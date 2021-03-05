@@ -1,0 +1,91 @@
+$res_320: "only screen and (min-width: 320px) and (max-width: 424px)";
+// $res_375 : "only screen and (min-width: 375px) and (max-width: 424px)";
+// $res_425 : "only screen and (min-width: 425px) and (max-width: 767px)";
+// $res_768 : "only screen and (min-width: 768px) and (max-width: 991px)";
+// $res_992 : "only screen and (min-width: 992px) and (max-width: 1023px)";
+// $res_1024 : "only screen and (min-width: 1024px) and (max-width: 1999px)";
+// $res_1200 : "only screen and (min-width: 1200px)";
+@mixin responsive_320() {
+  @media #{$res_320} {
+    @content;
+  }
+}
+.buyer-wrapper {
+  .btn {
+    width: 10%;
+    margin: 0 auto;
+    .btn-add__buyer {
+      background-color: #4bac4d;
+      color: white;
+      border-radius: 4px;
+    }
+  }
+  @include responsive_320() {
+    .btn {
+      display: flex;
+      justify-content: center;
+      margin-top: 3px;
+    }
+  }
+  .icon-plus__edit {
+    color: white;
+  }
+}
+
+.buyer-table__pc {
+  margin-top: 5px;
+}
+
+.buyer-table__mobile {
+  visibility: hidden;
+}
+
+@include responsive_320() {
+  .buyer-table__mobile {
+    visibility: visible;
+    .total-buyer{
+      margin-top: 5px;
+      margin-left: 15px;
+      span{
+        font-size: 12px;
+      }
+    }
+    .buyer-info {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 10px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+      .buyer-info__avatar {
+        margin-left: -25px;
+        margin-top: 5px;
+      }
+      .buyer-info__info {
+        margin-left: -65px;
+        padding-left: 0;
+        width: 165px;
+        .name {
+          color: rgb(27, 26, 26);
+          font-weight: 600;
+          font-size: 14px;
+          overflow: hidden;
+          width: 165px;
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
+        }
+        .code {
+          color: rgb(138, 127, 127);
+          font-size: 13px;
+        }
+        .phone {
+          color: rgb(126, 112, 112);
+          font-size: 13px;
+        }
+      }
+    }
+  }
+  .buyer-table__pc {
+    display: none;
+  }
+}

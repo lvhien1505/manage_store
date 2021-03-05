@@ -1,0 +1,60 @@
+$res_320 : "only screen and (min-width: 320px) and (max-width: 424px)";
+// $res_375 : "only screen and (min-width: 375px) and (max-width: 424px)";
+// $res_425 : "only screen and (min-width: 425px) and (max-width: 767px)";
+// $res_768 : "only screen and (min-width: 768px) and (max-width: 991px)";
+// $res_992 : "only screen and (min-width: 992px) and (max-width: 1023px)";
+// $res_1024 : "only screen and (min-width: 1024px) and (max-width: 1999px)";
+// $res_1200 : "only screen and (min-width: 1200px)";
+@mixin responsive_320() {
+    @media #{$res_320} {
+        @content
+    }
+}
+
+
+
+.home{
+    .home-header{
+        display: flex;
+        justify-content: flex-end;
+        h4{
+            margin-top: 14px;
+            margin-right: 10px;
+        }
+        .home-header__menu{
+            .btn-toggle{
+              width: 30px;
+              height: 30px;
+              margin-top: 11px;
+              margin-right: 15px;
+            }
+            .list-select{
+                position: absolute;
+                top:40px;
+                right: 15px;
+                .menu{
+                    background-color: #eee;
+                }
+            }
+        }
+    }
+    .home-content{
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        margin-top:200px;
+    }
+    .btn-select{
+        width: 200px;
+        height: 50px;
+        font-size:16px;
+        font-weight:600;
+    }
+    @include responsive_320(){
+        .btn-select{
+            width: 150px;
+        }
+        
+    }
+}
+

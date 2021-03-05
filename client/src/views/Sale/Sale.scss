@@ -1,0 +1,33 @@
+$res_320: "only screen and (min-width: 320px) and (max-width: 424px)";
+
+@mixin responsive_320() {
+  @media #{$res_320} {
+    @content;
+  }
+}
+
+.sale {
+  .sale-mobile {
+    visibility: hidden;
+  }
+  .sale-pc {
+    .sale-tab {
+      width: 100%;
+      position: absolute;
+      top: 1.5px;
+    }
+  }
+}
+.ant-tabs-nav-list {
+  position: absolute;
+  left: 36%;
+}
+
+@include responsive_320() {
+  .sale-mobile {
+    visibility: visible;
+  }
+  .sale-pc {
+    display: none;
+  }
+}

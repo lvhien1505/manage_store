@@ -1,0 +1,30 @@
+.search-buyer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #bababa;
+  .input-select {
+    width: 90%;
+    display: flex;
+    justify-content: flex-start;
+    position: relative;
+    .input-search__icon {
+      margin-top: 5px;
+      color: #eee;
+    }
+  }
+  .btn-add__buyer {
+    .btn {
+      border: none;
+      background-color: #fff;
+      color: #666666;
+    }
+  }
+  .info-buyer{
+    width: 100%;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+  }
+}

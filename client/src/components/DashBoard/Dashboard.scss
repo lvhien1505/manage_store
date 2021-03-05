@@ -1,0 +1,51 @@
+$res_320 : "only screen and (min-width: 320px) and (max-width: 424px)";
+// $res_375 : "only screen and (min-width: 375px) and (max-width: 424px)";
+// $res_425 : "only screen and (min-width: 425px) and (max-width: 767px)";
+// $res_768 : "only screen and (min-width: 768px) and (max-width: 991px)";
+// $res_992 : "only screen and (min-width: 992px) and (max-width: 1023px)";
+// $res_1024 : "only screen and (min-width: 1024px) and (max-width: 1999px)";
+// $res_1200 : "only screen and (min-width: 1200px)";
+@mixin responsive_320() {
+    @media #{$res_320} {
+        @content
+    }
+}
+
+.manage{
+    @include responsive_320(){
+        .manage-header__menu{
+            background-color:#0090da;
+            height: 50px;
+        }
+    }
+   .manage-header__menu{
+       .manage-header__menu-mobile{
+           visibility: hidden;
+       }
+       @include responsive_320(){
+           .manage-header__menu-pc{
+               display: none;
+           }
+           .manage-header__menu-mobile{
+               visibility:visible;
+               .btn-category{
+                   border: none;
+                   background-color: #0090da;
+                   width: 50px;
+                   height: 50px;
+               }
+               .menu-item{
+                   position: fixed;
+                   width: 80%;
+                   height: 100%;
+                   z-index: 10;
+               }
+               .name-select{
+                   color: white;
+                   font-size: 18px;
+                   font-weight: 600;
+               }
+        }
+       }
+   }
+}

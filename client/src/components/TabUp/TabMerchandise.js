@@ -1,0 +1,194 @@
+import React, { useState, useEffect } from "react";
+import { Tabs, Button, Image } from "antd";
+import { ArrowLeftOutlined } from "@ant-design/icons";
+import Dashboard from "../DashBoard/Dashboard";
+import { getProductWithId } from "../../api/product";
+import { notifyScreen } from "../../utils/notify";
+import { convertDay } from "../../utils/convert";
+import "./styles/TabMerchandise.scss";
+
+const TabMerchandise = ({ match, history }) => {
+  const [product, setProduct] = useState({});
+
+  const __getProductWithId = async (id) => {
+    try {
+      let res = await getProductWithId(id);
+      if (res.status === 200) {
+        return setProduct(res.data);
+      }
+    } catch (error) {
+      notifyScreen("error", "500", "Lỗi không xác định");
+    }
+  };
+
+  useEffect(() => {
+    __getProductWithId(match.params.id);
+  }, []);
+
+  return (
+    <Dashboard nameSelect={product.code ? "SP" + product.code : ""}>
+      <div className="product-tabup">
+        <div className="product-tabup__pc">
+          <Tabs defaultActiveKey="thongtin" type="card" centered>
+            <Tabs.TabPane tab="Thông tin" key="thongtin">
+              <div className="info-wrapper">
+                <div className="info-image">
+                  <Image
+                    src={
+                      process.env.NODE_ENV === "development"
+                        ? `${process.env.REACT_APP_BACKEND_URL}/${product.image}`
+                        : `/${product.image}`
+                    }
+                    alt={product.name}
+                    style={{ objectFit: "cover" }}
+                    width="250px"
+                    height="250px"
+                  />
+                </div>
+                <div className="info-detail">
+                  <div className="info-detail-info">
+                    Mã hàng : {"SP" + product.code}
+                  </div>
+                  <div className="info-detail-info">
+                    Tên hàng : {product.name}
+                  </div>
+                  <div className="info-detail-info">
+                    Nhóm hàng : {product.category ? product.category.name : ""}
+                  </div>
+                  <div className="info-detail-info">
+                    Đơn vị : {product.unit ? product.unit.name : ""}
+                  </div>
+                  <div className="info-detail-info">
+                    Giá nhập : {product.moneyIn}
+                  </div>
+                  <div className="info-detail-info">
+                    Giá bán : {product.moneyOut}
+                  </div>
+                  <div className="info-detail-info">
+                    Tồn kho : {product.inventory}
+                  </div>
+                  <div className="info-detail-info">
+                    Ngày tạo: {convertDay(product.createdAt)}
+                  </div>
+                </div>
+                <div className="note">
+                  {product.note ? product.note : "..Ghi chú"}
+                </div>
+                <div className="info-action">
+                  <Button
+                    className="info-action__btn"
+                    type="primary"
+                    size="large"
+                  >
+                    Cập nhật
+                  </Button>
+                  <Button
+                    className="info-action__btn"
+                    type="primary"
+                    size="large"
+                    danger
+                  >
+                    Ngừng kinh doanh
+                  </Button>
+                  <Button
+                    className="info-action__btn"
+                    type="primary"
+                    size="large"
+                    danger
+                  >
+                    Xóa
+                  </Button>
+                </div>
+              </div>
+            </Tabs.TabPane>
+            <Tabs.TabPane tab="Thẻ kho" key="thekho"></Tabs.TabPane>
+          </Tabs>
+          <div className="icon-goback" onClick={() => history.goBack()}>
+            <ArrowLeftOutlined />
+            <span style={{ marginLeft: "5px" }}>Quay lại</span>
+          </div>
+        </div>
+        <div className="product-tabup__mobile">
+          <Tabs defaultActiveKey="thongtin" type="card">
+            <Tabs.TabPane tab="Thông tin" key="thongtin">
+              <div className="product-header">
+                <div className="product-image">
+                  <Image
+                    src={
+                      process.env.NODE_ENV === "development"
+                        ? `${process.env.REACT_APP_BACKEND_URL}/${product.image}`
+                        : `/${product.image}`
+                    }
+                    alt={product.name}
+                    style={{ objectFit: "cover" }}
+                    width="80px"
+                    height="80px"
+                  />
+                </div>
+              </div>
+              <div className="info-detail">
+                <div className="info-detail-info product-name">
+                  {product.name}
+                </div>
+                <div className="info-detail-info">
+                  <span> Mã hàng</span>
+                  <span className="product-value">{"SP" + product.code}</span>
+                </div>
+                <div className="info-detail-info">
+                  <span>Nhóm hàng</span>
+                  <span className="product-value">{product.category ? product.category.name : ""}</span>
+                </div>
+                <div className="info-detail-info">
+                  <span> Đơn vị</span>
+                  <span className="product-value">{product.unit ? product.unit.name : ""}</span>
+                </div>
+                <div className="info-detail-info">
+                  <span>Giá nhập</span>
+                  <span className="product-value">{product.moneyIn}</span>
+                </div>
+                <div className="info-detail-info">
+                  <span>Giá bán</span>
+                  <span className="product-value">{product.moneyOut}</span>
+                </div>
+                <div className="info-detail-info">
+                  <span>Tồn kho</span>
+                  <span className="product-value">{product.inventory}</span>
+                </div>
+                <div className="info-detail-info">
+                  <span>Ngày tạo</span>
+                  <span className="product-value">{convertDay(product.createdAt)}</span>
+                </div>
+              </div>
+              <div className="note">
+                {product.note ? product.note : "..Ghi chú"}
+              </div>
+              <div className="product-action">
+                <Button
+                  className="product-action__btn"
+                  type="primary"
+                  size="small"
+                >
+                  Cập nhật
+                </Button>
+                <Button
+                  className="product-action__btn"
+                  type="primary"
+                  size="small"
+                  danger
+                >
+                  Xóa
+                </Button>
+              </div>
+            </Tabs.TabPane>
+            <Tabs.TabPane tab="Thẻ kho" key="thekho"></Tabs.TabPane>
+          </Tabs>
+          <div className="icon-goback" onClick={() => history.goBack()}>
+            <ArrowLeftOutlined />
+          </div>
+        </div>
+      </div>
+    </Dashboard>
+  );
+};
+
+export default TabMerchandise;

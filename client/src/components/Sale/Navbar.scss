@@ -1,0 +1,34 @@
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    background-color: #0090da;
+    height: 42px;
+    .input-select{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        z-index: 10;
+    }
+    .input-search__icon{
+        position: absolute;
+        right: 66vw;
+        color: rgb(216, 211, 211);
+    }
+    .navbar-menu{
+        .btn-toggle{
+            position: absolute;
+            right: 10px;
+            top: 5px;
+            z-index: 10;
+        }
+        .list-select{
+            position: absolute;
+            top: 42px;
+            right: 0;
+            .menu{
+                background-color: #eee;
+            }
+            z-index: 10;
+        }
+    }
+}
