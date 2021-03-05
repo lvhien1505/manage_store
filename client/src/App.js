@@ -12,8 +12,8 @@ import TabBuyer from './components/TabUp/TabBuyer';
 import TabMerchandise from './components/TabUp/TabMerchandise';
 import Partner from './views/Manage/Partner/Partner';
 import Sale from './views/Sale/Sale';
-
-import SearchBuyer from './components/Buyer/SearchBuyer'
+import Signup from './views/Signup/Signup';
+import Error from './views/Error/Error';
 
 
 const App = () => {
@@ -32,10 +32,9 @@ const App = () => {
         <Route path="/dashboard/merchandise/:id" exact component={TabMerchandise} />
         <Route path="/dashboard/partner" exact component={Partner} />
         <Route path="/sale" exact component={Sale} />
- 
-        <Route path="/test" exact component={SearchBuyer} />
+        <Route path="/signup" exact component={Signup} />
 
-        
+        <Route path="/*" exact component={Error} />      
       </Switch>
     </Router>
   );

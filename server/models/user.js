@@ -12,9 +12,8 @@ let userSchema = mongoose.Schema({
         type:String,
         unique:true
     },
-    avatar: {
+    name: {
         type: String,
-        default: ""
     },
     role: {
         type: String,

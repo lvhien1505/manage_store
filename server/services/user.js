@@ -9,10 +9,12 @@ const signup = async (req, res) => {
     let username = req.body.username;
     let email = req.body.email;
     let password = req.body.password;
+    let name = req.body.name;
     let user = {
       username,
       password,
       email,
+      name
     };
     let data = await UserModel.create(user);
     if (data) {

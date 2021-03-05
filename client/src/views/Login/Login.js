@@ -7,15 +7,6 @@ import { login } from "../../api/login";
 import { notifyScreen } from "../../utils/notify";
 
 const Login = ({history}) => {
-  //style form
-  const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 16 },
-  };
-  const tailLayout = {
-    wrapperCol: { offset: 8, span: 16 },
-  };
-  //end style form
 
   const handleLogin = async (values) => {
     try {
@@ -43,8 +34,6 @@ const Login = ({history}) => {
         style={{
           width: "250px",
           margin: "0 auto",
-          position: "relative",
-          top: "40px",
         }}
       >
         <Col>
@@ -54,7 +43,6 @@ const Login = ({history}) => {
       <Row style={{ width: "250px", margin: "0 auto" }}>
         <Col>
           <Form
-            {...layout}
             name="login"
             initialValues={{ remember: true }}
             onFinish={handleLogin}
@@ -75,10 +63,10 @@ const Login = ({history}) => {
                 placeholder="Nhập mật khẩu"
               />
             </Form.Item>
-            <Form.Item {...tailLayout} name="remember" valuePropName="checked" >
+            <Form.Item  name="remember" valuePropName="checked" >
               <Checkbox >Nhớ mật khẩu</Checkbox>
             </Form.Item>
-            <Form.Item {...tailLayout} >
+            <Form.Item >
               <Button type="primary" htmlType="submit" style={{float:"right"}}>
                 Đăng nhập
               </Button>
