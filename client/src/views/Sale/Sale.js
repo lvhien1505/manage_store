@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Tabs, Form, Select, Input } from "antd";
-import { UserOutlined } from "@ant-design/icons";
 import Navbar from "../../components/Sale/Navbar";
 import ScreenListProduct from "../../components/Sale/ScreenListProduct";
 import ContentTab from "../../components/TabUp/ContentTab";
+import ContentMobile from '../../components/Sale/ContentMobile'
 import { getProduct } from "../../api/product";
 import { getBuyer } from "../../api/buyer";
+import {checkAuth} from '../../api/login'
 import { notifyScreen } from "../../utils/notify";
-import "./Sale.scss";
+import "./styles/Sale.scss";
+import DashboardSaleMobile from "../../components/DashBoard/DashboardSaleMobile";
 
-const Sale = () => {
+const Sale = ({history}) => {
   const [listProduct, setListProduct] = useState([]);
   const [listBuyer, setListBuyer] = useState([]);
   const [newTabIndex, setNewTabIndex] = useState(1);
@@ -17,6 +19,21 @@ const Sale = () => {
     { title: "Hóa đơn 1", key: "hd1", closeIcon: true, products: [] },
   ]);
   const [targetKeyTabCurrent, setTargetKeyCurrent] = useState("hd1");
+  const [name, setName] = useState("");
+  const [statusChange,setStatusChange]=useState(false);
+
+  const __checkAuth = async ()=>{
+    try {
+      let res= await checkAuth();
+      if (res.status === 200) {
+        return setName(res.data.name);
+      }
+      
+    } catch (error) {
+      notifyScreen("error","401","Lỗi xác thực !")
+      history.push("/login")
+    }
+  }
 
   const __getListBuyer = async () => {
     try {
@@ -112,10 +129,15 @@ const Sale = () => {
     return setListTab(newListTab);
   }
 
+  const handleChangeListProduct =()=>{
+    return setStatusChange(!statusChange)
+  }
+
   useEffect(() => {
+    __checkAuth();
     __getListProduct();
     __getListBuyer();
-  }, []);
+  }, [statusChange]);
 
   return (
     <div className="sale">
@@ -145,6 +167,7 @@ const Sale = () => {
                   keyBill={tab.title}
                   listSell={tab.products}
                   removeProduct={(id)=>handleRemoveProduct(id)}
+                  nameSale={name}
                 />
               </Tabs.TabPane>
             ))}
@@ -155,7 +178,11 @@ const Sale = () => {
           valueSelect={handleSelectProduct}
         />
       </div>
-      <div className="sale-mobile"></div>
+      <div className="sale-mobile">
+        <DashboardSaleMobile nameSelect="Bán hàng">
+          <ContentMobile listProduct={listProduct.length > 0 ? listProduct : []} handleChangeListProduct={handleChangeListProduct}/>
+        </DashboardSaleMobile>
+      </div>
     </div>
   );
 };

@@ -38,7 +38,7 @@ const login=async (req,res)=>{
           if (result) {
             let token =jwt.sign({id:user._id},process.env.JWT_SECRET,{ expiresIn: 15 * 60 * 1000 });
             res.cookie("__t",token,{maxAge:"90000000"});
-            return res.status(200).json(LOGIN_SUCCESS)
+            return res.status(200).json(LOGIN_SUCCESS);
           }
         }
         res.status(401).json(USER_NOTEXIST)

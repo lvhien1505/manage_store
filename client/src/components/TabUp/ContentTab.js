@@ -6,7 +6,7 @@ import {createBillSell} from '../../api/billSell'
 import {notifyScreen} from '../../utils/notify'
 import "./styles/ContentTab.scss";
 
-const ContentTab = ({ listBuyer, keyBill, listSell,removeProduct }) => {
+const ContentTab = ({ listBuyer, keyBill, listSell,removeProduct,nameSale }) => {
   const [totalSaleOffMoney, setTotalSaleOffMoney] = useState(0);
   const [totalPaidMoney, setTotalPaidMoney] = useState(0);
   const [totalExcessMoney, setExcessMoney] = useState(0);
@@ -89,8 +89,8 @@ const ContentTab = ({ listBuyer, keyBill, listSell,removeProduct }) => {
       let phone = buyer.phone ? buyer.phone: ""
       let createdHour = hourCreateBill || ""
       let createdDay = dayCreateBill || ""
-      let userCreate = "Admin - Tran Sang";
-      let userSell = "Tran Sang";
+      let userCreate = nameSale;
+      let userSell = nameSale;
       let listSell =listProduct;
       let countNumSell=0;
       listProduct.forEach((product)=>{
@@ -126,7 +126,7 @@ const ContentTab = ({ listBuyer, keyBill, listSell,removeProduct }) => {
     __getTime();
     setListProduct(listSell);
     __initTotalMoney();
-  }, [listProduct.length,totalMoney,listSell.length,totalSaleOffMoney,buyer]);
+  }, [listProduct,totalMoney,listSell.length,totalSaleOffMoney,buyer]);
 
   return (
     <div className="content-tab-wrapper">
@@ -249,7 +249,7 @@ const ContentTab = ({ listBuyer, keyBill, listSell,removeProduct }) => {
       <div className="form-sell">
         <div className="sell-header">
           <div className="info-seller">
-            <UserOutlined /> <span>Le Van Hien</span>
+            <UserOutlined /> <span>{nameSale}</span>
           </div>
           <div className="info-time">
             <span>{dayCreateBill}</span>

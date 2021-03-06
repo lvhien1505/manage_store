@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Select, Menu,Button,Image } from "antd";
 import { SearchOutlined, MenuOutlined } from "@ant-design/icons";
-import "./Navbar.scss";
+import "./styles/Navbar.scss";
 
 const Navbar = ({listProduct,valueSelectProduct}) => {
   const [hideMenu, setHideMenu] = useState(false);

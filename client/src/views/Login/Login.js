@@ -2,7 +2,7 @@ import React from "react";
 import { Row, Col, Image, Form, Input, Button, Checkbox } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import logo from "../../logo/logo.png";
-
+import Cookies from "js-cookie";
 import { login } from "../../api/login";
 import { notifyScreen } from "../../utils/notify";
 

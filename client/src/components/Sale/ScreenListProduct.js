@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { List, Card, Image, Space } from "antd";
 import { CaretUpOutlined, CaretDownOutlined } from "@ant-design/icons";
-import "./ScreenListProduct.scss";
+import "./styles/ScreenListProduct.scss";
 
-const ScreenListProduct = ({ listProduct,valueSelect}) => {
+const ScreenListProduct = ({ listProduct, valueSelect }) => {
   const [count, setCount] = useState(40);
 
   const handleClickIcon = (type) => {
@@ -50,11 +50,26 @@ const ScreenListProduct = ({ listProduct,valueSelect}) => {
       </div>
       <div className="list-product">
         <List
+          pagination={{
+            pageSize: 24,
+            position: "bottom",
+          }}
           grid={{ gutter: 16, column: 6 }}
           dataSource={listProduct.length > 0 ? listProduct : []}
           renderItem={(product) => (
             <List.Item key={product._id}>
-              <div className="item-product" onClick={()=>valueSelect({_id:product._id,code:product.code,name:product.name,inventory:product.inventory,moneyOut:product.moneyOut})}>
+              <div
+                className="item-product"
+                onClick={() =>
+                  valueSelect({
+                    _id: product._id,
+                    code: product.code,
+                    name: product.name,
+                    inventory: product.inventory,
+                    moneyOut: product.moneyOut,
+                  })
+                }
+              >
                 <div className="image-product">
                   <Image
                     src={
@@ -65,13 +80,11 @@ const ScreenListProduct = ({ listProduct,valueSelect}) => {
                     preview={false}
                     width="50px"
                     height="65px"
-                    style={{objectFit:"cover"}}
+                    style={{ objectFit: "cover" }}
                   />
                 </div>
                 <div className="info-product">
-                  <div className="info-product__name">
-                     {product.name}
-                  </div>
+                  <div className="info-product__name">{product.name}</div>
                   <div className="info-product__price">
                     <span>{product.moneyOut}</span>
                   </div>
