@@ -13,7 +13,7 @@ export const getListPartner =async ()=>{
     if (process.env.NODE_ENV === "development") {  
         return await axios.post(`${process.env.REACT_APP_BACKEND_URL}/partner`,{},headers);
     }else{
-       return await axios.post("/partner",headers,{withCredentials:true});
+       return await axios.post("/partner",{},headers);
     }
 }
 

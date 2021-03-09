@@ -77,7 +77,7 @@ const Partner = ({history}) => {
 
   useEffect(() => {
     __getListPartner();
-  }, [])
+  }, [hideModalAdd])
 
   return (
     <Dashboard nameSelect="Nhà cung cấp" defaulCheckKey="6">

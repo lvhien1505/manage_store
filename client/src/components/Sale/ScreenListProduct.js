@@ -73,7 +73,7 @@ const ScreenListProduct = ({ listProduct, valueSelect }) => {
                 <div className="image-product">
                   <Image
                     src={
-                      process.env.NODE_ENV
+                      process.env.NODE_ENV === "development"
                         ? `${process.env.REACT_APP_BACKEND_URL}/${product.image}`
                         : `/${product.image}`
                     }

@@ -16,7 +16,7 @@ const Signup = ({ history }) => {
       let res = await signup(username, password, email,name);
       if (res.status === 200) {
         notifyScreen("success", res.data.statusCode, res.data.message);
-        return history.push("/login");
+        return history.push("/");
       }
     } catch (error) {
       if (error.response) {

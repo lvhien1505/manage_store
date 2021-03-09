@@ -52,7 +52,7 @@ const ModalAddMerchandise = ({ hideModal, handleHideModal,handleChange }) => {
         let res = await createProduct(merchandise);
         if (res.status === 200) {
           notifyScreen("success", res.data.statusCode, res.data.message);
-          handleChange();
+          // handleChange();
           return handleHideModal();
         }
       } catch (error) {

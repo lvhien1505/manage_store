@@ -19,7 +19,7 @@ const Home = ({history}) => {
       
     } catch (error) {
       notifyScreen("error","401","Lỗi xác thực !")
-      history.push("/login")
+      history.push("/")
     }
   }
   
