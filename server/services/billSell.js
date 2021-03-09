@@ -1,4 +1,5 @@
 const BillSellModel = require("../models/billSell");
+const BuyerModel = require("../models/buyer");
 const {
   ERROR_SERVER,
   CREATE_BILL_SELL_SUCCESS,
@@ -9,6 +10,25 @@ const {
 const getListBillSell = async (req, res) => {
   try {
     let listBill = await BillSellModel.find();
+    res.status(200).json(listBill);
+  } catch (error) {
+    res.status(500).json(ERROR_SERVER);
+  }
+};
+
+const getListBillSellWithLimit = async (req, res) => {
+  try {
+    let listBill = await BillSellModel.find().limit(15).sort({createdAt: 'desc'});
+    res.status(200).json(listBill);
+  } catch (error) {
+    res.status(500).json(ERROR_SERVER);
+  }
+};
+
+const getListBillWithStatus = async (req, res) => {
+  try {
+    let status = req.body.status;
+    let listBill = await BillSellModel.find({ status: status });
     res.status(200).json(listBill);
   } catch (error) {
     res.status(500).json(ERROR_SERVER);
@@ -26,30 +46,59 @@ const getBillWithId = async (req, res) => {
 
 const create = async (req, res) => {
   try {
-      let buyerId=req.body.buyerId;
-      let code="0001";
-      let key="0001";
-      let nameBuyer =req.body.nameBuyer;
-      let phone = req.body.phone;
-      let createdHour = req.body.createdHour;
-      let createdDay = req.body.createdDay;
-      let userCreate = req.body.userCreate;
-      let userSell = req.body.userSell;
-      let listSell =req.body.listSell;
-      let countNumSell=req.body.countNumSell;
-      let totalMoneySell=req.body.totalMoneySell;
-      let totalSaleOffMoneySell=req.body.totalSaleOffMoneySell;
-      let totalBuyerPaidNeed=req.body.totalBuyerPaidNeed;
-      let totalBuyerPaid=req.body.totalBuyerPaidBuyer;
-      let totalExcessPaid=req.body.totalExcessPaid;
-      let noteSell =req.body.noteSell;
-    let bill={buyerId,nameBuyer,phone,createdHour,createdDay,userCreate,userSell,listSell,countNumSell,totalMoneySell,totalSaleOffMoneySell,totalBuyerPaidNeed,totalBuyerPaid,totalExcessPaid,noteSell,code,key}
+    let buyerId = req.body.buyerId;
+    let buyerCode = req.body.buyerCode;
+    let code = `00001`;
+    let key = `00001`;
+    let nameBuyer = req.body.nameBuyer;
+    let phone = req.body.phone;
+    let createdHour = req.body.createdHour;
+    let createdDay = req.body.createdDay;
+    let userCreate = req.body.userCreate;
+    let userSell = req.body.userSell;
+    let listSell = req.body.listSell;
+    let countNumSell = req.body.countNumSell;
+    let totalMoneySell = req.body.totalMoneySell;
+    let totalSaleOffMoneySell = req.body.totalSaleOffMoneySell;
+    let totalBuyerPaidNeed = req.body.totalBuyerPaidNeed;
+    let totalBuyerPaid = req.body.totalBuyerPaid;
+    let totalExcessPaid = req.body.totalExcessPaid;
+    let noteSell = req.body.noteSell;
+    let status = req.body.status;
+    let bill = {
+      buyerId,
+      buyerCode,
+      nameBuyer,
+      phone,
+      createdHour,
+      createdDay,
+      userCreate,
+      userSell,
+      listSell,
+      countNumSell,
+      totalMoneySell,
+      totalSaleOffMoneySell,
+      totalBuyerPaidNeed,
+      totalBuyerPaid,
+      totalExcessPaid,
+      noteSell,
+      code,
+      key,
+      status,
+    };
+    let buyer = await BuyerModel.findById(buyerId);
     let data = await BillSellModel.create(bill);
     if (data) {
+      let totalSell = buyer.totalSell;
+      let newTotalSell = totalSell + data.totalBuyerPaidNeed;
+      if (totalExcessPaid<0) {
+        let newDebt = parseInt(buyer.debt) + (-totalExcessPaid)
+        await BuyerModel.findByIdAndUpdate({_id:buyerId},{debt:newDebt,totalSell:newTotalSell})
+      }
+      await BuyerModel.findByIdAndUpdate({_id:buyerId},{totalSell:newTotalSell})
       return res.status(200).json(CREATE_BILL_SELL_SUCCESS);
     }
   } catch (error) {
-    console.log(error)
     res.status(500).json(ERROR_SERVER);
   }
 };
@@ -87,5 +136,7 @@ module.exports = {
   update,
   remove,
   getListBillSell,
-  getBillWithId
+  getListBillSellWithLimit,
+  getBillWithId,
+  getListBillWithStatus,
 };

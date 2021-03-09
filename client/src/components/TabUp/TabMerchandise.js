@@ -2,12 +2,18 @@ import React, { useState, useEffect } from "react";
 import { Tabs, Button, Image } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import Dashboard from "../DashBoard/Dashboard";
+import ModalUpdateProduct from "../../components/Modals/ModalUpdate/ModalUpdateProduct";
+import ModalDeleteProduct from "../../components/Modals/ModalConfirmDelete/ModalDeleteProduct";
 import { getProductWithId } from "../../api/product";
 import { notifyScreen } from "../../utils/notify";
 import { convertDay } from "../../utils/convert";
 import "./styles/TabMerchandise.scss";
 
 const TabMerchandise = ({ match, history }) => {
+  const [hideModalUpdate, setHideModalUpdate] = useState(false);
+  const [showModalUpdate, setShowModalUpdate] = useState(false);
+  const [hideModalDelete, setHideModalDelete] = useState(false);
+  const [showModalDelete, setShowModalDelete] = useState(false);
   const [product, setProduct] = useState({});
 
   const __getProductWithId = async (id) => {
@@ -17,16 +23,38 @@ const TabMerchandise = ({ match, history }) => {
         return setProduct(res.data);
       }
     } catch (error) {
-      notifyScreen("error", "500", "Lỗi không xác định");
+      if (error) {
+        notifyScreen("error", "500", "Lỗi không xác định");
+      }
     }
+  };
+
+  const handlerHideModalUpdate = () => {
+    setHideModalUpdate(!hideModalUpdate);
+    return setShowModalUpdate(false);
+  };
+
+  const handlerShowModalUpdate = () => {
+    setShowModalUpdate(true);
+    return setHideModalUpdate(!hideModalUpdate);
+  };
+
+  const handlerHideModalDelete = () => {
+    setHideModalDelete(!hideModalDelete);
+    return setHideModalDelete(false);
+  };
+
+  const handlerShowModalDelete = () => {
+    setShowModalDelete(true);
+    return setHideModalDelete(!hideModalDelete);
   };
 
   useEffect(() => {
     __getProductWithId(match.params.id);
-  }, []);
+  }, [hideModalUpdate, hideModalDelete]);
 
   return (
-    <Dashboard nameSelect={product.code ? "SP" + product.code : ""}>
+    <Dashboard nameSelect={product.code ? "SP" + product.code : ""} defaulCheckKey="2">
       <div className="product-tabup">
         <div className="product-tabup__pc">
           <Tabs defaultActiveKey="thongtin" type="card" centered>
@@ -79,6 +107,7 @@ const TabMerchandise = ({ match, history }) => {
                     className="info-action__btn"
                     type="primary"
                     size="large"
+                    onClick={handlerShowModalUpdate}
                   >
                     Cập nhật
                   </Button>
@@ -95,6 +124,7 @@ const TabMerchandise = ({ match, history }) => {
                     type="primary"
                     size="large"
                     danger
+                    onClick={handlerShowModalDelete}
                   >
                     Xóa
                   </Button>
@@ -136,11 +166,15 @@ const TabMerchandise = ({ match, history }) => {
                 </div>
                 <div className="info-detail-info">
                   <span>Nhóm hàng</span>
-                  <span className="product-value">{product.category ? product.category.name : ""}</span>
+                  <span className="product-value">
+                    {product.category ? product.category.name : ""}
+                  </span>
                 </div>
                 <div className="info-detail-info">
                   <span> Đơn vị</span>
-                  <span className="product-value">{product.unit ? product.unit.name : ""}</span>
+                  <span className="product-value">
+                    {product.unit ? product.unit.name : ""}
+                  </span>
                 </div>
                 <div className="info-detail-info">
                   <span>Giá nhập</span>
@@ -156,7 +190,9 @@ const TabMerchandise = ({ match, history }) => {
                 </div>
                 <div className="info-detail-info">
                   <span>Ngày tạo</span>
-                  <span className="product-value">{convertDay(product.createdAt)}</span>
+                  <span className="product-value">
+                    {convertDay(product.createdAt)}
+                  </span>
                 </div>
               </div>
               <div className="note">
@@ -186,6 +222,20 @@ const TabMerchandise = ({ match, history }) => {
             <ArrowLeftOutlined />
           </div>
         </div>
+        {showModalUpdate ? (
+          <ModalUpdateProduct
+            productEdit={product}
+            hideModal={hideModalUpdate}
+            handleHideModal={handlerHideModalUpdate}
+          />
+        ) : null}
+        {showModalDelete ? (
+          <ModalDeleteProduct
+            idProduct={product._id ? product._id : null}
+            hideModal={hideModalDelete}
+            handleHideModal={handlerHideModalDelete}
+          />
+        ) : null}
       </div>
     </Dashboard>
   );

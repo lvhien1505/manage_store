@@ -106,8 +106,6 @@ const Sale = ({history}) => {
           return tab;
         }
         if (count === 0) {
-          let keyIndexProduct = tab.products.length + 1;
-          newProduct.keyIndex = keyIndexProduct;
           newProduct.totalMoney = newProduct.moneyOut;
           newProduct.countNum = 1;
           tab.products.push(newProduct);
@@ -137,7 +135,7 @@ const Sale = ({history}) => {
     __checkAuth();
     __getListProduct();
     __getListBuyer();
-  }, [statusChange]);
+  }, [statusChange,name]);
 
   return (
     <div className="sale">
@@ -167,7 +165,7 @@ const Sale = ({history}) => {
                   keyBill={tab.title}
                   listSell={tab.products}
                   removeProduct={(id)=>handleRemoveProduct(id)}
-                  nameSale={name}
+                  nameSale={name ? name : "Admin-TranSang"}
                 />
               </Tabs.TabPane>
             ))}
@@ -180,7 +178,7 @@ const Sale = ({history}) => {
       </div>
       <div className="sale-mobile">
         <DashboardSaleMobile nameSelect="Bán hàng">
-          <ContentMobile listProduct={listProduct.length > 0 ? listProduct : []} handleChangeListProduct={handleChangeListProduct}/>
+          <ContentMobile listProduct={listProduct.length > 0 ? listProduct : []} handleChangeListProduct={handleChangeListProduct} nameSale={name ? name : "Admin-TranSang"}/>
         </DashboardSaleMobile>
       </div>
     </div>

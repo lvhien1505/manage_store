@@ -2,18 +2,12 @@ import React, { useState } from "react";
 import { Menu, Button } from "antd";
 import { Link } from "react-router-dom";
 import {
-  EyeFilled,
-  DropboxOutlined,
-  MehFilled,
-  SlackOutlined,
+  EyeOutlined,
   BuildFilled,
   MenuOutlined,
   ShopOutlined,
-  DollarCircleOutlined,
-  TableOutlined,
   StockOutlined,
   InsertRowAboveOutlined,
-  GoldOutlined
 } from "@ant-design/icons";
 import "./DashboardSaleMobile.scss";
 
@@ -23,23 +17,20 @@ const DashboardSaleMobile = ({ children, nameSelect }) => {
   const MenuRes = (type) => {
     return (
       <Menu mode={type} className="menu-item"defaultSelectedKeys="1" >
-        <Menu.Item icon={<EyeFilled />} key="1">
+        <Menu.Item icon={<ShopOutlined/>} key="1">
           <Link to="/sale">Bán hàng</Link>
         </Menu.Item>
-          <Menu.Item icon={<TableOutlined />} key="category">
-            <Link to="/dashboard/merchandise/category">Hóa đơn tạm</Link>
+          <Menu.Item icon={<EyeOutlined />} key="2">
+            <Link to="/dashboard/transaction/bill-success">Lịch sử đơn hàng</Link>
           </Menu.Item>
-          <Menu.Item icon={<StockOutlined />} key="inventory">
-            <Link to="/dashboard/merchandise/inventory">Lịch sử đơn hàng</Link>
+          <Menu.Item icon={<InsertRowAboveOutlined />} key="3">
+            <Link to="/dashboard">Lập phiếu thu</Link>
           </Menu.Item>
-          <Menu.Item icon={<InsertRowAboveOutlined />} key="categoryProduct">
-            <Link to="/dashboard/merchandise/category-product">Lập phiếu thu</Link>
+          <Menu.Item icon={<StockOutlined />} key="4">
+            <Link to="/dashboard">Xem báo cáo ngày</Link>
           </Menu.Item>
-          <Menu.Item icon={<GoldOutlined />} key="unit">
-            <Link to="/dashboard/merchandise/unit">Xem báo cáo ngày</Link>
-          </Menu.Item>
-          <Menu.Item icon={<GoldOutlined />} key="unit">
-            <Link to="/dashboard/merchandise/unit">Quản lý</Link>
+          <Menu.Item icon={<BuildFilled />} key="5">
+            <Link to="/dashboard">Quản lý</Link>
           </Menu.Item>
       </Menu>
     );

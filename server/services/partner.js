@@ -16,6 +16,16 @@ const getListPartner = async (req, res) => {
   }
 };
 
+const getPartnerWithId = async (req, res) => {
+  try {
+    let partner = await PartnerModel.findById(req.params.id);
+    res.status(200).json(partner);
+  } catch (error) {
+    res.status(500).json(ERROR_SERVER);
+  }
+};
+
+
 const create = async (req, res) => {
   try {
     let code = req.body.code || "";
@@ -102,5 +112,6 @@ module.exports = {
   create,
   update,
   remove,
-  getListPartner
+  getListPartner,
+  getPartnerWithId
 };

@@ -1,0 +1,89 @@
+$res_320 : "only screen and (min-width: 320px) and (max-width: 424px)";
+// $res_375 : "only screen and (min-width: 375px) and (max-width: 424px)";
+// $res_425 : "only screen and (min-width: 425px) and (max-width: 767px)";
+// $res_768 : "only screen and (min-width: 768px) and (max-width: 991px)";
+// $res_992 : "only screen and (min-width: 992px) and (max-width: 1023px)";
+// $res_1024 : "only screen and (min-width: 1024px) and (max-width: 1999px)";
+// $res_1200 : "only screen and (min-width: 1200px)";
+@mixin responsive_320() {
+    @media #{$res_320} {
+        @content
+    }
+}
+
+
+.partner-tabup{
+    width: 100%;
+    margin-top: -33px;
+    .partner-tabup__mobile{
+        visibility: hidden;
+    }
+    .partner-tabup__pc{
+        .info-wrapper{
+            display: flex;
+            justify-content: space-around;
+        }
+        .info-image{
+            width: 200px;
+            height: 220px;
+            border: 1px solid #eee;
+            margin-top: 10px;
+        }
+        .info-detail-info{
+            width: 300px;
+            border-bottom: 1px solid #eeeeee;
+            margin-top: 20px;
+            padding-bottom: 15px;
+        }
+        .info-detail-info:first-child{
+            margin-top: 0px;
+        }
+        .note{
+            margin-top: 10px;
+            width: 200px;
+            height: 70px;
+            border-left: 1px solid #eeeeee;
+            padding-left: 15px;
+        }
+        .info-action{
+            display: flex;
+            flex-direction: column;
+            .info-action__btn{
+                margin-top: 10px;
+            }
+        }
+        .icon-goback{
+            position: absolute;
+            top: 57px;
+            left: 5px;
+            font-size: 15px;
+            color: rgb(13, 221, 13);   
+        }
+        .icon-goback:hover{
+            color:rgb(126, 126, 245);   
+            cursor: pointer;;
+        }
+    }
+}
+
+@include responsive_320(){
+    .partner-tabup{
+        margin-top: 0px;
+        .partner-tabup__mobile{
+            visibility: visible;
+            .icon-goback{
+                position: absolute;
+                top: 60px;
+                right: 10px;
+                color: rgb(103, 177, 103);
+            }
+            .icon-goback:hover{
+               color: rgb(99, 99, 196);
+            }
+        }
+    }
+    .partner-tabup__pc{
+        display: none;
+    }
+    
+}

@@ -15,7 +15,7 @@ const Login = ({history}) => {
       let res = await login(username, password);
       if (res.status === 200) {
         notifyScreen("success", res.data.statusCode, res.data.message);
-        return history.push("/")
+        return history.push("/home")
       }
     } catch (error) {
       if (error.response) {

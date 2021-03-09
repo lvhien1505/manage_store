@@ -74,7 +74,7 @@ const Merchandise = ({ history }) => {
   }, [hideModalAdd]);
 
   return (
-    <Dashboard nameSelect="Hàng hóa">
+    <Dashboard nameSelect="Hàng hóa" defaulCheckKey="2">
       <div className="merchandise-wrapper">
         <div className="btn">
           <Button

@@ -11,6 +11,7 @@ import ModalDeleteCategoryProduct from "../../../components/Modals/ModalConfirmD
 
 const CategoryProduct = () => {
   const [idCategory, setIdCategory] = useState({});
+  const [category, setCategory] = useState({});
   const [hideModalAdd, setHideModalAdd] = useState(false);
   const [showModalUpdate, setShowModalUpdate] = useState(false);
   const [hideModalUpdate, setHideModalUpdate] = useState(false);
@@ -35,7 +36,8 @@ const CategoryProduct = () => {
   };
 
   const handlerShowModalUpdate = (id) => {
-    setIdCategory(id)
+    let newListCategory=listCategory.filter((category)=>category._id===id)
+    setCategory(newListCategory[0])
     setShowModalUpdate(true)
     return setHideModalUpdate(!hideModalUpdate);
   };
@@ -79,7 +81,7 @@ const CategoryProduct = () => {
   },[idCategory,hideModalAdd,hideModalUpdate,hideModalDelete])
 
   return (
-    <Dashboard nameSelect="Nhóm hàng">
+    <Dashboard nameSelect="Nhóm hàng" defaulCheckKey="2">
       <div className="category-wrapper">
         <div className="btn">
           <Button
@@ -97,7 +99,7 @@ const CategoryProduct = () => {
       </div>
       <div className="category-table">
           <Table columns={columns} dataSource={listCategory?listCategory:[]} size="small"/>
-          {showModalUpdate ? <ModalUpdateCategoryProduct idCategory={idCategory ? idCategory : null} hideModal={hideModalUpdate} handleHideModal={handlerHideModalUpdate}/> :null}
+          {showModalUpdate ? <ModalUpdateCategoryProduct  categoryEdit={category} hideModal={hideModalUpdate} handleHideModal={handlerHideModalUpdate}/> :null}
           {showModalDelete ? <ModalDeleteCategoryProduct idCategory={idCategory ? idCategory : null} hideModal={hideModalDelete} handleHideModal={handlerHideModalDelete}/> : null}
       </div>
     </Dashboard>

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Button, Table,Avatar } from "antd";
+import { Button, Table, Avatar } from "antd";
 import { Link } from "react-router-dom";
-import { PlusOutlined,UserOutlined,PhoneOutlined } from "@ant-design/icons";
+import { PlusOutlined, UserOutlined, PhoneOutlined } from "@ant-design/icons";
 import Dashboard from "../../../components/DashBoard/Dashboard";
 import ModalAddBuyer from "../../../components/Modals/ModalAdd/ModalAddBuyer";
 import { getBuyer } from "../../../api/buyer";
 import { notifyScreen } from "../../../utils/notify";
-import logo from '../../../logo/logo.png'
+import avatar from "../../../logo/avatar/default.jpg";
 import "./Buyer.scss";
 
 const Buyer = ({ history }) => {
@@ -75,8 +75,8 @@ const Buyer = ({ history }) => {
   }, [hideModalAdd]);
 
   return (
-    <Dashboard nameSelect="Khách hàng">
-      <div className="buyer-wrapper">
+    <Dashboard nameSelect="Khách hàng" defaulCheckKey="5">
+      <div className="buyer-action">
         <div className="btn">
           <Button
             onClick={() => setHideModalAdd(!hideModalAdd)}
@@ -102,21 +102,27 @@ const Buyer = ({ history }) => {
         </div>
         <div className="buyer-list">
           {listBuyer.length > 0
-            ? listBuyer.map((buyer) => (
-                <Link to={`/dashboard/buyer/${buyer._id}`}>
-                   <div key={buyer._id} className="buyer-info">
-                     <div className="buyer-info__avatar">
-                        <Avatar src={logo} size={{xs:48}}/>
-                     </div>
-                     <div className="buyer-info__info">
-                       <div className="name">{buyer.address ? `${buyer.name} - ${buyer.address}` : buyer.name}</div>
-                       <div className="code">
-                         <UserOutlined/> {"KH" + buyer.code}
-                       </div>
-                       <div className="phone"><PhoneOutlined/> {buyer.phone}</div>
-                     </div >
-                     <div className="buyer-info__money">{buyer.totalSell}</div>
-                   </div>
+            ? listBuyer.map((buyer, i) => (
+                <Link to={`/dashboard/buyer/${buyer._id}`} key={i + "-link"}>
+                  <div key={buyer._id} className="buyer-info" key={i}>
+                    <div className="buyer-info__avatar">
+                      <Avatar src={avatar} size={{ xs: 42 }} />
+                    </div>
+                    <div className="buyer-info__info">
+                      <div className="name">
+                        {buyer.address
+                          ? `${buyer.name} - ${buyer.address}`
+                          : buyer.name}
+                      </div>
+                      <div className="code">
+                        <UserOutlined /> {"KH" + buyer.code}
+                      </div>
+                      <div className="phone">
+                        <PhoneOutlined /> {buyer.phone}
+                      </div>
+                    </div>
+                    <div className="buyer-info__money">{buyer.totalSell}</div>
+                  </div>
                 </Link>
               ))
             : null}

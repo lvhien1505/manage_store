@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Menu, Button } from "antd";
 import { Link } from "react-router-dom";
 import {
@@ -13,20 +13,69 @@ import {
   TableOutlined,
   StockOutlined,
   InsertRowAboveOutlined,
-  GoldOutlined
+  GoldOutlined,
 } from "@ant-design/icons";
 import "./Dashboard.scss";
 
-const Dashboard = ({ children, nameSelect }) => {
+const Dashboard = ({ children, nameSelect, defaulCheckKey }) => {
   const [hideMenuMobile, setHideMenuMobile] = useState(false);
+  const [defaulSelectKey,setDefaultSelectKey]=useState("")
 
+  useEffect(() => {
+    setDefaultSelectKey(defaulCheckKey ? defaulCheckKey :"1");
+  }, [])
   const MenuRes = (type) => {
     return (
-      <Menu mode={type} className="menu-item">
-        <Menu.Item icon={<EyeFilled />} key="1">
-          <Link to="/dashboard">Tổng quan</Link>
+      <Menu
+        mode={type}
+        className="menu-item"
+        defaultSelectedKeys={defaulSelectKey}
+        style={
+          type === "horizontal"
+            ? {
+                backgroundColor: "#0090da",
+                borderBottom: "1.5px solid #0090da",
+              }
+            : { backgroundColor: "#fff" }
+        }
+      >
+        <Menu.Item
+          icon={<EyeFilled />}
+          key="1"
+          style={
+            type === "horizontal"
+              ? defaulSelectKey != "1"
+                ? { color: "white" }
+                : {
+                  color:"white",
+                    backgroundColor: "#0078b6",
+                    paddingLeft: "7px",
+                    paddingRight: "7px",
+                  }
+              : { color: "black" }
+          }
+        >
+          <Link to="/dashboard" style={type ==="horizontal" ? {color:"white"} :{color:"black"}}>
+            Tổng quan
+          </Link>
         </Menu.Item>
-        <Menu.SubMenu title="Hàng hóa" icon={<DropboxOutlined />} key="2">
+        <Menu.SubMenu
+          title="Hàng hóa"
+          icon={<DropboxOutlined />}
+          key="2"
+          style={
+            type === "horizontal"
+              ? defaulSelectKey != "2"
+                ? { color: "white" }
+                : {
+                    color:"white",
+                    backgroundColor: "#0078b6",
+                    paddingLeft: "7px",
+                    paddingRight: "7px",
+                  }
+              : { color: "black" }
+          }
+        >
           <Menu.Item icon={<TableOutlined />} key="category">
             <Link to="/dashboard/merchandise/category">Danh mục</Link>
           </Menu.Item>
@@ -40,23 +89,128 @@ const Dashboard = ({ children, nameSelect }) => {
             <Link to="/dashboard/merchandise/unit">Đơn vị</Link>
           </Menu.Item>
         </Menu.SubMenu>
-        <Menu.SubMenu title="Giao dịch" icon={<BuildFilled />} key="3">
-          <Menu.Item icon={<DollarCircleOutlined />}>
-            <Link to="/dashboard/transaction/sell" key="sell">
-              Hóa Đơn
-            </Link>
-          </Menu.Item>
-          <Menu.Item icon={<ShopOutlined />}>
-            <Link to="/dashboard/transaction/buy" key="buy">
+        <Menu.SubMenu
+          title="Giao dịch"
+          icon={<BuildFilled />}
+          key="3"
+          style={
+            type === "horizontal"
+              ? defaulSelectKey != "3"
+                ? { color: "white" }
+                : {
+                  color:"white",
+                    backgroundColor: "#0078b6",
+                    paddingLeft: "7px",
+                    paddingRight: "7px",
+                  }
+              : { color: "black" }
+          }
+        >
+          <Menu.SubMenu icon={<DollarCircleOutlined />} title="Hóa Đơn">
+            <Menu.Item key="bill-save">
+              <Link to="/dashboard/transaction/bill-save" key="bill-save-1">
+                Hoá đơn tạm
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="bill-success" >
+              <Link
+                to="/dashboard/transaction/bill-success"
+                key="bill-success-1"
+              >
+                Hoá đơn hoàn thành
+              </Link>
+            </Menu.Item>
+          </Menu.SubMenu>
+          <Menu.SubMenu
+            icon={<ShopOutlined />}
+            key="4"
+            title="Nhập hàng"
+          >
+           <Menu.Item>
+             <Link to="/dashboard/transaction/buy" key="buy">
               Nhập Hàng
-            </Link>
-          </Menu.Item>
+             </Link>
+           </Menu.Item>
+           <Menu.SubMenu key="history" title="Lịch sử">
+             <Menu.Item key="save">
+              <Link to="/dashboard/transaction/buy/history/bill-save" >
+                Đơn tạm 
+              </Link>
+             </Menu.Item>
+             <Menu.Item key="success">
+              <Link to="/dashboard/transaction/buy/history/bill-success" >
+                Đơn hoàn thành
+              </Link>
+             </Menu.Item>
+           </Menu.SubMenu>
+          </Menu.SubMenu>
         </Menu.SubMenu>
-        <Menu.Item icon={<MehFilled />} key="4">
-          <Link to="/dashboard/buyer">Khách hàng</Link>
+        <Menu.Item
+          icon={<MehFilled />}
+          key="5"
+          style={
+            type === "horizontal"
+              ? defaulSelectKey != "5"
+                ? { color: "white" }
+                : {
+                  color:"white",
+                    backgroundColor: "#0078b6",
+                    paddingLeft: "7px",
+                    paddingRight: "7px",
+                  }
+              : { color: "black" }
+          }
+        >
+          <Link
+            to="/dashboard/buyer"
+            key="buyer"
+            style={
+              type === "horizontal" ? { color: "white" } : { color: "black" }
+            }
+          >
+            Khách hàng
+          </Link>
         </Menu.Item>
-        <Menu.Item icon={<SlackOutlined />} key="5">
-          <Link to="/dashboard/partner">Nhà cung cấp</Link>
+        <Menu.Item
+          icon={<SlackOutlined />}
+          key="6"
+          style={
+            type === "horizontal"
+              ? defaulSelectKey != "6"
+                ? { color: "white" }
+                : {
+                  color:"white",
+                    backgroundColor: "#0078b6",
+                    paddingLeft: "7px",
+                    paddingRight: "7px",
+                  }
+              : { color: "black" }
+          }
+        >
+          <Link
+            to="/dashboard/partner"
+            key="partner"
+            style={
+              type === "horizontal" ? { color: "white" } : { color: "black" }
+            }
+          >
+            Nhà cung cấp
+          </Link>
+        </Menu.Item>
+        <Menu.Item
+          key="7"
+          style={
+            type === "horizontal"
+              ? {
+                  float: "right",
+                  fontSize: "15px",
+                  backgroundColor: "#eee",
+                  padding: "0 8px 0 8px",
+                }
+              : { fontSize: "15px", backgroundColor: "#eee" }
+          }
+        >
+          <Link to="/sale">Chuyển sang bán hàng</Link>
         </Menu.Item>
       </Menu>
     );

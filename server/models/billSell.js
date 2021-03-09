@@ -7,6 +7,7 @@ let billSellSchema = mongoose.Schema({
     },
     key:String,
     buyerId:String,
+    buyerCode:String,
     nameBuyer:String,
     phone:String,
     address:String,
@@ -39,10 +40,6 @@ let billSellSchema = mongoose.Schema({
     totalBuyerPaid:Number,
     totalExcessPaid:Number,
     noteSell:String,
-    error:{
-        type:Boolean,
-        default:false
-    }
 },{
     timestamps: true,
 });

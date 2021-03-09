@@ -17,6 +17,14 @@ export const getListPartner =async ()=>{
     }
 }
 
+export const getPartnerWithId =async (id)=>{
+    if (process.env.NODE_ENV === "development") {  
+        return await axios.post(`${process.env.REACT_APP_BACKEND_URL}/partner/get/${id}`,{},headers);
+    }else{
+       return await axios.post(`/partner/${id}`,{},headers);
+    }
+}
+
 export const createPartner =async (body)=>{
     if (process.env.NODE_ENV === "development") {  
         return await axios.post(`${process.env.REACT_APP_BACKEND_URL}/partner/create`,body,headers);

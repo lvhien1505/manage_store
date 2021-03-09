@@ -53,6 +53,17 @@
            }
        }
     }
+    .time-sell{
+        height: 45px;
+        padding-top: 10px;
+        display: flex;
+        justify-content: flex-start;
+        border-bottom: 1px solid #eee;
+        span{
+            margin-left: 20px;
+            color: rgb(177, 170, 170);
+        }
+    }
     .footer-fixed{
         width: 100%;
         position: fixed;
@@ -79,8 +90,9 @@
                 width: 50%;
                 height: 50px;
                 font-weight: 600;
-                padding-top: 12px;
-                border:none
+                padding-top: 13px;
+                border:none;
+                text-align: center;
                
             }
             .btn-save{

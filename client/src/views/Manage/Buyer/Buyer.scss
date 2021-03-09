@@ -1,4 +1,4 @@
-$res_320: "only screen and (min-width: 320px) and (max-width: 424px)";
+$res_320 : "only screen and (min-width: 320px) and (max-width: 424px)";
 // $res_375 : "only screen and (min-width: 375px) and (max-width: 424px)";
 // $res_425 : "only screen and (min-width: 425px) and (max-width: 767px)";
 // $res_768 : "only screen and (min-width: 768px) and (max-width: 991px)";
@@ -10,27 +10,27 @@ $res_320: "only screen and (min-width: 320px) and (max-width: 424px)";
     @content;
   }
 }
-.buyer-wrapper {
-  .btn {
-    width: 10%;
-    margin: 0 auto;
-    .btn-add__buyer {
-      background-color: #4bac4d;
-      color: white;
-      border-radius: 4px;
-    }
-  }
-  @include responsive_320() {
+.buyer-action {
     .btn {
-      display: flex;
-      justify-content: center;
-      margin-top: 3px;
+      width: 10%;
+      margin: 0 auto;
+      .btn-add__buyer {
+        background-color: #4bac4d;
+        color: white;
+        border-radius: 4px;
+      }
+    }
+    @include responsive_320() {
+      .btn {
+        display: flex;
+        justify-content: center;
+        margin-top: 3px;
+      }
+    }
+    .icon-plus__edit {
+      color: white;
     }
   }
-  .icon-plus__edit {
-    color: white;
-  }
-}
 
 .buyer-table__pc {
   margin-top: 5px;
@@ -41,6 +41,9 @@ $res_320: "only screen and (min-width: 320px) and (max-width: 424px)";
 }
 
 @include responsive_320() {
+  .buyer-table__pc {
+    display: none;
+  }
   .buyer-table__mobile {
     visibility: visible;
     .total-buyer{
@@ -57,11 +60,10 @@ $res_320: "only screen and (min-width: 320px) and (max-width: 424px)";
       border-bottom: 1px solid #eee;
       padding-bottom: 10px;
       .buyer-info__avatar {
-        margin-left: -25px;
         margin-top: 5px;
       }
       .buyer-info__info {
-        margin-left: -65px;
+        margin-left: -5px;
         padding-left: 0;
         width: 165px;
         .name {
@@ -83,9 +85,11 @@ $res_320: "only screen and (min-width: 320px) and (max-width: 424px)";
           font-size: 13px;
         }
       }
+      .buyer-info__money{
+        width: 70px;
+       text-align: right;
+      }
     }
   }
-  .buyer-table__pc {
-    display: none;
-  }
+ 
 }

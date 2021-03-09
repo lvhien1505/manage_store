@@ -22,12 +22,69 @@ $res_320: "only screen and (min-width: 320px) and (max-width: 424px)";
   }
   @include responsive_320() {
     .btn {
-        display: flex;
-        justify-content: center;
-        margin-top: 3px;
+      display: flex;
+      justify-content: center;
+      margin-top: 3px;
     }
   }
   .icon-plus__edit {
     color: white;
+  }
+}
+.partner-table__mobile{
+  visibility: hidden;
+}
+
+@include responsive_320() {
+  .partner-table__pc {
+    display: none;
+  }
+  .partner-table__mobile {
+    visibility: visible;
+    .total-partner {
+      margin-top: 5px;
+      margin-left: 15px;
+      span {
+        font-size: 12px;
+      }
+    }
+    .partner-info {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 10px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+      .partner-info__avatar {
+        margin-left: 0px;
+        margin-top: 5px;
+      }
+      .partner-info__info {
+        margin-left: -5px;
+        padding-left: 0;
+        width: 165px;
+        .name {
+          color: rgb(27, 26, 26);
+          font-weight: 600;
+          font-size: 14px;
+          overflow: hidden;
+          width: 165px;
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
+        }
+        .code {
+          color: rgb(138, 127, 127);
+          font-size: 13px;
+        }
+        .phone {
+          color: rgb(126, 112, 112);
+          font-size: 13px;
+        }
+      }
+      .partner-info__money{
+        width: 70px;
+        text-align: right;
+      }
+    }
   }
 }

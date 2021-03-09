@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon server/app"
+    "start": "nodemon server/app",
+    "build": "cd client && npm run build"
   },
   "author": "lvhien1505",
   "license": "MIT",

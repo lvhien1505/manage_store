@@ -25,6 +25,23 @@ export const getBillWithId =async (id)=>{
     }
 }
 
+export const getBillWithStatus =async (body)=>{
+    if (process.env.NODE_ENV === "development") {  
+        return await axios.post(`${process.env.REACT_APP_BACKEND_URL}/bill-sell/history/status`,body,headers);
+    }else{
+       return await axios.post(`/bill-sell/history/status`,body,headers);
+    }
+}
+
+export const getBillWithLimit =async ()=>{
+    if (process.env.NODE_ENV === "development") {  
+        return await axios.post(`${process.env.REACT_APP_BACKEND_URL}/bill-sell/history/limit`,{},headers);
+    }else{
+       return await axios.post(`/bill-sell/history/limit`,{},headers);
+    }
+}
+
+
 export const createBillSell =async (body)=>{
     if (process.env.NODE_ENV === "development") {  
         return await axios.post(`${process.env.REACT_APP_BACKEND_URL}/bill-sell/create`,body,headers);

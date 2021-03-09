@@ -26,7 +26,7 @@ const Home = ({history}) => {
 
   useEffect(() => {
     __checkAuth()
-  }, [])
+  }, [name])
   
   return (
     <div className="home">

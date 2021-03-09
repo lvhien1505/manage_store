@@ -11,6 +11,7 @@ import ModalDeleteUnit from "../../../components/Modals/ModalConfirmDelete/Modal
 
 const Unit = () => {
     const [idUnit, setIdUnit] = useState({});
+    const [unit,setUnit]=useState({})
     const [hideModalAdd, setHideModalAdd] = useState(false);
     const [showModalUpdate, setShowModalUpdate] = useState(false);
     const [hideModalUpdate, setHideModalUpdate] = useState(false);
@@ -35,7 +36,8 @@ const Unit = () => {
     };
   
     const handlerShowModalUpdate = (id) => {
-      setIdUnit(id)
+      let newListUnit =listUnit.filter((unit)=>unit._id);
+      setUnit(newListUnit[0])
       setShowModalUpdate(true)
       return setHideModalUpdate(!hideModalUpdate);
     };
@@ -79,7 +81,7 @@ const Unit = () => {
     },[idUnit,hideModalAdd,hideModalUpdate,hideModalDelete])
   
     return (
-      <Dashboard nameSelect="Đơn vị">
+      <Dashboard nameSelect="Đơn vị" defaulCheckKey="2">
         <div className="unit-wrapper">
           <div className="btn">
             <Button
@@ -97,7 +99,7 @@ const Unit = () => {
         </div>
         <div className="unit-table">
             <Table columns={columns} dataSource={listUnit?listUnit:[]} size="small"/>
-            {showModalUpdate ? <ModalUpdateUnit idUnit={idUnit ? idUnit : null} hideModal={hideModalUpdate} handleHideModal={handlerHideModalUpdate}/> :null}
+            {showModalUpdate ? <ModalUpdateUnit unitEdit={unit} hideModal={hideModalUpdate} handleHideModal={handlerHideModalUpdate}/> :null}
             {showModalDelete ? <ModalDeleteUnit idUnit={idUnit ? idUnit : null} hideModal={hideModalDelete} handleHideModal={handlerHideModalDelete}/> : null}
         </div>
       </Dashboard>
