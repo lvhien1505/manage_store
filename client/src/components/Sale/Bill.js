@@ -14,7 +14,7 @@ const Bill = ({ listSelectProduct, hideBill, infoBuyer, nameSale }) => {
   const [totalAfterSaleOffMoney, setAfterTotalSaleOffMoney] = useState(0);
   const [totalMoneyBuyerPaid, setTotalMoneyBuyerPaid] = useState(0);
   const [totalExcessMoney, setTotalExcessMoney] = useState(0);
-  const [note,setNote]=useState("")
+  const [note, setNote] = useState("");
 
   const __getTime = () => {
     let date = new Date();
@@ -30,33 +30,29 @@ const Bill = ({ listSelectProduct, hideBill, infoBuyer, nameSale }) => {
     listSelectProduct.forEach((product) => {
       totalMoneyBill += product.totalMoney;
     });
-    setTotalExcessMoney(totalMoneyBuyerPaid-totalMoneyBill)
     setAfterTotalSaleOffMoney(totalMoneyBill);
     return setTotalMoney(totalMoneyBill);
   };
 
   const onChangeTotalSaleOff = (event) => {
     if (event.target.value) {
-      let totalMoneyAfterSaleOff =
-        totalAfterSaleOffMoney - parseInt(event.target.value);
+      let totalMoneyAfterSaleOff = totalMoney - parseInt(event.target.value);
       setTotalSaleOff(event.target.value);
-      return setTotalMoney(totalMoneyAfterSaleOff);
+      return setAfterTotalSaleOffMoney(totalMoneyAfterSaleOff);
     }
-    return __setTotalMoney();
   };
 
   const onChangeValueBuyerPaid = (event) => {
     if (event.target.value) {
-      let excessMoney =  parseInt(event.target.value) - totalMoney ;
+      let excessMoney = parseInt(event.target.value) - totalAfterSaleOffMoney;
       setTotalMoneyBuyerPaid(event.target.value);
       return setTotalExcessMoney(excessMoney);
     }
-    return __setTotalMoney();
   };
 
   const onFinish = async (type) => {
     try {
-      let buyerId = infoBuyer._id ? infoBuyer.id : "";
+      let buyerId = infoBuyer._id ? infoBuyer._id : "";
       let nameBuyer = infoBuyer.name ? infoBuyer.name : "";
       let phone = infoBuyer.phone ? infoBuyer.phone : "";
       let createdHour = hourCreateBill || "";
@@ -65,14 +61,9 @@ const Bill = ({ listSelectProduct, hideBill, infoBuyer, nameSale }) => {
       let userSell = nameSale;
       let listSell = listSelectProduct;
       let countNumSell = 0;
-      let totalMoneyInit = 0;
-      listSelectProduct.forEach((product) => {
-        countNumSell = product.countNum + countNumSell;
-        totalMoneyInit = totalMoney + product.totalMoney;
-      });
-      let totalMoneySell = totalMoneyInit || 0;
+      let totalMoneySell = totalMoney || 0;
       let totalSaleOffMoneySell = totalSaleOff || 0;
-      let totalBuyerPaidNeed = totalMoney || 0;
+      let totalBuyerPaidNeed = totalAfterSaleOffMoney || 0;
       let totalBuyerPaid = totalMoneyBuyerPaid || 0;
       let totalExcessPaid = totalExcessMoney || 0;
       let noteSell = note || "";
@@ -115,7 +106,7 @@ const Bill = ({ listSelectProduct, hideBill, infoBuyer, nameSale }) => {
   useEffect(() => {
     __getTime();
     __setTotalMoney();
-  }, [totalExcessMoney]);
+  }, []);
 
   return (
     <div className="bill">
@@ -183,8 +174,12 @@ const Bill = ({ listSelectProduct, hideBill, infoBuyer, nameSale }) => {
               ))
             : null}
         </div>
-        <div style={{marginTop:"20px"}}>
-          <Input.TextArea placeholder="Ghi chú" style={{border:"none",height:"100px"}} onChange={(e)=>setNote(e.target.value)}/>
+        <div style={{ marginTop: "20px" }}>
+          <Input.TextArea
+            placeholder="Ghi chú"
+            style={{ border: "none", height: "100px" }}
+            onChange={(e) => setNote(e.target.value)}
+          />
         </div>
         <div className="footer-fixed">
           <div className="math">

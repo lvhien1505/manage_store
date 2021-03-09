@@ -12,7 +12,7 @@ let headers={
   authorization:`Bearer ${token}`
 }
 
-const ModalAddMerchandise = ({ hideModal, handleHideModal,handleChange }) => {
+const ModalAddMerchandise = ({ hideModal, handleHideModal }) => {
   const [listCategory, setListCategory] = useState([]);
   const [listUnit, setListUnit] = useState([]);
   const [fileList, setFileList] = useState([]);
@@ -52,7 +52,6 @@ const ModalAddMerchandise = ({ hideModal, handleHideModal,handleChange }) => {
         let res = await createProduct(merchandise);
         if (res.status === 200) {
           notifyScreen("success", res.data.statusCode, res.data.message);
-          // handleChange();
           return handleHideModal();
         }
       } catch (error) {

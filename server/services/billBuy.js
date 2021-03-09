@@ -18,14 +18,14 @@ const getListBillBuy = async (req, res) => {
 
 const getListBillBuyWithLimit = async (req, res) => {
   try {
-    let listBill = await BillBuyModel.find().limit(15).sort({createdAt: 'desc'});
+    let listBill = await BillBuyModel.find()
+      .limit(15)
+      .sort({ createdAt: "desc" });
     res.status(200).json(listBill);
   } catch (error) {
     res.status(500).json(ERROR_SERVER);
   }
 };
-
-
 
 const getBillWithId = async (req, res) => {
   try {
@@ -47,9 +47,10 @@ const getListBillWithStatus = async (req, res) => {
 };
 
 const create = async (req, res) => {
+  let partner=""
   try {
     let partnerId = req.body.partnerId;
-    let partnerCode=req.body.partnerCode;
+    let partnerCode = req.body.partnerCode;
     let code = `00001`;
     let key = `00001`;
     let namePartner = req.body.namePartner;
@@ -88,16 +89,26 @@ const create = async (req, res) => {
       key,
       status,
     };
-    let partner =await PartnerModel.findById(partnerId)
+    if (partnerId) {
+      partner = await PartnerModel.findById(partnerId);
+    }
     let data = await BillBuyModel.create(bill);
     if (data) {
-      let totalBuy = partner.totalBuy;
-      let newTotalBuy = totalBuy + data.totalPaidNeedPartner;
-      if (totalDebtMath<0) {
-        let newTotalDebt = parseInt(partner.debt) + (-parseInt(totalDebtMath));
-        await PartnerModel.findByIdAndUpdate({_id:partnerId},{debt:newTotalDebt,totalBuy:newTotalBuy})
+      if (partner) {
+        let totalBuy = partner.totalBuy;
+        let newTotalBuy = totalBuy + data.totalPaidNeedPartner;
+        if (totalDebtMath < 0) {
+          let newTotalDebt = parseInt(partner.debt) + -parseInt(totalDebtMath);
+          await PartnerModel.findByIdAndUpdate(
+            { _id: partnerId },
+            { debt: newTotalDebt, totalBuy: newTotalBuy }
+          );
+        }
+        await PartnerModel.findByIdAndUpdate(
+          { _id: partnerId },
+          { totalBuy: newTotalBuy }
+        );
       }
-      await PartnerModel.findByIdAndUpdate({_id:partnerId},{totalBuy:newTotalBuy})
       return res.status(200).json(CREATE_BILL_SELL_SUCCESS);
     }
   } catch (error) {
@@ -140,5 +151,5 @@ module.exports = {
   getListBillBuy,
   getBillWithId,
   getListBillWithStatus,
-  getListBillBuyWithLimit
+  getListBillBuyWithLimit,
 };

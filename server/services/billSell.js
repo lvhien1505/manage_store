@@ -18,7 +18,9 @@ const getListBillSell = async (req, res) => {
 
 const getListBillSellWithLimit = async (req, res) => {
   try {
-    let listBill = await BillSellModel.find().limit(15).sort({createdAt: 'desc'});
+    let listBill = await BillSellModel.find()
+      .limit(15)
+      .sort({ createdAt: "desc" });
     res.status(200).json(listBill);
   } catch (error) {
     res.status(500).json(ERROR_SERVER);
@@ -45,6 +47,7 @@ const getBillWithId = async (req, res) => {
 };
 
 const create = async (req, res) => {
+  let buyer ="";
   try {
     let buyerId = req.body.buyerId;
     let buyerCode = req.body.buyerCode;
@@ -86,19 +89,30 @@ const create = async (req, res) => {
       key,
       status,
     };
-    let buyer = await BuyerModel.findById(buyerId);
+    if (buyerId) {
+      buyer = await BuyerModel.findById(buyerId);
+    }
     let data = await BillSellModel.create(bill);
     if (data) {
-      let totalSell = buyer.totalSell;
-      let newTotalSell = totalSell + data.totalBuyerPaidNeed;
-      if (totalExcessPaid<0) {
-        let newDebt = parseInt(buyer.debt) + (-totalExcessPaid)
-        await BuyerModel.findByIdAndUpdate({_id:buyerId},{debt:newDebt,totalSell:newTotalSell})
+      if (buyer) {
+        let totalSell = buyer.totalSell;
+        let newTotalSell = totalSell + data.totalBuyerPaidNeed;
+        if (totalExcessPaid < 0) {
+          let newDebt = parseInt(buyer.debt) + -totalExcessPaid;
+          await BuyerModel.findByIdAndUpdate(
+            { _id: buyerId },
+            { debt: newDebt, totalSell: newTotalSell }
+          );
+        }
+        await BuyerModel.findByIdAndUpdate(
+          { _id: buyerId },
+          { totalSell: newTotalSell }
+        );
       }
-      await BuyerModel.findByIdAndUpdate({_id:buyerId},{totalSell:newTotalSell})
       return res.status(200).json(CREATE_BILL_SELL_SUCCESS);
     }
   } catch (error) {
+    console.log(error);
     res.status(500).json(ERROR_SERVER);
   }
 };

@@ -8,7 +8,7 @@ import "./Home.scss";
 
 const Home = ({history}) => {
   const [hideMenu, setHideMenu] = useState(false);
-  const [name, setName] = useState(false);
+  const [name, setName] = useState("");
 
   const __checkAuth = async ()=>{
     try {
@@ -44,7 +44,6 @@ const Home = ({history}) => {
           <div className="list-select">
             {hideMenu ? (
               <Menu mode="inline" className="menu">
-                <Menu.Item key="1">Đổi mật khẩu</Menu.Item>
                 <Menu.Item key="2"><Link to="/login">Đăng xuất</Link></Menu.Item>
               </Menu>
             ) : null}
