@@ -206,7 +206,7 @@ const ContentBuy = ({ listPartner, listBuy,removeProduct,nameSale }) => {
                       </span>
                       <span>{product.moneyOut}</span>
                       <span style={{ marginTop: "-5px" }}>
-                        <InputNumber
+                        {/* <InputNumber
                           onChange={(value) =>
                             onChangeValueSaleOffProduct(value, product._id)
                           }
@@ -227,7 +227,7 @@ const ContentBuy = ({ listPartner, listBuy,removeProduct,nameSale }) => {
                                   boxShadow: "none",
                                 }
                           }
-                        />
+                        /> */}
                       </span>
                       <span
                         style={{
@@ -339,7 +339,7 @@ const ContentBuy = ({ listPartner, listBuy,removeProduct,nameSale }) => {
                   onClick={()=>onFinish("save",listProduct)}
                 >
                   <span style={{ fontSize: "18px", fontWeight: "600" }}>
-                    Lưu (F9)
+                    Lưu tạm
                   </span>
                 </Button>
               </Form.Item>
@@ -356,7 +356,7 @@ const ContentBuy = ({ listPartner, listBuy,removeProduct,nameSale }) => {
                   onClick={()=>onFinish("success",listProduct)}
                 >
                   <span style={{ fontSize: "18px", fontWeight: "600" }}>
-                    Hoàn Thành (F10)
+                    Hoàn Thành
                   </span>
                 </Button>
               </Form.Item>

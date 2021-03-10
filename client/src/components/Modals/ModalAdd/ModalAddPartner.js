@@ -43,7 +43,7 @@ const ModalAddPartner = ({ hideModal, handleHideModal }) => {
           name="code"
           rules={[{ required: true, message: "Vui lòng nhập mã nhà cung cấp!" }]}
         >
-          <Input placeholder="Nhập mã" required />
+          <Input placeholder="Nhập mã - VD : 0001" required />
         </Form.Item>
         <span>Tên</span>
         <Form.Item

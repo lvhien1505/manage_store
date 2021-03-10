@@ -20,13 +20,13 @@ const Navbar = ({ listProduct, valueSelectProduct }) => {
     <div className="navbar">
       <div className="input-select">
         <Select
-          placeholder="Tìm mặt hàng (F3)"
+          placeholder="Tìm mặt hàng"
           onChange={handleChange}
           showSearch
           showArrow={false}
           onSearch={handleSearch}
           style={{ padding: "5px", width: "35vw" }}
-          value={valueSelect ? valueSelect : "Tìm mặt hàng (F3)"}
+          value={valueSelect ? valueSelect : "Tìm mặt hàng"}
           bordered
         >
           {listProduct.length > 0
@@ -47,7 +47,7 @@ const Navbar = ({ listProduct, valueSelectProduct }) => {
                     <div>
                       <Image
                         src={
-                          process.env.NODE_ENV
+                          process.env.NODE_ENV === "development"
                             ? `${process.env.REACT_APP_BACKEND_URL}/${product.image}`
                             : `/${product.image}`
                         }
@@ -98,11 +98,11 @@ const Navbar = ({ listProduct, valueSelectProduct }) => {
         <div className="list-select">
           {hideMenu ? (
             <Menu mode="inline" className="menu">
-              <Menu.Item key="1">Xem báo cáo cuối ngày</Menu.Item>
               <Menu.Item key="2">
                 <Link to="/dashboard/transaction/bill-success">Lịch sử bán hàng</Link>
               </Menu.Item>
-              <Menu.Item key="3">Lập phiếu thu</Menu.Item>
+              {/* <Menu.Item key="1">Xem báo cáo cuối ngày</Menu.Item>
+              <Menu.Item key="3">Lập phiếu thu</Menu.Item> */}
               <Menu.Item key="4">
                 <Link to="/dashboard">Quản lý</Link>
               </Menu.Item>

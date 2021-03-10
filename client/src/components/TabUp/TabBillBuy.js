@@ -2,22 +2,42 @@ import React, { useState, useEffect } from "react";
 import { Button, Table, Space } from "antd";
 import { Link } from "react-router-dom";
 import Dashboard from "../DashBoard/Dashboard";
-import { getBillWithId } from "../../api/billBuy";
+import { getBillWithId, updateStatusBill } from "../../api/billBuy";
 import { notifyScreen } from "../../utils/notify";
 import "./styles/TabBillSell.scss";
 
-const TabBillBuy = ({ match }) => {
+const TabBillBuy = ({ match, history,location }) => {
   const [bill, setBill] = useState({});
   const __getBillWithId = async () => {
     try {
       let res = await getBillWithId(match.params.id);
       if (res.status === 200) {
-        return setBill(res.data);
+        let listBuy=[...res.data.listBuy]
+        console.log(listBuy)
+        // let newListBuy=listBuy.map((product,i)=>{
+        //     product.key=i+1;
+        //     return product;
+        // })
+        // return setBill(newListBuy);
+        return setBill(res.data)
       }
     } catch (error) {
       notifyScreen("error", "500", "Lỗi không xác định");
     }
   };
+
+  const handleSuccessBill = async (id) => {
+    try {
+      let res = await updateStatusBill(match.params.id, { status: true });
+      if (res.status === 200) {
+        notifyScreen("success", "200", "Cập nhật hóa đơn thành công");
+        return history.push("/dashboard/transaction/buy/history/bill-save");
+      }
+    } catch (error) {
+      notifyScreen("error", "500", "Cập nhật hóa đơn thất bại !");
+    }
+  };
+
   const columns = [
     {
       title: "Mã hàng",
@@ -60,7 +80,7 @@ const TabBillBuy = ({ match }) => {
         <div className="content-wrapper__top">
           <div className="info-bill">
             <div>
-              <span>Mã hóa đơn : {"HD" + bill.code}</span>
+              <span>Mã hóa đơn : {"HD" + location.state.codeBill}</span>
             </div>
             <div>
               <span>
@@ -75,9 +95,13 @@ const TabBillBuy = ({ match }) => {
             <div>
               <span>
                 Nhà cung cấp :{" "}
-                <Link to={`/dashboard/partner/${bill.partnerId}`}>
-                  {"NCC" + bill.partnerCode + "-" + bill.namePartner}
-                </Link>
+                {!bill.partnerId || !bill.partnerCode ? (
+                  "Không có"
+                ) : (
+                  <Link to={`/dashboard/partner/${bill.partnerId}`}>
+                    {"NCC" + bill.partnerCode + "-" + bill.namePartner}
+                  </Link>
+                )}
               </span>
             </div>
             <div>
@@ -97,11 +121,11 @@ const TabBillBuy = ({ match }) => {
           </div>
           <div className="btn-action">
             <Space direction="vertical">
-              <Button type="primary" size="large" style={{ width: "150px" }}>
+              <Button type="primary" size="large" style={{ width: "150px" }} onClick={()=>history.push("/notify")}>
                 Điều chỉnh
               </Button>
               {bill.status ? (
-                <Space  direction="vertical">
+                <Space direction="vertical">
                   <Button
                     type="primary"
                     size="large"
@@ -109,6 +133,7 @@ const TabBillBuy = ({ match }) => {
                       width: "150px",
                       backgroundColor: "rgba(149, 129, 129, 0.85)",
                     }}
+                    onClick={()=>history.push("/notify")}
                   >
                     In
                   </Button>
@@ -116,6 +141,7 @@ const TabBillBuy = ({ match }) => {
                     type="primary"
                     size="large"
                     style={{ width: "150px", backgroundColor: "#4bac4d" }}
+                    onClick={()=>history.push("/notify")}
                   >
                     Xuất File
                   </Button>
@@ -125,6 +151,7 @@ const TabBillBuy = ({ match }) => {
                   type="primary"
                   size="large"
                   style={{ width: "150px", backgroundColor: "#4bac4d" }}
+                  onClick={() => handleSuccessBill(match.params.id)}
                 >
                   Hoàn thành
                 </Button>

@@ -153,7 +153,7 @@ const Bill = ({ listSelectProduct, hideBill, infoBuyer, nameSale }) => {
                     </div>
                     <div className="right">
                       <div className="input-saleoff">
-                        <span>Giảm giá</span>
+                        {/* <span>Giảm giá</span>
                         <Input
                           style={{
                             width: "55%",
@@ -163,7 +163,7 @@ const Bill = ({ listSelectProduct, hideBill, infoBuyer, nameSale }) => {
                             marginTop: "-5px",
                           }}
                           placeholder="VND"
-                        />
+                        /> */}
                       </div>
                       <span style={{ color: "#77d672", fontWeight: "600" }}>
                         {product.totalMoney}

@@ -114,12 +114,11 @@ const ContentMobile = ({ listProduct, handleChangeListProduct }) => {
       </div>
       <div className="filter-product">
         <Button
-          onClick={() => setHideModalAdd(!hideModalAdd)}
           icon={<UnorderedListOutlined />}
           type="link"
           style={{ color: "rgb(128, 123, 123)" }}
         >
-          Lọc sản phẩm
+          Chọn hàng bán
         </Button>
       </div>
       <div

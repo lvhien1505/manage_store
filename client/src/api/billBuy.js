@@ -57,6 +57,14 @@ export const updateBillBuy =async (id,body)=>{
     }
 }
 
+export const updateStatusBill =async (id,body)=>{
+    if (process.env.NODE_ENV === "development") {  
+        return await axios.put(`${process.env.REACT_APP_BACKEND_URL}/bill-buy/status/${id}`,body,headers);
+    }else{
+       return await axios.put(`/bill-buy/status/${id}`,body,headers);
+    }
+}
+
 export const removeBillBuy =async (id)=>{
     if (process.env.NODE_ENV === "development") {  
         return await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/bill-buy/${id}`,headers);

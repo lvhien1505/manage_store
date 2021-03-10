@@ -2,20 +2,32 @@ import React, { useState, useEffect } from "react";
 import { Button, Table, Space } from "antd";
 import { Link } from "react-router-dom";
 import Dashboard from "../../components/DashBoard/Dashboard";
-import { getBillWithId } from "../../api/billSell";
+import { getBillWithId, updateStatusBill } from "../../api/billSell";
 import { notifyScreen } from "../../utils/notify";
 import "./styles/TabBillSell.scss";
 
-const TabBillSell = ({ match }) => {
+const TabBillSell = ({ match, history,location }) => {
   const [bill, setBill] = useState({});
   const __getBillWithId = async () => {
     try {
       let res = await getBillWithId(match.params.id);
       if (res.status === 200) {
-        return setBill(res.data);
+        return setBill(res.data)
       }
     } catch (error) {
       notifyScreen("error", "500", "Lỗi không xác định");
+    }
+  };
+
+  const handleSuccessBill = async (id) => {
+    try {
+      let res = await updateStatusBill(match.params.id, { status: true });
+      if (res.status === 200) {
+        notifyScreen("success", "200", "Cập nhật hóa đơn thành công");
+        return history.push("/dashboard/transaction/bill-save");
+      }
+    } catch (error) {
+      notifyScreen("error", "500", "Cập nhật hóa đơn thất bại !");
     }
   };
   const columns = [
@@ -60,7 +72,7 @@ const TabBillSell = ({ match }) => {
         <div className="content-wrapper__top">
           <div className="info-bill">
             <div>
-              <span>Mã hóa đơn : {"HD" + bill.code}</span>
+              <span>Mã hóa đơn : {"HD" + location.state.codeBill}</span>
             </div>
             <div>
               <span>
@@ -75,9 +87,13 @@ const TabBillSell = ({ match }) => {
             <div>
               <span>
                 Khách hàng :{" "}
-                <Link to={`/dashboard/buyer/${bill.buyerId}`}>
-                  {"KH" + bill.buyerCode + "-" + bill.nameBuyer}
-                </Link>
+                {!bill.buyerId || !bill.buyerCode ? (
+                  "Không có"
+                ) : (
+                  <Link to={`/dashboard/buyer/${bill.buyerId}`}>
+                    {"KH" + bill.buyerCode + "-" + bill.nameBuyer}
+                  </Link>
+                )}
               </span>
             </div>
             <div>
@@ -97,11 +113,11 @@ const TabBillSell = ({ match }) => {
           </div>
           <div className="btn-action">
             <Space direction="vertical">
-              <Button type="primary" size="large" style={{ width: "150px" }}>
+              <Button type="primary" size="large" style={{ width: "150px" }} onClick={()=>history.push("/notify")}>
                 Điều chỉnh
               </Button>
               {bill.status ? (
-                <Space  direction="vertical">
+                <Space direction="vertical">
                   <Button
                     type="primary"
                     size="large"
@@ -109,6 +125,7 @@ const TabBillSell = ({ match }) => {
                       width: "150px",
                       backgroundColor: "rgba(149, 129, 129, 0.85)",
                     }}
+                    onClick={()=>history.push("/notify")}
                   >
                     In
                   </Button>
@@ -116,6 +133,7 @@ const TabBillSell = ({ match }) => {
                     type="primary"
                     size="large"
                     style={{ width: "150px", backgroundColor: "#4bac4d" }}
+                    onClick={()=>history.push("/notify")}
                   >
                     Xuất File
                   </Button>
@@ -125,6 +143,7 @@ const TabBillSell = ({ match }) => {
                   type="primary"
                   size="large"
                   style={{ width: "150px", backgroundColor: "#4bac4d" }}
+                  onClick={() => handleSuccessBill(match.params.id)}
                 >
                   Hoàn thành
                 </Button>

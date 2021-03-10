@@ -49,7 +49,7 @@ const Signup = ({ history }) => {
         <Col>
           <Form name="signup" onFinish={handleSignup}>
             <Form.Item
-              name="nme"
+              name="name"
               rules={[{ required: true, message: "Vui lòng nhập tên!" }]}
             >
               <Input

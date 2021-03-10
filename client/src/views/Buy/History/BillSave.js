@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Space, Table } from "antd";
 import Dashboard from "../../../components/DashBoard/Dashboard";
 import ModalDeleteBillBuy from "../../../components/Modals/ModalConfirmDelete/ModalDeleteBillBuy";
-import {getBillWithStatus  } from "../../../api/billBuy";
+import { getBillWithStatus } from "../../../api/billBuy";
 import { notifyScreen } from "../../../utils/notify";
 
 const BillSave = ({ history }) => {
@@ -15,7 +15,13 @@ const BillSave = ({ history }) => {
     try {
       let res = await getBillWithStatus({ status: false });
       if (res.status === 200) {
-        return setListBill(res.data);
+        let listBill = [...res.data];
+        let newListBill = listBill.map((bill, i) => {
+          bill.code = `0000${i + 1}`;
+          bill.key = i + 1;
+          return bill;
+        });
+        return setListBill(newListBill);
       }
     } catch (error) {
       notifyScreen("error", "500", "Lỗi không xác định");
@@ -73,9 +79,9 @@ const BillSave = ({ history }) => {
       dataIndex: "totalSaleOffMoneyBuy",
     },
     {
-        title: "Tổng tiền cần trả",
-        key: "totalPaidNeedPartner",
-        dataIndex: "totalPaidNeedPartner",
+      title: "Tổng tiền cần trả",
+      key: "totalPaidNeedPartner",
+      dataIndex: "totalPaidNeedPartner",
     },
     {
       title: "Đã trả",
@@ -95,9 +101,15 @@ const BillSave = ({ history }) => {
         <Space>
           <Button
             type="primary"
-            onClick={() =>
-              history.push(`/dashboard/transaction/buy/bill-save/${id}`)
-            }
+            onClick={() => {
+              let bill = listBill.filter((bill) => bill._id === id);
+              return history.push({
+                pathname: `/dashboard/transaction/buy/bill-save/${id}`,
+                state: {
+                  codeBill: bill[0].code,
+                },
+              });
+            }}
           >
             Thông tin/Điều chỉnh
           </Button>
@@ -118,7 +130,7 @@ const BillSave = ({ history }) => {
   }, [hideModalDelete]);
   return (
     <Dashboard nameSelect="Đơn hàng" defaulCheckKey="3">
-       <div>
+      <div>
         <h1>Đơn hàng tạm</h1>
       </div>
       <Table dataSource={listBill} columns={columns} />

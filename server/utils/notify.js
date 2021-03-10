@@ -1,16 +1,16 @@
 const SIGNUP_SUCCESS={
     statusCode:200,
-    message:"Signup success !"
+    message:"Đăng kí thành công !"
 }
 
 const LOGIN_SUCCESS={
     statusCode:200,
-    message:"Login success !"
+    message:"Đăng nhập thành công !"
 }
 
 const USER_EXIST={
     statusCode:401,
-    message:"Email or username is already !"
+    message:"Email hoặc username đã tồn tại !"
 }
 
 const USER_NOTEXIST={
@@ -30,7 +30,7 @@ const ERROR_TOKEN={
 
 const ERROR_PASSWORD={
     statusCode:401,
-    message:"Password invalid !"
+    message:"Mật khẩu không đúng !"
 }
 
 const INVALID_TOKEN={
@@ -45,49 +45,49 @@ const NOT_PERMISSON = {
 
 const CREATE_PARTNER_SUCCESS = {
     statusCode: 200,
-    message: 'partner is created !'
+    message: 'Tạo NCC thành công !'
 }
 const UPDATE_PARTNER_SUCCESS = {
     statusCode: 200,
-    message: 'Update partner success !'
+    message: 'Cập nhật NCC thành công !'
 }
 
 const DELETE_PARTNER_SUCCESS = {
     statusCode: 200,
-    message: 'Partner is deleted !'
+    message: 'Xóa NCC thành công !'
 }
 
 const CREATE_UNIT_SUCCESS = {
     statusCode: 200,
-    message: 'Unit is created !'
+    message: 'Tạo đơn vị thành công !'
 }
 const UPDATE_UNIT_SUCCESS = {
     statusCode: 200,
-    message: 'Update Unit success !'
+    message: 'Cập nhật đơn vị thành công !'
 }
 
 const DELETE_UNIT_SUCCESS = {
     statusCode: 200,
-    message: 'Unit is deleted !'
+    message: 'Xóa đơn vị thành công !'
 }
 
 const CREATE_BUYER_SUCCESS = {
     statusCode: 200,
-    message: 'Buyer is created !'
+    message: 'Tạo khách hàng thành công !'
 }
 const UPDATE_BUYER_SUCCESS = {
     statusCode: 200,
-    message: 'Update buyer success !'
+    message: 'Cập nhật khách hàng thành công !'
 }
 
 const DELETE_BUYER_SUCCESS = {
     statusCode: 200,
-    message: 'buyer is deleted !'
+    message: 'Xóa khách hàng thành công !'
 }
 
 const CREATE_TRANSACTION_SUCCESS = {
     statusCode: 200,
-    message: 'Transaction is created !'
+    message: 'Transaction thành công !'
 }
 const UPDATE_TRANSACTION_SUCCESS = {
     statusCode: 200,
@@ -101,44 +101,44 @@ const DELETE_TRANSACTION_SUCCESS = {
 
 const CREATE_PRODUCT_SUCCESS = {
     statusCode: 200,
-    message: 'Product is created !'
+    message: 'Tạo sản phẩm thành công !'
 }
 const UPDATE_PRODUCT_SUCCESS = {
     statusCode: 200,
-    message: 'Update product success !'
+    message: 'Cập nhật sản phẩm thành công !'
 }
 
 const DELETE_PRODUCT_SUCCESS = {
     statusCode: 200,
-    message: 'Product is deleted !'
+    message: 'Sản phẩm dã được xóa thành công !'
 }
 
 const CREATE_CATEGORY_SUCCESS = {
     statusCode: 200,
-    message: 'Category is created !'
+    message: 'Tạo nhóm hàng thành công !'
 }
 const UPDATE_CATEGORY_SUCCESS = {
     statusCode: 200,
-    message: 'Update category success !'
+    message: 'Cập nhật nhóm hàng thành công !'
 }
 
 const DELETE_CATEGORY_SUCCESS = {
     statusCode: 200,
-    message: 'Category is deleted !'
+    message: 'Xóa nhóm hàng thành công !'
 }
 
 const CREATE_BILL_SELL_SUCCESS = {
     statusCode: 200,
-    message: 'Bill is created !'
+    message: 'Hóa đơn đã được tạo !'
 }
 const UPDATE_BILL_SELL_SUCCESS = {
     statusCode: 200,
-    message: 'Update bill success !'
+    message: 'Cập nhật hóa đơn thành công !'
 }
 
 const DELETE_BILL_SELL_SUCCESS = {
     statusCode: 200,
-    message: 'Bill is deleted !'
+    message: 'Xóa hóa đơn thành công !'
 }
 
 

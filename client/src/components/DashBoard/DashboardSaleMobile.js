@@ -23,12 +23,12 @@ const DashboardSaleMobile = ({ children, nameSelect }) => {
           <Menu.Item icon={<EyeOutlined />} key="2">
             <Link to="/dashboard/transaction/bill-success">Lịch sử đơn hàng</Link>
           </Menu.Item>
-          <Menu.Item icon={<InsertRowAboveOutlined />} key="3">
+          {/* <Menu.Item icon={<InsertRowAboveOutlined />} key="3">
             <Link to="/dashboard">Lập phiếu thu</Link>
           </Menu.Item>
           <Menu.Item icon={<StockOutlined />} key="4">
             <Link to="/dashboard">Xem báo cáo ngày</Link>
-          </Menu.Item>
+          </Menu.Item> */}
           <Menu.Item icon={<BuildFilled />} key="5">
             <Link to="/dashboard">Quản lý</Link>
           </Menu.Item>

@@ -2,11 +2,17 @@ import React, { useState, useEffect } from "react";
 import { Input, Form, Button, List, InputNumber } from "antd";
 import { UserOutlined, DeleteOutlined } from "@ant-design/icons";
 import SearchBuyer from "../Search/Search";
-import {createBillSell} from '../../api/billSell'
-import {notifyScreen} from '../../utils/notify'
+import { createBillSell } from "../../api/billSell";
+import { notifyScreen } from "../../utils/notify";
 import "./styles/ContentTab.scss";
 
-const ContentTab = ({ listBuyer, keyBill, listSell,removeProduct,nameSale }) => {
+const ContentTab = ({
+  listBuyer,
+  keyBill,
+  listSell,
+  removeProduct,
+  nameSale,
+}) => {
   const [totalSaleOffMoney, setTotalSaleOffMoney] = useState(0);
   const [totalPaidMoney, setTotalPaidMoney] = useState(0);
   const [totalExcessMoney, setExcessMoney] = useState(0);
@@ -18,116 +24,129 @@ const ContentTab = ({ listBuyer, keyBill, listSell,removeProduct,nameSale }) => 
   const [hourCreateBill, setHourCreateBill] = useState("");
   const [note, setNote] = useState("");
 
-  const __initTotalMoney=()=>{
-    let totalMoneyInit=0;
-        listProduct.forEach((product)=>{
-        totalMoneyInit += product.totalMoney;
-    })
-    setTotalPaidMoney(totalMoneyInit - totalSaleOffMoney)
-    setExcessMoney(totalMoneyBuyerPaid - (totalMoneyInit-totalSaleOffMoney));
+  const __initTotalMoney = () => {
+    let totalMoneyInit = 0;
+    listProduct.forEach((product) => {
+      totalMoneyInit += product.totalMoney;
+    });
+    setTotalPaidMoney(totalMoneyInit - totalSaleOffMoney);
+    setExcessMoney(totalMoneyBuyerPaid - (totalMoneyInit - totalSaleOffMoney));
     return setTotalMoney(totalMoneyInit);
-
-  }
+  };
 
   const onChangeValueNumProduct = (value, idProduct) => {
     let newListProduct = listProduct.map((product) => {
       if (product._id === idProduct) {
-        product.countNum=value;
-        product.totalMoney = product.countNum * parseInt(product.moneyOut);  
+        product.countNum = value;
+        product.totalMoney = product.countNum * parseInt(product.moneyOut);
       }
       return product;
     });
     return setListProduct(newListProduct);
   };
 
-  const onChangeValueSaleOffProduct = (value, idProduct) => {
-    let newListProduct = listProduct.map((product) => {
-      if (product._id === idProduct) {
-        product.totalMoney =  parseInt(product.totalMoney)-value;
-      }
-      return product;
-    });
-    return setListProduct(newListProduct);
-  };
+  // const onChangeValueSaleOffProduct = (value) => {
+  //   if (value) {
+  //     let newTotalSaleOffMoney = totalSaleOffMoney + value;
+  //     return setTotalSaleOffMoney(newTotalSaleOffMoney);
+  //   }
+  // };
 
-  const onChangeValueSaleOff=(e)=>{
-    let value=e.target.value;
+  const onChangeValueSaleOff = (e) => {
+    let value = e.target.value;
     if (!e.target.value || e.target.value === "0") {
-      value=0;
+      value = 0;
     }
-    let newPaidMoney=totalMoney - parseInt(value);
+    let newPaidMoney = totalMoney - parseInt(value);
     setTotalSaleOffMoney(value);
     return setTotalPaidMoney(newPaidMoney);
-  }
+  };
 
-  const onChangeValuePaidMoney=(e)=>{
-    let value=e.target.value;
+  const onChangeValuePaidMoney = (e) => {
+    let value = e.target.value;
     if (!e.target.value || e.target.value === "0") {
-      value=0;
+      value = 0;
     }
-    let newExcessMoney= parseInt(value) - totalPaidMoney;
-    setTotalMoneyBuyerPaid(value)
+    let newExcessMoney = parseInt(value) - totalPaidMoney;
+    setTotalMoneyBuyerPaid(value);
     return setExcessMoney(newExcessMoney);
-  }
+  };
 
-  const handleSelectBuyer =(info)=>{
-      return setBuyer(info);
-  }
+  const handleSelectBuyer = (info) => {
+    return setBuyer(info);
+  };
 
-  const __getTime =()=>{
-    let date =new Date()
-    let hour=date.getHours() + " : " + date.getMinutes();
-    let day=date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() 
-    setHourCreateBill(hour)
+  const __getTime = () => {
+    let date = new Date();
+    let hour = date.getHours() + " : " + date.getMinutes();
+    let day =
+      date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+    setHourCreateBill(hour);
     return setDayCreateBill(day);
-  }
+  };
 
-  const onFinish =async (type,listProduct)=>{
+  const onFinish = async (type, listProduct) => {
     try {
-      let buyerId=buyer._id ? buyer._id : ""
-      let buyerCode=buyer.code ? buyer.code : ""
-      let nameBuyer =buyer.name ? buyer.name : ""
-      let phone = buyer.phone ? buyer.phone: ""
-      let createdHour = hourCreateBill || ""
-      let createdDay = dayCreateBill || ""
+      let buyerId = buyer._id ? buyer._id : "";
+      let buyerCode = buyer.code ? buyer.code : "";
+      let nameBuyer = buyer.name ? buyer.name : "";
+      let phone = buyer.phone ? buyer.phone : "";
+      let createdHour = hourCreateBill || "";
+      let createdDay = dayCreateBill || "";
       let userCreate = nameSale;
       let userSell = nameSale;
-      let listSell =listProduct;
-      let countNumSell=0;
-      listProduct.forEach((product)=>{
-        countNumSell=product.countNum + countNumSell
-      })
-      let totalMoneySell=totalMoney || 0;
-      let totalSaleOffMoneySell=totalSaleOffMoney || 0;
-      let totalBuyerPaidNeed=totalPaidMoney || 0;
-      let totalBuyerPaid=totalMoneyBuyerPaid || 0;
-      let totalExcessPaid=totalExcessMoney ||0;
-      let noteSell =note || "";
-      let bill={buyerId,buyerCode,nameBuyer,phone,createdHour,createdDay,userCreate,userSell,listSell,countNumSell,totalMoneySell,totalSaleOffMoneySell,totalBuyerPaidNeed,totalBuyerPaid,totalExcessPaid,noteSell}
+      let listSell = listProduct;
+      let countNumSell = 0;
+      listProduct.forEach((product) => {
+        countNumSell = product.countNum + countNumSell;
+      });
+      let totalMoneySell = totalMoney || 0;
+      let totalSaleOffMoneySell = totalSaleOffMoney || 0;
+      let totalBuyerPaidNeed = totalPaidMoney || 0;
+      let totalBuyerPaid = totalMoneyBuyerPaid || 0;
+      let totalExcessPaid = totalExcessMoney || 0;
+      let noteSell = note || "";
+      let bill = {
+        buyerId,
+        buyerCode,
+        nameBuyer,
+        phone,
+        createdHour,
+        createdDay,
+        userCreate,
+        userSell,
+        listSell,
+        countNumSell,
+        totalMoneySell,
+        totalSaleOffMoneySell,
+        totalBuyerPaidNeed,
+        totalBuyerPaid,
+        totalExcessPaid,
+        noteSell,
+      };
       if (type === "save") {
-          bill.status=false;
-          let res = await createBillSell(bill);
-          if (res.status === 200) {
-            return notifyScreen("success",res.status,res.data.message)
-          }
-      }
-      if (type==="success") {
-        bill.status=true;
+        bill.status = false;
         let res = await createBillSell(bill);
-          if (res.status === 200) {
-            return notifyScreen("success",res.status,res.data.message)
-          }
+        if (res.status === 200) {
+          return notifyScreen("success", res.status, res.data.message);
+        }
+      }
+      if (type === "success") {
+        bill.status = true;
+        let res = await createBillSell(bill);
+        if (res.status === 200) {
+          return notifyScreen("success", res.status, res.data.message);
+        }
       }
     } catch (error) {
       notifyScreen("error", "500", "Lỗi không xác định");
     }
-    
-  }
+  };
   useEffect(() => {
     __getTime();
     setListProduct(listSell);
     __initTotalMoney();
-  }, [listProduct,totalMoney,listSell.length,totalSaleOffMoney,buyer]);
+  }, [listProduct, totalMoney, listSell.length, totalSaleOffMoney, buyer]);
 
   return (
     <div className="content-tab-wrapper">
@@ -164,8 +183,11 @@ const ContentTab = ({ listBuyer, keyBill, listSell,removeProduct,nameSale }) => 
                           justifyContent: "space-between",
                         }}
                       >
-                        <span>{i+1}</span>
-                        <span onClick={()=>removeProduct(product._id)} className="action-remove">
+                        <span>{i + 1}</span>
+                        <span
+                          onClick={() => removeProduct(product._id)}
+                          className="action-remove"
+                        >
                           <DeleteOutlined />
                         </span>
                       </div>
@@ -206,9 +228,9 @@ const ContentTab = ({ listBuyer, keyBill, listSell,removeProduct,nameSale }) => 
                       </span>
                       <span>{product.moneyOut}</span>
                       <span style={{ marginTop: "-5px" }}>
-                        <InputNumber
+                        {/* <InputNumber
                           onChange={(value) =>
-                            onChangeValueSaleOffProduct(value, product._id)
+                            onChangeValueSaleOffProduct(value)
                           }
                           defaultValue={0}
                           style={
@@ -227,7 +249,7 @@ const ContentTab = ({ listBuyer, keyBill, listSell,removeProduct,nameSale }) => 
                                   boxShadow: "none",
                                 }
                           }
-                        />
+                        /> */}
                       </span>
                       <span
                         style={{
@@ -258,10 +280,14 @@ const ContentTab = ({ listBuyer, keyBill, listSell,removeProduct,nameSale }) => 
           </div>
         </div>
         <div className="form">
-          <Form >
+          <Form>
             <div className="search-buyer-search">
               <Form.Item name="buyer">
-                <SearchBuyer listBuyer={listBuyer} valueSelectBuyer={(info)=>handleSelectBuyer(info)} typeSearch="buyer"/>
+                <SearchBuyer
+                  listBuyer={listBuyer}
+                  valueSelectBuyer={(info) => handleSelectBuyer(info)}
+                  typeSearch="buyer"
+                />
               </Form.Item>
             </div>
             <div className="name-bill">
@@ -321,7 +347,7 @@ const ContentTab = ({ listBuyer, keyBill, listSell,removeProduct,nameSale }) => 
                     height: "40px",
                     maxHeight: "80px",
                   }}
-                  onChange={(e)=>setNote(e.target.value)}
+                  onChange={(e) => setNote(e.target.value)}
                 />
               </div>
             </div>
@@ -336,10 +362,10 @@ const ContentTab = ({ listBuyer, keyBill, listSell,removeProduct,nameSale }) => 
                     height: "66px",
                     textAlign: "center",
                   }}
-                  onClick={()=>onFinish("save",listProduct)}
+                  onClick={() => onFinish("save", listProduct)}
                 >
                   <span style={{ fontSize: "18px", fontWeight: "600" }}>
-                    Lưu (F9)
+                    Lưu tạm
                   </span>
                 </Button>
               </Form.Item>
@@ -353,10 +379,10 @@ const ContentTab = ({ listBuyer, keyBill, listSell,removeProduct,nameSale }) => 
                     height: "66px",
                     textAlign: "center",
                   }}
-                  onClick={()=>onFinish("success",listProduct)}
+                  onClick={() => onFinish("success", listProduct)}
                 >
                   <span style={{ fontSize: "18px", fontWeight: "600" }}>
-                    Thanh toán (F10)
+                    Thanh toán
                   </span>
                 </Button>
               </Form.Item>

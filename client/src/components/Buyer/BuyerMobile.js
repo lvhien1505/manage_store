@@ -45,6 +45,7 @@ const BuyerMobile = ({ hideBuyerMobile,valueSelectBuyer }) => {
             onClick={() => setHideModalAdd(!hideModalAdd)}
             className="btn-add__buyer"
             icon={<PlusOutlined className="icon-plus__edit" />}
+            type="primary"
           >
             Thêm khách hàng
           </Button>

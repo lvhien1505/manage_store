@@ -177,11 +177,8 @@ const Overview = () => {
                   <Select.Option key="1" value="1">
                     Hôm nay
                   </Select.Option>
-                  <Select.Option key="2" value="2">
-                    Hôm qua
-                  </Select.Option>
                   <Select.Option key="3" value="3">
-                    7 ngày trước
+                    7 ngày qua
                   </Select.Option>
                   <Select.Option key="4" value="4">
                     Tháng này

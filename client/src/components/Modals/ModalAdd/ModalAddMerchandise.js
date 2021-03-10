@@ -83,7 +83,7 @@ const ModalAddMerchandise = ({ hideModal, handleHideModal }) => {
       <Form onFinish={handlerFormAdd}>
         <span>Mã hàng</span>
         <Form.Item name="code">
-          <Input placeholder="Nhập mã hàng" />
+          <Input placeholder="Nhập mã hàng - VD : 0001" />
         </Form.Item >
         <span>Tên hàng</span>
         <Form.Item name="name">

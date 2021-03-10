@@ -15,7 +15,13 @@ const BillSuccess = ({ history }) => {
     try {
       let res = await getBillWithStatus({ status: true });
       if (res.status === 200) {
-        return setListBill(res.data);
+        let listBill =[...res.data]
+        let newListBill=listBill.map((bill,i)=>{
+          bill.code = `0000${i+1}`;
+          bill.key=i+1;
+          return bill
+        })
+        return setListBill(newListBill);
       }
     } catch (error) {
       notifyScreen("error", "500", "Lỗi không xác định");
@@ -96,7 +102,15 @@ const BillSuccess = ({ history }) => {
           <Button
             type="primary"
             onClick={() =>
-              history.push(`/dashboard/transaction/bill-success/${id}`)
+             {
+              let bill=listBill.filter((bill)=>bill._id === id)
+              return history.push({
+                pathname:`/dashboard/transaction/bill-success/${id}`,
+                state:{
+                  codeBill :  bill[0].code
+                }
+              })
+             }
             }
           >
             Thông tin/Điều chỉnh

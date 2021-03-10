@@ -15,7 +15,13 @@ const BillSave = ({ history }) => {
     try {
       let res = await getBillWithStatus({ status: false });
       if (res.status === 200) {
-        return setListBill(res.data);
+        let listBill = [...res.data];
+        let newListBill = listBill.map((bill, i) => {
+          bill.code = `0000${i + 1}`;
+          bill.key = i + 1;
+          return bill;
+        });
+        return setListBill(newListBill);
       }
     } catch (error) {
       notifyScreen("error", "500", "Lỗi không xác định");
@@ -90,9 +96,15 @@ const BillSave = ({ history }) => {
         <Space>
           <Button
             type="primary"
-            onClick={() =>
-              history.push(`/dashboard/transaction/bill-save/${id}`)
-            }
+            onClick={() => {
+              let bill = listBill.filter((bill) => bill._id === id);
+              return history.push({
+                pathname: `/dashboard/transaction/bill-save/${id}`,
+                state: {
+                  codeBill: bill[0].code,
+                },
+              });
+            }}
           >
             Thông tin/Điều chỉnh
           </Button>

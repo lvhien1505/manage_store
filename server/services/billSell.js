@@ -18,7 +18,7 @@ const getListBillSell = async (req, res) => {
 
 const getListBillSellWithLimit = async (req, res) => {
   try {
-    let listBill = await BillSellModel.find()
+    let listBill = await BillSellModel.find({status:true})
       .limit(15)
       .sort({ createdAt: "desc" });
     res.status(200).json(listBill);
@@ -41,6 +41,20 @@ const getBillWithId = async (req, res) => {
   try {
     let bill = await BillSellModel.findById(req.params.id);
     res.status(200).json(bill);
+  } catch (error) {
+    res.status(500).json(ERROR_SERVER);
+  }
+};
+
+const updateStatus = async (req, res) => {
+  try {
+    let id = req.params.id;
+    if (id) {
+      let data = await BillSellModel.findByIdAndUpdate({ _id: id }, {status:true});
+      if (data) {
+        return res.status(200).json(UPDATE_BILL_SELL_SUCCESS);
+      }
+    }
   } catch (error) {
     res.status(500).json(ERROR_SERVER);
   }
@@ -153,4 +167,5 @@ module.exports = {
   getListBillSellWithLimit,
   getBillWithId,
   getListBillWithStatus,
+  updateStatus
 };

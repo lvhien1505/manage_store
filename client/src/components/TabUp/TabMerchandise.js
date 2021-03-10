@@ -4,6 +4,7 @@ import { ArrowLeftOutlined } from "@ant-design/icons";
 import Dashboard from "../DashBoard/Dashboard";
 import ModalUpdateProduct from "../../components/Modals/ModalUpdate/ModalUpdateProduct";
 import ModalDeleteProduct from "../../components/Modals/ModalConfirmDelete/ModalDeleteProduct";
+import NotifyScaleUp from '../../views/Notify/NotifyScaleUp'
 import { getProductWithId } from "../../api/product";
 import { notifyScreen } from "../../utils/notify";
 import { convertDay } from "../../utils/convert";
@@ -116,6 +117,7 @@ const TabMerchandise = ({ match, history }) => {
                     type="primary"
                     size="large"
                     danger
+                    onClick={()=>history.push("/notify")}
                   >
                     Ngừng kinh doanh
                   </Button>
@@ -131,7 +133,9 @@ const TabMerchandise = ({ match, history }) => {
                 </div>
               </div>
             </Tabs.TabPane>
-            <Tabs.TabPane tab="Thẻ kho" key="thekho"></Tabs.TabPane>
+            <Tabs.TabPane tab="Thẻ kho" key="thekho">
+              <NotifyScaleUp/>
+            </Tabs.TabPane>
           </Tabs>
           <div className="icon-goback" onClick={() => history.goBack()}>
             <ArrowLeftOutlined />
@@ -203,6 +207,7 @@ const TabMerchandise = ({ match, history }) => {
                   className="product-action__btn"
                   type="primary"
                   size="small"
+                  onClick={handlerShowModalUpdate}
                 >
                   Cập nhật
                 </Button>
@@ -211,12 +216,15 @@ const TabMerchandise = ({ match, history }) => {
                   type="primary"
                   size="small"
                   danger
+                  onClick={handlerShowModalDelete}
                 >
                   Xóa
                 </Button>
               </div>
             </Tabs.TabPane>
-            <Tabs.TabPane tab="Thẻ kho" key="thekho"></Tabs.TabPane>
+            <Tabs.TabPane tab="Thẻ kho" key="thekho">
+              <NotifyScaleUp/>
+            </Tabs.TabPane>
           </Tabs>
           <div className="icon-goback" onClick={() => history.goBack()}>
             <ArrowLeftOutlined />

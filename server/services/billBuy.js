@@ -46,6 +46,20 @@ const getListBillWithStatus = async (req, res) => {
   }
 };
 
+const updateStatus = async (req, res) => {
+  try {
+    let id = req.params.id;
+    if (id) {
+      let data = await BillBuyModel.findByIdAndUpdate({ _id: id }, {status:true});
+      if (data) {
+        return res.status(200).json(UPDATE_BILL_SELL_SUCCESS);
+      }
+    }
+  } catch (error) {
+    res.status(500).json(ERROR_SERVER);
+  }
+};
+
 const create = async (req, res) => {
   let partner=""
   try {
@@ -152,4 +166,5 @@ module.exports = {
   getBillWithId,
   getListBillWithStatus,
   getListBillBuyWithLimit,
+  updateStatus
 };

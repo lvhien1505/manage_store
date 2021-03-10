@@ -58,8 +58,8 @@ const SearchBuyer = ({
         <Select
           placeholder={
             typeSearch === "partner"
-              ? "Tìm đối tác (F4)"
-              : "Tìm khách hàng (F4)"
+              ? "Tìm đối tác"
+              : "Tìm khách hàng"
           }
           showSearch
           showArrow={false}

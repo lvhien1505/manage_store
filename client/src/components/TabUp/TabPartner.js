@@ -4,6 +4,7 @@ import { ArrowLeftOutlined } from "@ant-design/icons";
 import Dashboard from "../DashBoard/Dashboard";
 import { getPartnerWithId } from "../../api/partner";
 import { notifyScreen } from "../../utils/notify";
+import NotifyScaleUp from '../../views/Notify/NotifyScaleUp'
 import avatar from "../../logo/avatar/default.jpg";
 import { convertDay } from "../../utils/convert";
 import "./styles/TabPartner.scss";
@@ -109,6 +110,7 @@ const TabBuyer = ({ match, history }) => {
                     type="primary"
                     size="large"
                     danger
+                    onClick={()=>history.push("/notify")}
                   >
                     Ngừng hoạt động
                   </Button>
@@ -124,7 +126,9 @@ const TabBuyer = ({ match, history }) => {
                 </div>
               </div>
             </Tabs.TabPane>
-            <Tabs.TabPane tab="Nợ cần trả" key="nocantra"></Tabs.TabPane>
+            <Tabs.TabPane tab="Nợ cần trả" key="nocantra">
+            <NotifyScaleUp/>
+            </Tabs.TabPane>
           </Tabs>
           <div className="icon-goback" onClick={() => history.goBack()}>
             <ArrowLeftOutlined />
@@ -133,8 +137,12 @@ const TabBuyer = ({ match, history }) => {
         </div>
         <div className="partner-tabup__mobile">
           <Tabs defaultActiveKey="thongtin" type="card">
-            <Tabs.TabPane tab="Thông tin" key="thongtin"></Tabs.TabPane>
-            <Tabs.TabPane tab="Công nợ" key="nocanthu"></Tabs.TabPane>
+            <Tabs.TabPane tab="Thông tin" key="thongtin">
+              <NotifyScaleUp/>
+            </Tabs.TabPane>
+            <Tabs.TabPane tab="Công nợ" key="nocanthu">
+            <NotifyScaleUp/>
+            </Tabs.TabPane>
           </Tabs>
           <div className="icon-goback" onClick={() => history.goBack()}>
             <ArrowLeftOutlined />

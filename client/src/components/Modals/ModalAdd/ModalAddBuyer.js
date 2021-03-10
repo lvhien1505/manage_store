@@ -37,12 +37,12 @@ const ModalAddBuyer = ({hideModal,handleHideModal}) => {
                 name="code"
                 rules={[{ required: true, message: "Vui lòng nhập mã KH!" }]}
                 >
-                    <Input placeholder="Nhập mã KH"/>
+                    <Input placeholder="Nhập mã KH - VD : 0001"/>
                 </Form.Item>
                 <span>Tên</span>
                 <Form.Item 
                 name="name"
-                rules={[{ required: true, message: "Vui lòng nhập mã KH!" }]}
+                rules={[{ required: true, message: "Vui lòng nhập tên!" }]}
                 >
                     <Input placeholder="Nhập tên"/>
                 </Form.Item>

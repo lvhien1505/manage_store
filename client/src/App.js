@@ -21,6 +21,7 @@ import BillSuccess from './views/Manage/Transaction/Bill/BillSuccess';
 import Buy from './views/Buy/Buy';
 import BillBuySave from './views/Buy/History/BillSave';
 import BillBuySuccess from './views/Buy/History/BillSuccess';
+import NotifyScaleUp from './views/Notify/NotifyScaleUp'
 import Error from './views/Error/Error';
 
 
@@ -30,6 +31,7 @@ const App = () => {
       <Switch>
         <Route path="/home" exact component={Home} />
         <Route path="/" exact component={Login} />
+        <Route path="/notify" exact component={NotifyScaleUp} />
         <Route path="/dashboard" exact component={Overview} />
         <Route path="/dashboard/merchandise/category" exact component={Merchandise} />
         <Route path="/dashboard/merchandise/category-product" exact component={CategoryProduct} />
