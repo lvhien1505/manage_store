@@ -24,11 +24,10 @@
       border-bottom: 1px solid #eee;
       padding-bottom: 10px;
       .buyer-info__avatar {
-        margin-left: -25px;
         margin-top: 5px;
       }
       .buyer-info__info {
-        margin-left: -65px;
+        margin-left: -5px;
         padding-left: 0;
         width: 165px;
         .name {
@@ -48,6 +47,10 @@
         .phone {
           color: rgb(126, 112, 112);
           font-size: 13px;
+        }
+        .buyer-info__money{
+          width: 70px;
+          text-align: right;
         }
       }
     }

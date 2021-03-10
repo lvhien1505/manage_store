@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 import { login } from "../../api/login";
 import { notifyScreen } from "../../utils/notify";
 
-const Login = ({history}) => {
+const Login = () => {
 
   const handleLogin = async (values) => {
     try {
@@ -17,7 +17,9 @@ const Login = ({history}) => {
         Cookies.set('__t', res.data.token, { expires: 1 });
         localStorage.setItem("__t",res.data.token);
         notifyScreen("success", "200", "Đăng nhập thành công");
-        return window.location.href="/home"
+        return setTimeout(()=>{
+           window.location.replace("/home");
+        },1000)   
       }
     } catch (error) {
       if (error.response) {

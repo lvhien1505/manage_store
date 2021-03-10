@@ -10,6 +10,10 @@ import {checkAuth} from '../../api/login'
 import { notifyScreen } from "../../utils/notify";
 import "./styles/Sale.scss";
 import DashboardSaleMobile from "../../components/DashBoard/DashboardSaleMobile";
+import Cookies from "js-cookie";
+
+
+let token=Cookies.get("__t");
 
 const Sale = ({history}) => {
   const [listProduct, setListProduct] = useState([]);
@@ -24,7 +28,7 @@ const Sale = ({history}) => {
 
   const __checkAuth = async ()=>{
     try {
-      let res= await checkAuth();
+      let res= await checkAuth(token);
       if (res.status === 200) {
         return setName(res.data.name);
       }
@@ -165,7 +169,7 @@ const Sale = ({history}) => {
                   keyBill={tab.title}
                   listSell={tab.products}
                   removeProduct={(id)=>handleRemoveProduct(id)}
-                  nameSale={name ? name : "Admin-TranSang"}
+                  nameSale={name ? name : "Admin"}
                 />
               </Tabs.TabPane>
             ))}

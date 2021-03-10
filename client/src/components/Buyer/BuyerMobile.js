@@ -6,7 +6,7 @@ import ModalAddBuyer from "../Modals/ModalAdd/ModalAddBuyer";
 import { getBuyer } from "../../api/buyer";
 import { notifyScreen } from "../../utils/notify";
 import "./styles/BuyerMobile.scss";
-import logo from '../../logo/logo.png'
+import avatar from '../../logo/avatar/default.jpg'
 
 const BuyerMobile = ({ hideBuyerMobile,valueSelectBuyer }) => {
   const [listBuyer, setListBuyer] = useState([]);
@@ -67,7 +67,7 @@ const BuyerMobile = ({ hideBuyerMobile,valueSelectBuyer }) => {
                     return hideBuyerMobile();
                   }}>
                     <div className="buyer-info__avatar">
-                      <Avatar src={logo} size={{ xs: 48 }} />
+                      <Avatar src={avatar} size={{ xs: 48 }} />
                     </div>
                     <div className="buyer-info__info">
                       <div className="name">

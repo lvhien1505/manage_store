@@ -5,6 +5,10 @@ import { ShopFilled, DatabaseFilled, CaretDownFilled } from "@ant-design/icons";
 import {checkAuth} from '../../api/login';
 import {notifyScreen} from '../../utils/notify'
 import "./Home.scss";
+import Cookies from "js-cookie";
+
+
+let token=Cookies.get("__t");
 
 const Home = ({history}) => {
   const [hideMenu, setHideMenu] = useState(false);
@@ -12,14 +16,16 @@ const Home = ({history}) => {
 
   const __checkAuth = async ()=>{
     try {
-      let res= await checkAuth();
+      let res= await checkAuth(token);
       if (res.status === 200) {
         return setName(res.data.name);
       }
       
-    } catch (error) {
-      notifyScreen("error","401","Lỗi xác thực !")
-      history.push("/")
+    } catch (error) {   
+      if (error) {
+        notifyScreen("error","401","Lỗi xác thực !")
+        history.push("/")
+      }
     }
   }
   
@@ -44,7 +50,7 @@ const Home = ({history}) => {
           <div className="list-select">
             {hideMenu ? (
               <Menu mode="inline" className="menu">
-                <Menu.Item key="2"><Link to="/login">Đăng xuất</Link></Menu.Item>
+                <Menu.Item key="2"><Link to="/">Đăng xuất</Link></Menu.Item>
               </Menu>
             ) : null}
           </div>
