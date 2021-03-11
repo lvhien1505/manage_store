@@ -65,8 +65,6 @@ const create = async (req, res) => {
   try {
     let buyerId = req.body.buyerId;
     let buyerCode = req.body.buyerCode;
-    let code = `00001`;
-    let key = `00001`;
     let nameBuyer = req.body.nameBuyer;
     let phone = req.body.phone;
     let createdHour = req.body.createdHour;
@@ -99,8 +97,6 @@ const create = async (req, res) => {
       totalBuyerPaid,
       totalExcessPaid,
       noteSell,
-      code,
-      key,
       status,
     };
     if (buyerId) {
@@ -126,7 +122,6 @@ const create = async (req, res) => {
       return res.status(200).json(CREATE_BILL_SELL_SUCCESS);
     }
   } catch (error) {
-    console.log(error);
     res.status(500).json(ERROR_SERVER);
   }
 };

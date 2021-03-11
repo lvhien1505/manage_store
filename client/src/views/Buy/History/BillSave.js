@@ -17,7 +17,6 @@ const BillSave = ({ history }) => {
       if (res.status === 200) {
         let listBill = [...res.data];
         let newListBill = listBill.map((bill, i) => {
-          bill.code = `0000${i + 1}`;
           bill.key = i + 1;
           return bill;
         });
@@ -45,7 +44,7 @@ const BillSave = ({ history }) => {
       title: "Mã HD",
       dataIndex: "code",
       key: "code",
-      render: (text) => "HD" + text,
+      render: (text) => "HD0000" + text,
     },
     {
       title: "Trạng thái",

@@ -50,8 +50,9 @@ const updateStatus = async (req, res) => {
   try {
     let id = req.params.id;
     if (id) {
-      let data = await BillBuyModel.findByIdAndUpdate({ _id: id }, {status:true});
+      let data = await BillBuyModel.findByIdAndUpdate({ _id: id }, {status:true});  
       if (data) {
+        await PartnerModel.findByIdAndUpdate({_id:data.partnerId},{})
         return res.status(200).json(UPDATE_BILL_SELL_SUCCESS);
       }
     }

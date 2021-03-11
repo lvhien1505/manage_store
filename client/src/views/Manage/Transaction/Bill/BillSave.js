@@ -17,7 +17,6 @@ const BillSave = ({ history }) => {
       if (res.status === 200) {
         let listBill = [...res.data];
         let newListBill = listBill.map((bill, i) => {
-          bill.code = `0000${i + 1}`;
           bill.key = i + 1;
           return bill;
         });
@@ -45,7 +44,7 @@ const BillSave = ({ history }) => {
       title: "Mã HD",
       dataIndex: "code",
       key: "code",
-      render: (text) => "HD" + text,
+      render: (text) => "HD0000" + text,
     },
     {
       title: "Trạng thái",
@@ -98,12 +97,7 @@ const BillSave = ({ history }) => {
             type="primary"
             onClick={() => {
               let bill = listBill.filter((bill) => bill._id === id);
-              return history.push({
-                pathname: `/dashboard/transaction/bill-save/${id}`,
-                state: {
-                  codeBill: bill[0].code,
-                },
-              });
+              return history.push(`/dashboard/transaction/bill-save/${id}`);
             }}
           >
             Thông tin/Điều chỉnh

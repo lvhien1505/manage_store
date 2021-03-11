@@ -6,19 +6,12 @@ import { getBillWithId, updateStatusBill } from "../../api/billBuy";
 import { notifyScreen } from "../../utils/notify";
 import "./styles/TabBillSell.scss";
 
-const TabBillBuy = ({ match, history,location }) => {
+const TabBillBuy = ({ match, history }) => {
   const [bill, setBill] = useState({});
   const __getBillWithId = async () => {
     try {
       let res = await getBillWithId(match.params.id);
       if (res.status === 200) {
-        let listBuy=[...res.data.listBuy]
-        console.log(listBuy)
-        // let newListBuy=listBuy.map((product,i)=>{
-        //     product.key=i+1;
-        //     return product;
-        // })
-        // return setBill(newListBuy);
         return setBill(res.data)
       }
     } catch (error) {
@@ -80,7 +73,7 @@ const TabBillBuy = ({ match, history,location }) => {
         <div className="content-wrapper__top">
           <div className="info-bill">
             <div>
-              <span>Mã hóa đơn : {"HD" + location.state.codeBill}</span>
+              <span>Mã hóa đơn : {"HD0000" + bill.code}</span>
             </div>
             <div>
               <span>

@@ -38,7 +38,7 @@ export const convertStringNameTag = (name) => {
 export const convertDay=(data)=>{
   let date = new Date(data);
   let day = date.getDate()
-  let month = date.getMonth();
+  let month = date.getMonth() + 1;
   let year =date.getFullYear(); 
   return `${day}/${month}/${year}`
 }

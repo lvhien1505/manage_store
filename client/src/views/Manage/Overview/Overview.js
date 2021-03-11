@@ -101,7 +101,7 @@ const Overview = () => {
         break;
 
       case "3":
-        setSelect("hôm nay");
+        setSelect("7 ngày qua");
         break;
 
       case "4":

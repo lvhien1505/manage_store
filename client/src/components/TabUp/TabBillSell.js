@@ -6,7 +6,7 @@ import { getBillWithId, updateStatusBill } from "../../api/billSell";
 import { notifyScreen } from "../../utils/notify";
 import "./styles/TabBillSell.scss";
 
-const TabBillSell = ({ match, history,location }) => {
+const TabBillSell = ({ match, history }) => {
   const [bill, setBill] = useState({});
   const __getBillWithId = async () => {
     try {
@@ -72,7 +72,7 @@ const TabBillSell = ({ match, history,location }) => {
         <div className="content-wrapper__top">
           <div className="info-bill">
             <div>
-              <span>Mã hóa đơn : {"HD" + location.state.codeBill}</span>
+              <span>Mã hóa đơn : {"HD0000" + bill.code}</span>
             </div>
             <div>
               <span>

@@ -1,3 +1,10 @@
+$res_320 : "only screen and (min-width: 320px) and (max-width: 424px)";
+
+@mixin responsive_320() {
+  @media #{$res_320} {
+    @content;
+  }
+}
 .overview {
   width: 90%;
   margin: 0 auto;
@@ -68,5 +75,10 @@
           padding-top: 10px;
           padding-left: 15px;
       }
+  }
+  @include responsive_320(){
+    .overview-right{
+      display: none;
+    }
   }
 }

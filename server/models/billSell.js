@@ -1,11 +1,13 @@
 const mongoose=require("../config/dbConnect");
+const autoIncrement = require('mongoose-auto-increment');
+autoIncrement.initialize(mongoose)
 
 let billSellSchema = mongoose.Schema({
     code:{
-        type:String,
-        required:true
+        type:Number,
+        required:true,
+        default:0
     },
-    key:String,
     buyerId:String,
     buyerCode:String,
     nameBuyer:String,
@@ -43,6 +45,8 @@ let billSellSchema = mongoose.Schema({
 },{
     timestamps: true,
 });
+
+billSellSchema.plugin(autoIncrement.plugin,{ model: 'billSell', field: 'code' })
 
 let BillSellModel = mongoose.model("billSell", billSellSchema);
 module.exports = BillSellModel;

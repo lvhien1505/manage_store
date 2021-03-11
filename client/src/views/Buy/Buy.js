@@ -4,13 +4,34 @@ import ContentBuy from "../../components/Buy/ContentBuy";
 import ScreenListProduct from "../../components/Sale/ScreenListProduct";
 import { getListPartner } from "../../api/partner";
 import { getProduct } from "../../api/product";
+import {checkAuth} from '../../api/login'
 import { notifyScreen } from "../../utils/notify";
+import Cookies from "js-cookie";
+import './Buy.scss'
 
-const Buy = () => {
+
+let token=Cookies.get("__t");
+
+const Buy = ({history}) => {
   const [statusChange, setStatusChange] = useState(false);
   const [listPartner, setListPartner] = useState([]);
   const [listProduct, setListProduct] = useState([]);
   const [listProductSelect, setListProductSelect] = useState([]);
+  const [name, setName] = useState("");
+
+  const __checkAuth = async ()=>{
+    try {
+      let res= await checkAuth(token);
+      if (res.status === 200) {
+        return setName(res.data.name);
+      }
+      
+    } catch (error) {
+      notifyScreen("error","401","Lỗi xác thực !")
+      history.push("/login")
+    }
+  }
+
   const __getListPartner = async () => {
     try {
       let res = await getListPartner();
@@ -64,15 +85,16 @@ const Buy = () => {
     return setListProductSelect(newListProduct);
   };
   useEffect(() => {
+    __checkAuth()
     __getListPartner();
     __getListProduct();
-  }, [statusChange]);
+  }, [statusChange,name]);
   return (
     <Dashboard nameSelect="Nhập hàng" defaulCheckKey="3">
-      <div>
+      <div className="buy-wrapper">
         <ContentBuy
           listBuy={listProductSelect.length > 0 ? listProductSelect : []}
-          nameSale="Admin-TranSang"
+          nameSale={name?name:"Admin"}
           listPartner={listPartner}
           removeProduct={(id) => handleRemoveProduct(id)}
         />

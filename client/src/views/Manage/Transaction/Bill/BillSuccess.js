@@ -15,12 +15,11 @@ const BillSuccess = ({ history }) => {
     try {
       let res = await getBillWithStatus({ status: true });
       if (res.status === 200) {
-        let listBill =[...res.data]
-        let newListBill=listBill.map((bill,i)=>{
-          bill.code = `0000${i+1}`;
-          bill.key=i+1;
-          return bill
-        })
+        let listBill = [...res.data];
+        let newListBill = listBill.map((bill, i) => {
+          bill.key = i + 1;
+          return bill;
+        });
         return setListBill(newListBill);
       }
     } catch (error) {
@@ -45,7 +44,7 @@ const BillSuccess = ({ history }) => {
       title: "Mã HD",
       dataIndex: "code",
       key: "code",
-      render: (text) => "HD" + text,
+      render: (text) => "HD0000" + text,
     },
     {
       title: "Trạng thái",
@@ -82,7 +81,7 @@ const BillSuccess = ({ history }) => {
       title: "Tổng tiền cần trả",
       key: "totalBuyerPaidNeed",
       dataIndex: "totalBuyerPaidNeed",
-  },
+    },
     {
       title: "Khách trả",
       key: "totalBuyerPaid",
@@ -101,17 +100,9 @@ const BillSuccess = ({ history }) => {
         <Space>
           <Button
             type="primary"
-            onClick={() =>
-             {
-              let bill=listBill.filter((bill)=>bill._id === id)
-              return history.push({
-                pathname:`/dashboard/transaction/bill-success/${id}`,
-                state:{
-                  codeBill :  bill[0].code
-                }
-              })
-             }
-            }
+            onClick={() => {
+              return history.push(`/dashboard/transaction/bill-success/${id}`);
+            }}
           >
             Thông tin/Điều chỉnh
           </Button>
@@ -132,7 +123,7 @@ const BillSuccess = ({ history }) => {
   }, [hideModalDelete]);
   return (
     <Dashboard nameSelect="Hóa đơn" defaulCheckKey="3">
-       <div>
+      <div>
         <h1>Hóa đơn hoàn thành</h1>
       </div>
       <Table dataSource={listBill} columns={columns} />
