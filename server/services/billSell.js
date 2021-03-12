@@ -18,7 +18,7 @@ const getListBillSell = async (req, res) => {
 
 const getListBillSellWithLimit = async (req, res) => {
   try {
-    let listBill = await BillSellModel.find({status:true})
+    let listBill = await BillSellModel.find({ status: true })
       .limit(15)
       .sort({ createdAt: "desc" });
     res.status(200).json(listBill);
@@ -50,8 +50,28 @@ const updateStatus = async (req, res) => {
   try {
     let id = req.params.id;
     if (id) {
-      let data = await BillSellModel.findByIdAndUpdate({ _id: id }, {status:true});
+      let data = await BillSellModel.findByIdAndUpdate(
+        { _id: id },
+        { status: true }
+      );
       if (data) {
+        let idBuyer = data.buyerId;
+
+        if (idBuyer) {
+          let buyer = await BuyerModel.findById(idBuyer);
+          let newTotalSell = buyer.totalSell + data.totalBuyerPaidNeed;
+          let newDebt = buyer.debt;
+          if (data.totalExcessPaid < 0) {
+            newDebt = buyer.debt - parseInt(data.totalExcessPaid);
+          }
+          await BuyerModel.findByIdAndUpdate(
+            { _id: idBuyer },
+            {
+              totalSell: newTotalSell,
+              debt: newDebt,
+            }
+          );
+        }
         return res.status(200).json(UPDATE_BILL_SELL_SUCCESS);
       }
     }
@@ -61,7 +81,7 @@ const updateStatus = async (req, res) => {
 };
 
 const create = async (req, res) => {
-  let buyer ="";
+  let buyer = "";
   try {
     let buyerId = req.body.buyerId;
     let buyerCode = req.body.buyerCode;
@@ -104,20 +124,22 @@ const create = async (req, res) => {
     }
     let data = await BillSellModel.create(bill);
     if (data) {
-      if (buyer) {
-        let totalSell = buyer.totalSell;
-        let newTotalSell = totalSell + data.totalBuyerPaidNeed;
-        if (totalExcessPaid < 0) {
-          let newDebt = parseInt(buyer.debt) + -totalExcessPaid;
+      if (status) {
+        if (buyer) {
+          let totalSell = buyer.totalSell;
+          let newTotalSell = totalSell + data.totalBuyerPaidNeed;
+          if (totalExcessPaid < 0) {
+            let newDebt = parseInt(buyer.debt) + -totalExcessPaid;
+            await BuyerModel.findByIdAndUpdate(
+              { _id: buyerId },
+              { debt: newDebt, totalSell: newTotalSell }
+            );
+          }
           await BuyerModel.findByIdAndUpdate(
             { _id: buyerId },
-            { debt: newDebt, totalSell: newTotalSell }
+            { totalSell: newTotalSell }
           );
         }
-        await BuyerModel.findByIdAndUpdate(
-          { _id: buyerId },
-          { totalSell: newTotalSell }
-        );
       }
       return res.status(200).json(CREATE_BILL_SELL_SUCCESS);
     }
@@ -147,6 +169,23 @@ const remove = async (req, res) => {
     let id = req.params.id;
     let data = await BillSellModel.findByIdAndDelete({ _id: id });
     if (data) {
+      let idBuyer = data.buyerId;
+
+      if (idBuyer) {
+        let buyer = await BuyerModel.findById(idBuyer);
+        let newTotalSell = buyer.totalSell - data.totalBuyerPaidNeed;
+        let newDebt = buyer.debt;
+        if (data.totalExcessPaid < 0) {
+          newDebt = buyer.debt + parseInt(data.totalExcessPaid);
+        }
+        await BuyerModel.findByIdAndUpdate(
+          { _id: idBuyer },
+          {
+            totalSell: newTotalSell,
+            debt: newDebt,
+          }
+        );
+      }
       return res.status(200).json(DELETE_BILL_SELL_SUCCESS);
     }
   } catch (error) {
@@ -162,5 +201,5 @@ module.exports = {
   getListBillSellWithLimit,
   getBillWithId,
   getListBillWithStatus,
-  updateStatus
+  updateStatus,
 };

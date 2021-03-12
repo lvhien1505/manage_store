@@ -1,5 +1,6 @@
 const BillBuyModel = require("../models/billBuy");
 const PartnerModel = require("../models/partner");
+
 const {
   ERROR_SERVER,
   CREATE_BILL_SELL_SUCCESS,
@@ -50,9 +51,28 @@ const updateStatus = async (req, res) => {
   try {
     let id = req.params.id;
     if (id) {
-      let data = await BillBuyModel.findByIdAndUpdate({ _id: id }, {status:true});  
+      let data = await BillBuyModel.findByIdAndUpdate(
+        { _id: id },
+        { status: true }
+      );
       if (data) {
-        await PartnerModel.findByIdAndUpdate({_id:data.partnerId},{})
+        let idPartner = data.partnerId;
+
+        if (idPartner) {
+          let partner = await PartnerModel.findById(idPartner);
+          let newTotalBuy = partner.totalBuy + data.totalPaidNeedPartner;
+          let newDebt = partner.debt;
+          if (data.totalDebtMath < 0) {
+            newDebt = partner.debt - parseInt(data.totalDebtMath);
+          }
+          await PartnerModel.findByIdAndUpdate(
+            { _id: idPartner },
+            {
+              totalBuy: newTotalBuy,
+              debt: newDebt,
+            }
+          );
+        }
         return res.status(200).json(UPDATE_BILL_SELL_SUCCESS);
       }
     }
@@ -62,12 +82,10 @@ const updateStatus = async (req, res) => {
 };
 
 const create = async (req, res) => {
-  let partner=""
+  let partner = "";
   try {
     let partnerId = req.body.partnerId;
     let partnerCode = req.body.partnerCode;
-    let code = `00001`;
-    let key = `00001`;
     let namePartner = req.body.namePartner;
     let phone = req.body.phone;
     let createdHour = req.body.createdHour;
@@ -100,8 +118,6 @@ const create = async (req, res) => {
       totalMoneyPaid,
       totalDebtMath,
       noteBuy,
-      code,
-      key,
       status,
     };
     if (partnerId) {
@@ -109,20 +125,23 @@ const create = async (req, res) => {
     }
     let data = await BillBuyModel.create(bill);
     if (data) {
-      if (partner) {
-        let totalBuy = partner.totalBuy;
-        let newTotalBuy = totalBuy + data.totalPaidNeedPartner;
-        if (totalDebtMath < 0) {
-          let newTotalDebt = parseInt(partner.debt) + -parseInt(totalDebtMath);
+      if (status) {
+        if (partner) {
+          let totalBuy = partner.totalBuy;
+          let newTotalBuy = totalBuy + data.totalPaidNeedPartner;
+          if (totalDebtMath < 0) {
+            let newTotalDebt =
+              parseInt(partner.debt) + -parseInt(totalDebtMath);
+            await PartnerModel.findByIdAndUpdate(
+              { _id: partnerId },
+              { debt: newTotalDebt, totalBuy: newTotalBuy }
+            );
+          }
           await PartnerModel.findByIdAndUpdate(
             { _id: partnerId },
-            { debt: newTotalDebt, totalBuy: newTotalBuy }
+            { totalBuy: newTotalBuy }
           );
         }
-        await PartnerModel.findByIdAndUpdate(
-          { _id: partnerId },
-          { totalBuy: newTotalBuy }
-        );
       }
       return res.status(200).json(CREATE_BILL_SELL_SUCCESS);
     }
@@ -152,6 +171,23 @@ const remove = async (req, res) => {
     let id = req.params.id;
     let data = await BillBuyModel.findByIdAndDelete({ _id: id });
     if (data) {
+      let idPartner = data.partnerId;
+
+      if (idPartner) {
+        let partner = await PartnerModel.findById(idPartner);
+        let newTotalBuy = partner.totalBuy - data.totalPaidNeedPartner;
+        let newDebt = partner.debt;
+        if (data.totalDebtMath < 0) {
+          newDebt = partner.debt + parseInt(data.totalDebtMath);
+        }
+        await PartnerModel.findByIdAndUpdate(
+          { _id: idPartner },
+          {
+            totalBuy: newTotalBuy,
+            debt: newDebt,
+          }
+        );
+      }
       return res.status(200).json(DELETE_BILL_SELL_SUCCESS);
     }
   } catch (error) {
@@ -167,5 +203,5 @@ module.exports = {
   getBillWithId,
   getListBillWithStatus,
   getListBillBuyWithLimit,
-  updateStatus
+  updateStatus,
 };
