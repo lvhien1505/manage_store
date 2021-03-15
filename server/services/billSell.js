@@ -1,5 +1,6 @@
 const BillSellModel = require("../models/billSell");
 const BuyerModel = require("../models/buyer");
+const ProductModel = require("../models/product");
 const {
   ERROR_SERVER,
   CREATE_BILL_SELL_SUCCESS,
@@ -30,7 +31,7 @@ const getListBillSellWithLimit = async (req, res) => {
 const getListBillWithStatus = async (req, res) => {
   try {
     let status = req.body.status;
-    let listBill = await BillSellModel.find({ status: status });
+    let listBill = await BillSellModel.find({ status: status }).sort({ createdAt: "desc" });
     res.status(200).json(listBill);
   } catch (error) {
     res.status(500).json(ERROR_SERVER);
@@ -140,6 +141,13 @@ const create = async (req, res) => {
             { totalSell: newTotalSell }
           );
         }
+        if (listSell.length > 0) {
+          listSell.forEach(async (product)=>{
+            let dataFind= await ProductModel.findById(product._id)
+            let newInventory=dataFind.inventory-product.countNum;
+            await ProductModel.findByIdAndUpdate({_id:product._id},{inventory:newInventory})
+          })
+        }
       }
       return res.status(200).json(CREATE_BILL_SELL_SUCCESS);
     }
@@ -185,6 +193,13 @@ const remove = async (req, res) => {
             debt: newDebt,
           }
         );
+      }
+      if (data.listSell.length > 0) {
+        data.listSell.forEach(async (product)=>{
+          let dataFind= await ProductModel.findById(product._id)
+          let newInventory=dataFind.inventory + product.countNum;
+          await ProductModel.findByIdAndUpdate({_id:product._id},{inventory:newInventory})
+        })
       }
       return res.status(200).json(DELETE_BILL_SELL_SUCCESS);
     }

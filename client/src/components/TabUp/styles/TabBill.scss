@@ -1,0 +1,184 @@
+$res_320: "only screen and (min-width: 320px) and (max-width: 424px)";
+
+@mixin responsive_320() {
+  @media #{$res_320} {
+    @content;
+  }
+}
+
+.tab-pc {
+  .content-wrapper {
+    .content-wrapper__top {
+      width: 90%;
+      height: 100%;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      .info-bill {
+        width: 30%;
+        div {
+          margin-top: 15px;
+          border-bottom: 1px solid #eee;
+          padding-bottom: 5px;
+        }
+      }
+      .note-bill {
+        width: 20%;
+        height: 70px;
+        margin-top: 15px;
+        padding-left: 10px;
+        border-left: 1px solid #eee;
+      }
+      .btn-action {
+        width: 24%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        margin-top: 15px;
+      }
+    }
+    .content-wrapper__bottom {
+      width: 90%;
+      height: auto;
+      margin: 0 auto;
+      margin-top: 25px;
+      display: flex;
+      justify-content: flex-start;
+      .table-list__product {
+        width: 72%;
+      }
+      .math-bill {
+        width: 18%;
+        margin-left: 40px;
+        div {
+          margin-top: 10px;
+          display: flex;
+          justify-content: space-between;
+          padding-bottom: 5px;
+        }
+      }
+    }
+  }
+}
+.tab-mobile{
+    visibility: hidden;
+}
+
+@include responsive_320(){
+    .tab-pc{
+        display: none;
+    }
+    .tab-mobile{
+        visibility: visible;
+        background-color: #ebebeb;
+        .icon-goback{
+          position: absolute;
+          right: 15px;
+          top: 15px;
+        }
+        .info{
+            background-color: #fff;
+            width: 100%;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            .info-status,.info-buyer,.info-time{
+                width: 92%;
+                margin: 0 auto;
+                margin-top: 2px;
+                display: flex;
+                justify-content: space-between;
+                span:first-child{
+                    font-weight: 600;
+                }
+                span:last-child{
+                    font-size: 13px;
+                    color: #807575;
+                }
+            }
+            .info-time{
+                .info-time__math{
+                    width: 100px;
+                    display: flex;
+                    justify-content: space-between;
+                    span{
+                        font-size: 13px;
+                        color: #807575;
+                        font-weight: 400;
+                    }
+                }
+            }
+        }
+        .list-product{
+            background-color: #fff;
+            width: 100%;
+            margin-top: 20px;
+            padding-top: 5px;
+            padding-bottom: 10px;
+            .element-product{
+                width: 92%;
+                margin: 0 auto;
+                display: flex;
+                justify-content: space-between;
+                border-bottom: 1px solid #eee;
+                padding-top: 5px;
+                padding-bottom: 5px;
+                .left{
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-start;
+                    .product-name{
+                        font-size: 15px;
+                        font-weight: 600;
+                    }
+                    .product-code,.product-math{
+                        font-size: 13px;
+                        color: rgb(122, 112, 112);
+                    }
+                }
+                .right{
+                    span{
+                        font-weight: 600;
+                        color: #0090da;
+                    }
+                }
+            }
+        }
+        .math-money{
+            background-color: #fff;
+            width: 100%;
+            margin-top: 20px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            div{
+                width: 92%;
+                margin: 0 auto;
+                display: flex;
+                justify-content: space-between;
+                border-bottom: 1px solid #eee;
+                padding-top: 6px;
+                padding-bottom: 12px;
+                span:first-child{
+                    font-weight: 600;
+                }
+                span:last-child{
+                    font-size: 13px;
+                }
+            }
+        }
+        .user-create{
+            height: 150px;
+            width: 92%;
+            margin: 0 auto;
+            padding-top: 5px;
+            span:last-child{
+                font-weight: 600;
+            }
+        }
+        .btn-action{
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    }
+
+}

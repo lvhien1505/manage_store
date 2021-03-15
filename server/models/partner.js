@@ -21,6 +21,7 @@ let partnerSchema = mongoose.Schema(
       type:String,
       required:true
     },
+    address:String,
     phone:{
       type:String,
     },

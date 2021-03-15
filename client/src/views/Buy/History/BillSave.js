@@ -41,10 +41,10 @@ const BillSave = ({ history }) => {
 
   const columns = [
     {
-      title: "Mã HD",
+      title: "Mã PN",
       dataIndex: "code",
       key: "code",
-      render: (text) => "HD0000" + text,
+      render: (text) => "PN0000" + text,
     },
     {
       title: "Trạng thái",
@@ -128,7 +128,7 @@ const BillSave = ({ history }) => {
     __getListBill();
   }, [hideModalDelete]);
   return (
-    <Dashboard nameSelect="Đơn hàng" defaulCheckKey="3">
+    <Dashboard nameSelect="Đơn hàng nhập tạm" defaulCheckKey="3">
       <div>
         <h1>Đơn hàng tạm</h1>
       </div>

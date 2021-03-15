@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import {Link} from 'react-router-dom'
 import { Button, Space, Table } from "antd";
 import Dashboard from "../../../../components/DashBoard/Dashboard";
 import ModalDeleteBill from "../../../../components/Modals/ModalConfirmDelete/ModalDeleteBill";
 import { getBillWithStatus } from "../../../../api/billSell";
 import { notifyScreen } from "../../../../utils/notify";
+import "./styles/BillSuccess.scss"
 
 const BillSuccess = ({ history }) => {
   const [listBill, setListBill] = useState([]);
@@ -122,18 +124,90 @@ const BillSuccess = ({ history }) => {
     __getListBill();
   }, [hideModalDelete]);
   return (
-    <Dashboard nameSelect="Hóa đơn" defaulCheckKey="3">
-      <div>
-        <h1>Hóa đơn hoàn thành</h1>
+    <Dashboard nameSelect="Hóa đơn bán hoàn thành" defaulCheckKey="3">
+      <div className="bill-success__pc">
+        <div>
+          <h1>Hóa đơn hoàn thành</h1>
+        </div>
+        <Table dataSource={listBill} columns={columns} />
+        {showModalDelete ? (
+          <ModalDeleteBill
+            idBill={bill._id ? bill._id : null}
+            hideModal={hideModalDelete}
+            handleHideModal={handlerHideModalDelete}
+          />
+        ) : null}
       </div>
-      <Table dataSource={listBill} columns={columns} />
-      {showModalDelete ? (
-        <ModalDeleteBill
-          idBill={bill._id ? bill._id : null}
-          hideModal={hideModalDelete}
-          handleHideModal={handlerHideModalDelete}
-        />
-      ) : null}
+      <div className="bill-success__mobile">
+        <div className="total-bill">
+          <span>
+            Tổng số {listBill.length > 0 ? listBill.length : 0} hóa đơn{" "}
+          </span>
+        </div>
+        <div className="list-bill">
+          {listBill.length > 0
+            ? listBill.map((billSuccess, i) => (
+                <div className="element-bill" key={i}>
+                  <Link
+                    to={`/dashboard/transaction/bill-success/${billSuccess._id}`}
+                  >
+                    <div className="left">
+                      <span className="code">HD0000{billSuccess.code}</span>
+                      <span className="name">
+                        {billSuccess.nameBuyer
+                          ? billSuccess.nameBuyer
+                          : "Không có khách hàng"}
+                      </span>
+                      <div className="time">
+                        <span>{billSuccess.createdDay}</span>
+                        <span>{billSuccess.createdHour}</span>
+                      </div>
+                    </div>
+                  </Link>
+                  <div className="right">
+                    <Link
+                      to={`/dashboard/transaction/bill-success/${billSuccess._id}`}
+                    >
+                      <div className="math">
+                        <span className="money">
+                          {billSuccess.totalBuyerPaidNeed}
+                        </span>
+                        <span className="status">
+                          {billSuccess.status
+                            ? "Hoàn thành"
+                            : "Chưa hoàn thành"}
+                        </span>
+                      </div>
+                    </Link>
+                    <div style={{ marginTop: "6px" }}>
+                      <Button
+                        type="primary"
+                        danger
+                        style={{
+                          width: "35px",
+                          height: "35px",
+                          textAlign: "center",
+                        }}
+                        size="small"
+                        onClick={() => handlerShowModalDelete(billSuccess._id)}
+                      >
+                        Xóa
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            : null}
+
+          {showModalDelete ? (
+            <ModalDeleteBill
+              idBill={bill._id ? bill._id : null}
+              hideModal={hideModalDelete}
+              handleHideModal={handlerHideModalDelete}
+            />
+          ) : null}
+        </div>
+      </div>
     </Dashboard>
   );
 };

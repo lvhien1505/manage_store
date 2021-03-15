@@ -59,6 +59,18 @@ $res_320 : "only screen and (min-width: 320px) and (max-width: 424px)";
       }
       
     }
+    
+  }
+  @include responsive_320(){
+    .overview-left{
+      width: 100%;
+      margin-top: 45px;
+      .select{
+        position: absolute;
+        top: 55px;
+        left: 5%;
+      }
+    }
   }
   .overview-right{
       background-color: #eee;

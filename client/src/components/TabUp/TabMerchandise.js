@@ -143,6 +143,9 @@ const TabMerchandise = ({ match, history }) => {
           </div>
         </div>
         <div className="product-tabup__mobile">
+        <div className="icon-goback" onClick={() => history.goBack()}>
+            <ArrowLeftOutlined style={{color:"white"}}/>
+          </div>
           <Tabs defaultActiveKey="thongtin" type="card">
             <Tabs.TabPane tab="Thông tin" key="thongtin">
               <div className="product-header">
@@ -226,9 +229,6 @@ const TabMerchandise = ({ match, history }) => {
               <NotifyScaleUp/>
             </Tabs.TabPane>
           </Tabs>
-          <div className="icon-goback" onClick={() => history.goBack()}>
-            <ArrowLeftOutlined />
-          </div>
         </div>
         {showModalUpdate ? (
           <ModalUpdateProduct

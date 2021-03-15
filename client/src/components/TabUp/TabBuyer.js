@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Tabs, Button, Avatar } from "antd";
+import { Tabs, Button, Avatar,Image } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import Dashboard from "../DashBoard/Dashboard";
 import { getBuyerWithId } from "../../api/buyer";
@@ -7,7 +7,7 @@ import { notifyScreen } from "../../utils/notify";
 import { convertDay } from "../../utils/convert";
 import avatar from "../../logo/avatar/default.jpg";
 import ModalUpdateBuyer from "../Modals/ModalUpdate/ModalUpdateBuyer";
-import NotifyScaleUp from '../../views/Notify/NotifyScaleUp'
+import NotifyScaleUp from "../../views/Notify/NotifyScaleUp";
 import "./styles/TabBuyer.scss";
 import ModalDeleteBuyer from "../Modals/ModalConfirmDelete/ModalDeleteBuyer";
 
@@ -114,7 +114,7 @@ const TabBuyer = ({ match, history }) => {
                     type="primary"
                     size="large"
                     danger
-                    onClick={()=>history.push("/notify")}
+                    onClick={() => history.push("/notify")}
                   >
                     Ngừng hoạt động
                   </Button>
@@ -130,11 +130,8 @@ const TabBuyer = ({ match, history }) => {
                 </div>
               </div>
             </Tabs.TabPane>
-            <Tabs.TabPane
-              tab="Nợ cần thu từ khách"
-              key="nocanthu"
-            >
-             <NotifyScaleUp/>
+            <Tabs.TabPane tab="Nợ cần thu từ khách" key="nocanthu">
+              <NotifyScaleUp />
             </Tabs.TabPane>
           </Tabs>
           <div className="icon-goback" onClick={() => history.goBack()}>
@@ -143,17 +140,85 @@ const TabBuyer = ({ match, history }) => {
           </div>
         </div>
         <div className="buyer-tabup__mobile">
+          <div className="icon-goback" onClick={() => history.goBack()}>
+            <ArrowLeftOutlined style={{ color: "white" }} />
+          </div>
           <Tabs defaultActiveKey="thongtin" type="card">
             <Tabs.TabPane tab="Thông tin" key="thongtin">
-              <NotifyScaleUp/>
+              <div className="buyer-header">
+                <div className="buyer-image">
+                  <Image
+                    src={avatar}
+                    alt={buyer.name}
+                    style={{ objectFit: "cover" }}
+                    width="80px"
+                    height="80px"
+                  />
+                </div>
+              </div>
+              <div className="info-detail">
+                <div className="info-detail-info buyer-name">
+                  {buyer.name}
+                </div>
+                <div className="info-detail-info">
+                  <span> Mã KH</span>
+                  <span className="buyer-value">{"KH" + buyer.code}</span>
+                </div>
+                <div className="info-detail-info">
+                  <span>Giới tính</span>
+                  <span className="buyer-value">{buyer.sex === "male" ? "Nam" : "Nữ"}</span>
+                </div>
+                <div className="info-detail-info">
+                  <span>Điện thoại</span>
+                  <span className="buyer-value">{buyer.phone}</span>
+                </div>
+                <div className="info-detail-info">
+                  <span>Địa chỉ</span>
+                  <span className="buyer-value">{buyer.address}</span>
+                </div>
+                <div className="info-detail-info">
+                  <span>Tổng bán</span>
+                  <span className="buyer-value">{buyer.totalSell}</span>
+                </div>
+                <div className="info-detail-info">
+                  <span>Công nợ</span>
+                  <span className="buyer-value">{buyer.debt}</span>
+                </div>
+                <div className="info-detail-info">
+                  <span>Ngày tạo</span>
+                  <span className="buyer-value">
+                    {convertDay(buyer.createdAt)}
+                  </span>
+                </div>
+             </div>
+             <div className="note">
+                {buyer.note ? buyer.note : "..Ghi chú"} 
+                </div>
+             
+              <div className="buyer-action">
+                <Button
+                  className="buyer-action__btn"
+                  type="primary"
+                  size="small"
+                  onClick={handlerShowModalUpdate}
+                >
+                  Cập nhật
+                </Button>
+                <Button
+                  className="buyer-action__btn"
+                  type="primary"
+                  size="small"
+                  danger
+                  onClick={handlerShowModalDelete}
+                >
+                  Xóa
+                </Button>
+              </div>
             </Tabs.TabPane>
             <Tabs.TabPane tab="Công nợ" key="nocanthu">
-              <NotifyScaleUp/>
+              <NotifyScaleUp />
             </Tabs.TabPane>
           </Tabs>
-          <div className="icon-goback" onClick={() => history.goBack()}>
-            <ArrowLeftOutlined />
-          </div>
         </div>
         {showModalUpdate ? (
           <ModalUpdateBuyer
@@ -162,7 +227,7 @@ const TabBuyer = ({ match, history }) => {
             handleHideModal={handlerHideModalUpdate}
           />
         ) : null}
-         {showModalDelete ? (
+        {showModalDelete ? (
           <ModalDeleteBuyer
             idBuyer={buyer._id ? buyer._id : null}
             hideModal={hideModalDelete}

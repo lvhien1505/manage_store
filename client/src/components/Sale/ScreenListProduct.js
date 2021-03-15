@@ -81,6 +81,7 @@ const ScreenListProduct = ({ listProduct, valueSelect }) => {
                     width="50px"
                     height="65px"
                     style={{ objectFit: "cover" }}
+                    title={`--Tồn : ${product.inventory}`}
                   />
                 </div>
                 <div className="info-product">

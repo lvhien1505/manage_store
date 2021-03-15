@@ -1,6 +1,5 @@
 import React from 'react';
 import {ToolFilled} from '@ant-design/icons'
-import { Button } from 'antd';
 
 const NotifyScaleUp = () => {
     return (
