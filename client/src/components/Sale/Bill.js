@@ -61,6 +61,9 @@ const Bill = ({ listSelectProduct, hideBill, infoBuyer, nameSale }) => {
       let userSell = nameSale;
       let listSell = listSelectProduct;
       let countNumSell = 0;
+      listSell.forEach((product) => {
+        countNumSell = product.countNum + countNumSell;
+      });
       let totalMoneySell = totalMoney || 0;
       let totalSaleOffMoneySell = totalSaleOff || 0;
       let totalBuyerPaidNeed = totalAfterSaleOffMoney || 0;

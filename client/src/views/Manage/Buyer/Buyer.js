@@ -76,7 +76,7 @@ const Buyer = ({ history }) => {
 
   return (
     <Dashboard nameSelect="Khách hàng" defaulCheckKey="5">
-      <div className="buyer-action">
+      <div className="buyer-action__wrapper">
         <div className="btn">
           <Button
             onClick={() => setHideModalAdd(!hideModalAdd)}
