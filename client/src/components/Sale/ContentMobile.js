@@ -8,10 +8,14 @@ import {
 import Bill from './Bill';
 import BuyerMobile from '../Buyer/BuyerMobile'
 import ModalAddMerchandise from "../Modals/ModalAdd/ModalAddMerchandise";
+import {checkAuth} from '../../api/login'
+import { notifyScreen } from "../../utils/notify";
 import "./styles/ContentMobile.scss";
-import { Link } from "react-router-dom";
+import Cookies from "js-cookie";
 
-const ContentMobile = ({ listProduct, handleChangeListProduct }) => {
+let token=Cookies.get("__t");
+
+const ContentMobile = ({ listProduct, handleChangeListProduct,history }) => {
   const [hideModalAdd, setHideModalAdd] = useState(false);
   const [hideBill, setHideBill] = useState(false);
   const [hideContentListBuyer, setHideContentListBuyer] = useState(false);
@@ -19,6 +23,20 @@ const ContentMobile = ({ listProduct, handleChangeListProduct }) => {
   const [showBtnAction, setShowBtnAction] = useState(false);
   const [listSelectProduct, setListSelectProduct] = useState([]);
   const [buyer,setBuyer]=useState({});
+  const [name, setName] = useState("");
+
+  const __checkAuth = async ()=>{
+    try {
+      let res= await checkAuth(token);
+      if (res.status === 200) {
+        return setName(res.data.name);
+      }
+      
+    } catch (error) {
+      notifyScreen("error","401","Lỗi xác thực !")
+      history.push("/login")
+    }
+  }
 
   const handlerHideModal = () => {
     return setHideModalAdd(!hideModalAdd);
@@ -78,7 +96,9 @@ const ContentMobile = ({ listProduct, handleChangeListProduct }) => {
       return setBuyer(buyer);
   }
 
-  useEffect(() => {}, [listSelectProduct, statusChange,hideContentListBuyer]);
+  useEffect(() => {
+    __checkAuth();
+  }, [listSelectProduct, statusChange,hideContentListBuyer]);
 
   return (
     <div className="product-wrapper">
@@ -208,7 +228,7 @@ const ContentMobile = ({ listProduct, handleChangeListProduct }) => {
         ""
       )}
       {hideContentListBuyer ? <BuyerMobile hideBuyerMobile={handleHideContentListBuyer} valueSelectBuyer={handleGetBuyer}/> :""}
-      {hideBill ? <Bill hideBill={handleHideBill} listSelectProduct={listSelectProduct} infoBuyer={buyer? buyer : {}}/>: ""}
+      {hideBill ? <Bill hideBill={handleHideBill} listSelectProduct={listSelectProduct} infoBuyer={buyer? buyer : {}} nameSale={name ? name : ""}/>: ""}
     </div>
   );
 };

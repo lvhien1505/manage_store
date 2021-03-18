@@ -28,11 +28,11 @@ let billSellSchema = mongoose.Schema({
     },
     userCreate:{
         type:String,
-        default:"Admin - Tran Sang"
+        default:"Admin"
     },
     userSell:{
         type:String,
-        default:"Tran Sang"
+        default:"Admin"
     },
     listSell:{
         type:Array
