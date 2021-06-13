@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Button, Space, Table } from "antd";
+import { Button, Space, Table,Row,Col } from "antd";
+import {PlusOutlined } from "@ant-design/icons";
+import CurrencyFormat from 'react-currency-format';
 import Dashboard from "../../../../components/DashBoard/Dashboard";
 import ModalDeleteBill from "../../../../components/Modals/ModalConfirmDelete/ModalDeleteBill";
+import SectionBill from "../../../../components/SectionTab/SectionBill";
 import { getBillWithStatus } from "../../../../api/billSell";
 import { notifyScreen } from "../../../../utils/notify";
 import "./styles/BillSave.scss";
@@ -46,7 +49,7 @@ const BillSave = ({ history }) => {
       title: "Mã HD",
       dataIndex: "code",
       key: "code",
-      render: (text) => "HD0000" + text,
+      render: (text,obj) => <Link to={`/dashboard/transaction/bill-save/${obj._id}`}>{"HD0000" + text}</Link>
     },
     {
       title: "Trạng thái",
@@ -73,21 +76,19 @@ const BillSave = ({ history }) => {
       title: "Tổng tiền hàng",
       key: "totalMoneySell",
       dataIndex: "totalMoneySell",
+      render: (text)=><CurrencyFormat value={text} displayType={'text'} thousandSeparator={true}  renderText={value => <span>{value}</span>} />
     },
     {
       title: "Giảm giá",
       key: "totalSaleOffMoneySell",
       dataIndex: "totalSaleOffMoneySell",
+      render: (text)=><CurrencyFormat value={text} displayType={'text'} thousandSeparator={true}  renderText={value => <span>{value}</span>} />
     },
     {
       title: "Khách trả",
       key: "totalBuyerPaid",
       dataIndex: "totalBuyerPaid",
-    },
-    {
-      title: "Tiền thừa trả khách",
-      key: "totalExcessPaid",
-      dataIndex: "totalExcessPaid",
+      render: (text)=><CurrencyFormat value={text} displayType={'text'} thousandSeparator={true}  renderText={value => <span>{value}</span>} />
     },
     {
       title: "Cập nhật",
@@ -95,15 +96,6 @@ const BillSave = ({ history }) => {
       dataIndex: "_id",
       render: (id) => (
         <Space>
-          <Button
-            type="primary"
-            onClick={() => {
-              let bill = listBill.filter((bill) => bill._id === id);
-              return history.push(`/dashboard/transaction/bill-save/${id}`);
-            }}
-          >
-            Thông tin/Điều chỉnh
-          </Button>
           <Button
             type="primary"
             onClick={() => handlerShowModalDelete(id)}
@@ -122,10 +114,17 @@ const BillSave = ({ history }) => {
   return (
     <Dashboard nameSelect="Hóa đơn bán tạm" defaulCheckKey="3">
       <div className="bill-save__pc">
-        <div>
-          <h1>Hóa đơn tạm</h1>
-        </div>
-        <Table dataSource={listBill} columns={columns} />
+      <h2>Hóa đơn tạm
+      </h2>
+        <Row>
+          <Col span={5}><SectionBill listBill={listBill.length > 0 ? listBill : [] } status={false}/></Col>
+          <Col span={19}>
+          <div className="top-table-list-bill">
+              <Button type="primary" icon={<PlusOutlined />} onClick={()=>history.push("/sale")}>Thêm mới</Button>
+            </div>
+           <div className="table-list-bill"> <Table dataSource={listBill} columns={columns} /></div>
+          </Col>
+        </Row>
         {showModalDelete ? (
           <ModalDeleteBill
             idBill={bill._id ? bill._id : null}
@@ -161,7 +160,9 @@ const BillSave = ({ history }) => {
                   <div className="right">
                     <Link to={`/dashboard/transaction/bill-save/${billSave._id}`}>
                       <div className="math">
-                        <span className="money">{billSave.totalBuyerPaidNeed}</span>
+                        <span className="money">
+                        <CurrencyFormat value={billSave.totalBuyerPaidNeed} displayType={'text'} thousandSeparator={true}  renderText={value => <span>{value}</span>} />
+                        </span>
                         <span className="status">
                           {billSave.status ? "Hoàn thành" : "Chưa hoàn thành"}
                         </span>

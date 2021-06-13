@@ -21,6 +21,7 @@ import BillSuccess from './views/Manage/Transaction/Bill/BillSuccess';
 import Buy from './views/Buy/Buy';
 import BillBuySave from './views/Buy/History/BillSave';
 import BillBuySuccess from './views/Buy/History/BillSuccess';
+import CashFlow from './views/Manage/CashFlow/CashFlow';
 import NotifyScaleUp from './views/Notify/NotifyScaleUp'
 import Error from './views/Error/Error';
 
@@ -51,6 +52,7 @@ const App = () => {
         <Route path="/dashboard/partner/:id" exact component={TabPartner} />
         <Route path="/dashboard/merchandise/:id" exact component={TabMerchandise} />
         <Route path="/dashboard/partner" exact component={Partner} />
+        <Route path="/dashboard/cashflow" exact component={CashFlow} />
         <Route path="/sale" exact component={Sale} />
         <Route path="/signup" exact component={Signup} />
 

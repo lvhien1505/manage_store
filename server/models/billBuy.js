@@ -10,6 +10,9 @@ let billBuySchema = mongoose.Schema({
         default:1,
         unique:true
     },
+    typeBill:{
+        type:String
+    },
     partnerId:String,
     partnerCode:String,
     namePartner:String,
@@ -44,6 +47,13 @@ let billBuySchema = mongoose.Schema({
     totalMoneyPaid:Number,
     totalDebtMath:Number,
     noteBuy:String,
+    debtRedundancy:{
+        type:Number,
+        default:0
+    },
+    historyChangeDebt:[{
+        type:String
+    }]
 },{
     timestamps: true,
 });

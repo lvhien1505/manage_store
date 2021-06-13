@@ -1,18 +1,22 @@
 import React from "react";
 import { Modal, Form, Input, Button } from "antd";
-import {createCategory} from '../../../api/category';
-import {notifyScreen} from '../../../utils/notify'
+import { StopOutlined, PlusOutlined } from "@ant-design/icons";
+import { createCategory } from "../../../api/category";
+import { notifyScreen } from "../../../utils/notify";
 
 const ModalAddCategoryProduct = ({ hideModal, handleHideModal }) => {
   const handlerFormAdd = async (values) => {
     try {
-      let name = values.name || "";
-      let categoryProduct = { name };
-      let res = await createCategory(categoryProduct);
-      if (res.status === 200) {
-        notifyScreen("success", res.data.statusCode, res.data.message);
-        return handleHideModal();
+      let name = values.name;
+      if (name) {
+        let categoryProduct = { name };
+        let res = await createCategory(categoryProduct);
+        if (res.status === 200) {
+          notifyScreen("success", res.data.statusCode, res.data.message);
+          return handleHideModal();
+        }
       }
+     
     } catch (error) {
       if (error.response) {
         if (error.response.data) {
@@ -34,20 +38,39 @@ const ModalAddCategoryProduct = ({ hideModal, handleHideModal }) => {
       title="Thêm nhóm hàng"
       footer={null}
     >
-      <Form onFinish={handlerFormAdd}>
-        <span>Tên nhóm hàng</span>
-        <Form.Item name="name">
-          <Input placeholder="Nhập tên nhóm hàng" />
-        </Form.Item>
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <Form.Item style={{ marginRight: "10px" }}>
-            <Button type="primary" danger onClick={handleHideModal}>
-              Thoát
+      <Form onFinish={handlerFormAdd} className="form-add-category">
+        <div className="wrapper-input-form">
+          <div>
+            <span style={{ width: "120px" }}>Tên nhóm hàng</span>
+            <Form.Item
+              name="name"
+              rules={[
+                { required: true, message: "Vui lòng nhập tên nhóm hàng !" },
+              ]}
+            >
+              <Input placeholder="Nhập tên nhóm hàng" bordered={false} />
+            </Form.Item>
+          </div>
+        </div>
+        <div className="btn-action-modal-add">
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              icon={<PlusOutlined />}
+              className="btn-submit-form-add"
+            >
+              Thêm
             </Button>
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit">
-              Thêm
+            <Button
+              type="primary"
+              onClick={handleHideModal}
+              icon={<StopOutlined />}
+              className="btn-close-form-add"
+            >
+              Thoát
             </Button>
           </Form.Item>
         </div>

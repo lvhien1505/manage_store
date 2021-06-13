@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { List, Card, Image, Space } from "antd";
 import { CaretUpOutlined, CaretDownOutlined } from "@ant-design/icons";
+import CurrencyFormat from "react-currency-format";
 import "./styles/ScreenListProduct.scss";
 
 const ScreenListProduct = ({ listProduct, valueSelect }) => {
@@ -73,7 +74,7 @@ const ScreenListProduct = ({ listProduct, valueSelect }) => {
                 <div className="image-product">
                   <Image
                     src={
-                      process.env.NODE_ENV === "development"
+                      process.env.REACT_APP_ENV === "development"
                         ? `${process.env.REACT_APP_BACKEND_URL}/${product.image}`
                         : `/${product.image}`
                     }
@@ -87,7 +88,12 @@ const ScreenListProduct = ({ listProduct, valueSelect }) => {
                 <div className="info-product">
                   <div className="info-product__name">{product.name}</div>
                   <div className="info-product__price">
-                    <span>{product.moneyOut}</span>
+                    <CurrencyFormat
+                      value={product.moneyOut}
+                      displayType={"text"}
+                      thousandSeparator={true}
+                      renderText={(value) => <span>{value}</span>}
+                    />
                   </div>
                 </div>
               </div>

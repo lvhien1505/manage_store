@@ -1,0 +1,63 @@
+.sectiontab-list-merchandise{
+    .card-info,.card-action-category,.card-action-inventory,.card-action-sort-inventory,.card-action-total-money-buy,.card-action-total-money-sell{
+        min-height: 95px;
+        height: auto;
+        width: 240px;
+        background-color: #fff;
+        border-radius: 5px;
+        padding: 10px 15px 20px 15px;
+        margin-top: 20px;
+        box-shadow: 0 5px 15px rgba(0,0,0,.1);
+    }
+    .card-info{
+        margin-top: 51px;
+     div{
+         display: flex;
+         justify-content: space-between;
+         margin-bottom: 5px;
+         span:last-child{
+             font-weight: 600;
+         }
+     }
+    }
+
+
+    .card-action-inventory div,.card-action-sort-inventory div,.card-action-total-money-buy div,.card-action-total-money-sell div{
+        display: flex;
+        flex-direction: column;
+        label{
+            margin-bottom: 3px;
+            margin-left: 0;
+        }
+    }
+    .card-action-category div{
+        position: relative;
+        border-bottom: 1px solid  #d1d0d0;
+        input{
+            padding-left: 0;
+            text-align: start;
+        }
+        input:hover{
+            cursor: pointer;
+        }
+        .icon-symbol{
+            position: absolute;
+            top: 7px;
+            right: 5px;
+        }
+
+    }
+}
+
+.popover-category{
+    min-width: 300px;
+    min-height: 100px;
+    padding:0 20px 0 20px;
+    display: flex;
+    justify-content: space-between;
+    span:hover{
+        color: rgb(0, 144, 218);
+        cursor: pointer;
+    }
+}
+

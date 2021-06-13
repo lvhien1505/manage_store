@@ -6,7 +6,7 @@ import {createBillBuy} from '../../api/billBuy'
 import {notifyScreen} from '../../utils/notify'
 import "./styles/ContentBuy.scss";
 
-const ContentBuy = ({ listPartner, listBuy,removeProduct,nameSale }) => {
+const ContentBuy = ({ listPartner, listBuy,removeProduct,nameSale,countNumProduct }) => {
   const [totalSaleOffMoney, setTotalSaleOffMoney] = useState(0);
   const [totalPaidMoney, setTotalPaidMoney] = useState(0);
   const [totalDebt, setTotalDebt] = useState(0);
@@ -127,10 +127,10 @@ const ContentBuy = ({ listPartner, listBuy,removeProduct,nameSale }) => {
     __getTime();
     setListProduct(listBuy);
     __initTotalMoney();
-  }, [listProduct,totalMoney,listBuy.length,totalSaleOffMoney,partner]);
+  }, [listProduct,totalMoney,listBuy.length,totalSaleOffMoney,partner,countNumProduct]);
 
   return (
-    <div className="content-tab-wrapper">
+    <div className="content-tab-wrapper-buy">
       <div className="list-product">
         <div className="list-product-list">
           {listProduct.length > 0 ? (

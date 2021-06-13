@@ -9,7 +9,7 @@ const ModalDeleteBuyer = ({ idBuyer,hideModal, handleHideModal }) => {
       let res = await removeBuyer(id);
       if (res.status === 200) {
         notifyScreen("success", res.data.statusCode, res.data.message);
-       return handleHideModal();
+       return window.location.href="/dashboard/buyer";
       }
     } catch (error) {
       if (error.response) {

@@ -46,7 +46,10 @@ let partnerSchema = mongoose.Schema(
     },
     note:{
       type:String,
-    }
+    },
+    listBill:[{
+      type:String
+  }]
   },
   {
     timestamps: true,

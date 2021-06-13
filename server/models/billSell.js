@@ -10,6 +10,9 @@ let billSellSchema = mongoose.Schema({
         default:1,
         unique:true
     },
+    typeBill:{
+        type:String
+    },
     buyerId:String,
     buyerCode:String,
     nameBuyer:String,
@@ -44,6 +47,14 @@ let billSellSchema = mongoose.Schema({
     totalBuyerPaid:Number,
     totalExcessPaid:Number,
     noteSell:String,
+    debtRedundancy:{
+        type:Number,
+        default:0
+    },
+    historyPaid:[{
+        type:String,
+        ref:"paidDebt"
+    }]
 },{
     timestamps: true,
 });

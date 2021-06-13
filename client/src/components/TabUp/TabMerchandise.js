@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Tabs, Button, Image } from "antd";
-import { ArrowLeftOutlined } from "@ant-design/icons";
+import {
+  ArrowLeftOutlined,
+  StopOutlined,
+  ToolOutlined,
+} from "@ant-design/icons";
 import Dashboard from "../DashBoard/Dashboard";
 import ModalUpdateProduct from "../../components/Modals/ModalUpdate/ModalUpdateProduct";
 import ModalDeleteProduct from "../../components/Modals/ModalConfirmDelete/ModalDeleteProduct";
-import NotifyScaleUp from '../../views/Notify/NotifyScaleUp'
+import CurrencyFormat from "react-currency-format";
+import NotifyScaleUp from "../../views/Notify/NotifyScaleUp";
 import { getProductWithId } from "../../api/product";
 import { notifyScreen } from "../../utils/notify";
 import { convertDay } from "../../utils/convert";
@@ -55,16 +60,24 @@ const TabMerchandise = ({ match, history }) => {
   }, [hideModalUpdate, hideModalDelete]);
 
   return (
-    <Dashboard nameSelect={product.code ? "SP" + product.code : ""} defaulCheckKey="2">
+    <Dashboard
+      nameSelect={product.code ? "SP" + product.code : ""}
+      defaulCheckKey="2"
+    >
       <div className="product-tabup">
         <div className="product-tabup__pc">
-          <Tabs defaultActiveKey="thongtin" type="card" centered>
+          <Tabs
+            defaultActiveKey="thongtin"
+            type="card"
+            centered
+            className="tabup-full"
+          >
             <Tabs.TabPane tab="Thông tin" key="thongtin">
               <div className="info-wrapper">
                 <div className="info-image">
                   <Image
                     src={
-                      process.env.NODE_ENV === "development"
+                      process.env.REACT_APP_ENV === "development"
                         ? `${process.env.REACT_APP_BACKEND_URL}/${product.image}`
                         : `/${product.image}`
                     }
@@ -88,13 +101,31 @@ const TabMerchandise = ({ match, history }) => {
                     Đơn vị : {product.unit ? product.unit.name : ""}
                   </div>
                   <div className="info-detail-info">
-                    Giá nhập : {product.moneyIn}
+                    Giá nhập :{" "}
+                    <CurrencyFormat
+                      value={product.moneyIn}
+                      displayType={"text"}
+                      thousandSeparator={true}
+                      renderText={(value) => <span>{value}</span>}
+                    />
                   </div>
                   <div className="info-detail-info">
-                    Giá bán : {product.moneyOut}
+                    Giá bán :{" "}
+                    <CurrencyFormat
+                      value={product.moneyOut}
+                      displayType={"text"}
+                      thousandSeparator={true}
+                      renderText={(value) => <span>{value}</span>}
+                    />
                   </div>
                   <div className="info-detail-info">
-                    Tồn kho : {product.inventory}
+                    Tồn kho :{" "}
+                    <CurrencyFormat
+                      value={product.inventory}
+                      displayType={"text"}
+                      thousandSeparator={true}
+                      renderText={(value) => <span>{value}</span>}
+                    />
                   </div>
                   <div className="info-detail-info">
                     Ngày tạo: {convertDay(product.createdAt)}
@@ -109,6 +140,7 @@ const TabMerchandise = ({ match, history }) => {
                     type="primary"
                     size="large"
                     onClick={handlerShowModalUpdate}
+                    icon={<ToolOutlined />}
                   >
                     Cập nhật
                   </Button>
@@ -117,7 +149,8 @@ const TabMerchandise = ({ match, history }) => {
                     type="primary"
                     size="large"
                     danger
-                    onClick={()=>history.push("/notify")}
+                    onClick={() => history.push("/notify")}
+                    icon={<StopOutlined />}
                   >
                     Ngừng kinh doanh
                   </Button>
@@ -127,6 +160,7 @@ const TabMerchandise = ({ match, history }) => {
                     size="large"
                     danger
                     onClick={handlerShowModalDelete}
+                    icon={<StopOutlined />}
                   >
                     Xóa
                   </Button>
@@ -134,7 +168,7 @@ const TabMerchandise = ({ match, history }) => {
               </div>
             </Tabs.TabPane>
             <Tabs.TabPane tab="Thẻ kho" key="thekho">
-              <NotifyScaleUp/>
+              <NotifyScaleUp />
             </Tabs.TabPane>
           </Tabs>
           <div className="icon-goback" onClick={() => history.goBack()}>
@@ -143,8 +177,8 @@ const TabMerchandise = ({ match, history }) => {
           </div>
         </div>
         <div className="product-tabup__mobile">
-        <div className="icon-goback" onClick={() => history.goBack()}>
-            <ArrowLeftOutlined style={{color:"white"}}/>
+          <div className="icon-goback" onClick={() => history.goBack()}>
+            <ArrowLeftOutlined style={{ color: "white" }} />
           </div>
           <Tabs defaultActiveKey="thongtin" type="card">
             <Tabs.TabPane tab="Thông tin" key="thongtin">
@@ -152,7 +186,7 @@ const TabMerchandise = ({ match, history }) => {
                 <div className="product-image">
                   <Image
                     src={
-                      process.env.NODE_ENV === "development"
+                      process.env.REACT_APP_ENV === "development"
                         ? `${process.env.REACT_APP_BACKEND_URL}/${product.image}`
                         : `/${product.image}`
                     }
@@ -226,7 +260,7 @@ const TabMerchandise = ({ match, history }) => {
               </div>
             </Tabs.TabPane>
             <Tabs.TabPane tab="Thẻ kho" key="thekho">
-              <NotifyScaleUp/>
+              <NotifyScaleUp />
             </Tabs.TabPane>
           </Tabs>
         </div>

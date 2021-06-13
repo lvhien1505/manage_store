@@ -12,20 +12,34 @@ $res_320: "only screen and (min-width: 320px) and (max-width: 424px)";
 }
 
 .unit-wrapper {
+  height: 40px;
+  padding-left: 50px;
+  padding-right: 50px;
   .btn {
-    width: 10%;
-    margin: 0 auto;
-    .btn-add__unit {
-      background-color: #4bac4d;
-      color: white;
+    float: right;
+    button {
+      height: 40px;
+      border: none;
       border-radius: 4px;
+      color: #fff;
+    }
+
+    button:nth-child(n + 1) {
+      background-color: #419543;
+    }
+    button:nth-child(n + 1):hover {
+      background-color: #2b612c;
     }
   }
   @include responsive_320() {
-    .btn {
-        display: flex;
-        justify-content: center;
-        margin-top: 3px;
+    .unit-wrapper {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+    .unit-table {
+      margin-top: 10px;
+      padding-left: 10px;
+      padding-right: 10px;
     }
   }
   .icon-plus__edit {
@@ -33,6 +47,29 @@ $res_320: "only screen and (min-width: 320px) and (max-width: 424px)";
   }
 }
 
-.unit-table{
-    margin-top: 10px;
+.unit-table {
+  margin-top: 10px;
+  padding-left: 50px;
+  padding-right: 50px;
+  .ant-table-thead > tr > th {
+    background-color: #dcf4fc !important;
+  }
+  
+  button{
+    border: none;
+  }
+
+  .btn-update-unit {
+    background-color: #419543;
+  }
+
+  .btn-remove-unit {
+    background-color: #898c8d;
+  }
+  .btn-update-unit:hover {
+    background-color: #2b612c;
+  }
+  .btn-remove-unit:hover {
+    background-color: #494d4e;
+  }
 }

@@ -4,6 +4,7 @@ import { ArrowLeftOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import Dashboard from "../DashBoard/Dashboard";
 import { getBillWithId, updateStatusBill } from "../../api/billBuy";
+import CurrencyFormat from "react-currency-format";
 import { notifyScreen } from "../../utils/notify";
 import "./styles/TabBill.scss";
 
@@ -53,6 +54,7 @@ const TabBillBuy = ({ match, history }) => {
       title: "Giá bán",
       dataIndex: "moneyOut",
       key: "moneyOut",
+      
     },
     {
       title: "Giảm giá",
@@ -140,7 +142,7 @@ const TabBillBuy = ({ match, history }) => {
                     <Button
                       type="primary"
                       size="large"
-                      style={{ width: "150px", backgroundColor: "#4bac4d" }}
+                      style={{ width: "150px", backgroundColor: "rgba(149, 129, 129, 0.85)" }}
                       onClick={() => history.push("/notify")}
                     >
                       Xuất File

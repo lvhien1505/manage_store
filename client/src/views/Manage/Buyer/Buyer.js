@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Button, Table, Avatar } from "antd";
+import { Button, Table, Avatar, Row, Col } from "antd";
 import { Link } from "react-router-dom";
-import { PlusOutlined, UserOutlined, PhoneOutlined } from "@ant-design/icons";
+import { PlusOutlined, UserOutlined, PhoneOutlined,DeliveredProcedureOutlined } from "@ant-design/icons";
+import CurrencyFormat from "react-currency-format";
 import Dashboard from "../../../components/DashBoard/Dashboard";
 import ModalAddBuyer from "../../../components/Modals/ModalAdd/ModalAddBuyer";
+import SectionBuyer from "../../../components/SectionTab//SectionPartner";
 import { getBuyer } from "../../../api/buyer";
 import { notifyScreen } from "../../../utils/notify";
 import avatar from "../../../logo/avatar/default.jpg";
@@ -33,7 +35,9 @@ const Buyer = ({ history }) => {
       title: "Mã KH",
       dataIndex: "code",
       key: "code",
-      render: (text) => "KH" + text,
+      render: (text, obj) => (
+        <Link to={`/dashboard/buyer/${obj._id}`}>{"KH" + text}</Link>
+      ),
     },
     {
       title: "Tên KH",
@@ -49,23 +53,26 @@ const Buyer = ({ history }) => {
       title: "Nợ hiện tại",
       key: "debt",
       dataIndex: "debt",
+      render: (text) => (
+        <CurrencyFormat
+          value={text}
+          displayType={"text"}
+          thousandSeparator={true}
+          renderText={(value) => <span>{value}</span>}
+        />
+      ),
     },
     {
       title: "Tổng bán",
       key: "totalSell",
       dataIndex: "totalSell",
-    },
-    {
-      title: "Cập nhật",
-      key: "id",
-      dataIndex: "_id",
-      render: (id) => (
-        <Button
-          type="primary"
-          onClick={() => history.push(`/dashboard/buyer/${id}`)}
-        >
-          Thông tin/Trả nợ
-        </Button>
+      render: (text) => (
+        <CurrencyFormat
+          value={text}
+          displayType={"text"}
+          thousandSeparator={true}
+          renderText={(value) => <span>{value}</span>}
+        />
       ),
     },
   ];
@@ -76,23 +83,43 @@ const Buyer = ({ history }) => {
 
   return (
     <Dashboard nameSelect="Khách hàng" defaulCheckKey="5">
-      <div className="buyer-action__wrapper">
-        <div className="btn">
-          <Button
-            onClick={() => setHideModalAdd(!hideModalAdd)}
-            className="btn-add__buyer"
-            icon={<PlusOutlined className="icon-plus__edit" />}
-          >
-            Thêm khách hàng
-          </Button>
-        </div>
+      <div className="modal-buyer">
         <ModalAddBuyer
           hideModal={hideModalAdd}
           handleHideModal={handlerHideModal}
         />
       </div>
       <div className="buyer-table__pc">
-        <Table columns={columns} dataSource={listBuyer ? listBuyer : []} />
+        <h2>Khách hàng</h2>
+        <Row>
+          <Col span={5}>
+            <SectionBuyer
+            listBuyer={listBuyer.length >0 ? listBuyer :[]}
+            typeSection="buyer"
+            />
+          </Col>
+          <Col span={19}>
+            <div className="top-table-list-buyer">
+              <Button
+                type="primary"
+                icon={<PlusOutlined />}
+                onClick={() => setHideModalAdd(!hideModalAdd)}
+              >
+                Thêm mới
+              </Button>
+              <Button type="primary" icon={<DeliveredProcedureOutlined />}>
+                Xuất file
+              </Button>
+            </div>
+            <div className="table-list-buyer">
+              {" "}
+              <Table
+                columns={columns}
+                dataSource={listBuyer ? listBuyer : []}
+              />
+            </div>
+          </Col>
+        </Row>
       </div>
       <div className="buyer-table__mobile">
         <div className="total-buyer">

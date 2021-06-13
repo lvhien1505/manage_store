@@ -1,12 +1,15 @@
 const BillBuyModel = require("../models/billBuy");
 const PartnerModel = require("../models/partner");
 const ProductModel = require("../models/product");
+const ControlDebtModel = require("../models/controlDebt");
+const PaidDebtModel = require("../models/paidDebt");
 const {
   ERROR_SERVER,
   CREATE_BILL_SELL_SUCCESS,
   UPDATE_BILL_SELL_SUCCESS,
   DELETE_BILL_SELL_SUCCESS,
 } = require("../utils/notify");
+const {sortTimeArray} = require("../utils/time")
 
 const getListBillBuy = async (req, res) => {
   try {
@@ -36,6 +39,48 @@ const getBillWithId = async (req, res) => {
     res.status(500).json(ERROR_SERVER);
   }
 };
+
+const getBillWithIdPartner= async (req, res) => {
+  try {
+    let partnerId = req.body.partnerId;
+    let bill = await BillBuyModel.find({partnerId : partnerId});
+    res.status(200).json(bill).sort({ createdAt: "desc" });;
+  } catch (error) {
+    res.status(500).json(ERROR_SERVER);
+  }
+};
+
+// const getBillWithIdPartnerAndType = async (req, res) => {
+//   try {
+//     let partnerId = req.body.partnerId;
+//     let bill = await BillBuyModel.find({ $and:[{partnerId : partnerId},{typeBill:"debt"}]}).sort({ createdAt: "desc" });;
+//     res.status(200).json(bill);
+//   } catch (error) {
+//     res.status(500).json(ERROR_SERVER);
+//   }
+// };
+
+const getBillWithIdPartnerAndType = async (req, res) => {
+  try {
+    let partnerId = req.params.id;
+    let listBill = await BillBuyModel.find({ $and:[{partnerId : partnerId},{typeBill:"debt"},{status:true}]}).sort({ createdAt: "desc" });
+    let listControl = await ControlDebtModel.find({
+      idPartner:partnerId,
+      typePartner:"partner"
+    }).sort({ createdAt: "desc" });
+    let listPaidDebt = await PaidDebtModel.find({
+      idPartner:partnerId,
+      typePartner:"partner"
+    }).sort({ createdAt: "desc" });
+
+    let copyListAllBill = [...listBill.concat(listControl).concat(listPaidDebt)]
+     let listAllBill = sortTimeArray(copyListAllBill)
+    res.status(200).json(listAllBill);
+  } catch (error) {
+    res.status(500).json(ERROR_SERVER);
+  }
+};
+
 
 const getListBillWithStatus = async (req, res) => {
   try {
@@ -101,6 +146,15 @@ const create = async (req, res) => {
     let totalDebtMath = req.body.totalDebtMath;
     let noteBuy = req.body.noteBuy;
     let status = req.body.status;
+
+    var typeBill =""
+
+    if (totalDebtMath < 0) {
+      typeBill = "debt"
+    }else{
+      typeBill = "done"
+    }
+
     let bill = {
       partnerId,
       partnerCode,
@@ -218,4 +272,6 @@ module.exports = {
   getListBillWithStatus,
   getListBillBuyWithLimit,
   updateStatus,
+  getBillWithIdPartner,
+  getBillWithIdPartnerAndType
 };

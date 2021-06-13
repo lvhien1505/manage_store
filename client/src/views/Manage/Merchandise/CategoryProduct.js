@@ -1,12 +1,12 @@
-import React, { useState,useEffect} from "react";
-import {Button, Table,Space } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import React, { useState, useEffect } from "react";
+import { Button, Table, Space } from "antd";
+import { PlusOutlined, StopOutlined, ToolOutlined } from "@ant-design/icons";
 import Dashboard from "../../../components/DashBoard/Dashboard";
-import ModalAddCategoryProduct from '../../../components/Modals/ModalAdd/ModalAddCategoryProduct';
-import ModalUpdateCategoryProduct from '../../../components/Modals/ModalUpdate/ModalUpdateCategoryProduct';
-import {getListCategory} from '../../../api/category';
-import {notifyScreen} from '../../../utils/notify'
-import "./styles/CategoryProduct.scss"
+import ModalAddCategoryProduct from "../../../components/Modals/ModalAdd/ModalAddCategoryProduct";
+import ModalUpdateCategoryProduct from "../../../components/Modals/ModalUpdate/ModalUpdateCategoryProduct";
+import { getListCategory } from "../../../api/category";
+import { notifyScreen } from "../../../utils/notify";
+import "./styles/CategoryProduct.scss";
 import ModalDeleteCategoryProduct from "../../../components/Modals/ModalConfirmDelete/ModalDeleteCategoryProduct";
 
 const CategoryProduct = () => {
@@ -17,68 +17,85 @@ const CategoryProduct = () => {
   const [hideModalUpdate, setHideModalUpdate] = useState(false);
   const [showModalDelete, setShowModalDelete] = useState(false);
   const [hideModalDelete, setHideModalDelete] = useState(false);
-  const [listCategory,setListCategory]=useState([])
+  const [listCategory, setListCategory] = useState([]);
 
-  const __getListCategory=async ()=>{
-      try {
-        let res=await getListCategory();
-        if (res.status === 200) {
-          return setListCategory(res.data);
-        }
-      } catch (error) {
-         notifyScreen("error","500","Lỗi không xác định")
+  const __getListCategory = async () => {
+    try {
+      let res = await getListCategory();
+      if (res.status === 200) {
+        return setListCategory(res.data);
       }
-  }
-  
+    } catch (error) {
+      notifyScreen("error", "500", "Lỗi không xác định");
+    }
+  };
 
   const handlerHideModal = () => {
     return setHideModalAdd(!hideModalAdd);
   };
 
   const handlerShowModalUpdate = (id) => {
-    let newListCategory=listCategory.filter((category)=>category._id===id)
-    setCategory(newListCategory[0])
-    setShowModalUpdate(true)
+    let newListCategory = listCategory.filter(
+      (category) => category._id === id
+    );
+    setCategory(newListCategory[0]);
+    setShowModalUpdate(true);
     return setHideModalUpdate(!hideModalUpdate);
   };
 
   const handlerShowModalDelete = (id) => {
-    setIdCategory(id)
-    setShowModalDelete(true)
+    setIdCategory(id);
+    setShowModalDelete(true);
     return setHideModalDelete(!hideModalDelete);
   };
 
   const handlerHideModalUpdate = () => {
-     setHideModalUpdate(!hideModalUpdate);
-     return setShowModalUpdate(false)
+    setHideModalUpdate(!hideModalUpdate);
+    return setShowModalUpdate(false);
   };
 
   const handlerHideModalDelete = () => {
     setHideModalDelete(!hideModalDelete);
-    return setShowModalDelete(false)
- };
- 
+    return setShowModalDelete(false);
+  };
+
   const columns = [
     {
-      title: 'Tên nhóm hàng',
-      dataIndex: 'name',
-      key: 'name',
-      width:"80%"
+      title: "Tên nhóm hàng",
+      dataIndex: "name",
+      key: "name",
+      width: "80%",
     },
     {
-      title:"Cập nhật",
-      key: 'id',
-      dataIndex: '_id',
-      render:(id)=>(<Space>
-          <Button type="primary" onClick={()=>handlerShowModalUpdate(id)}>Sửa</Button>
-          <Button type="primary" danger onClick={()=>handlerShowModalDelete(id)}>Xóa</Button>
-      </Space>)
+      title: "Cập nhật",
+      key: "id",
+      dataIndex: "_id",
+      render: (id) => (
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handlerShowModalUpdate(id)}
+            icon={<ToolOutlined />}
+            className="btn-update-category"
+          >
+            Sửa
+          </Button>
+          <Button
+            type="primary"
+            className="btn-remove-category"
+            onClick={() => handlerShowModalDelete(id)}
+            icon={<StopOutlined />}
+          >
+            Xóa
+          </Button>
+        </Space>
+      ),
     },
   ];
 
   useEffect(() => {
     __getListCategory();
-  },[idCategory,hideModalAdd,hideModalUpdate,hideModalDelete])
+  }, [idCategory, hideModalAdd, hideModalUpdate, hideModalDelete]);
 
   return (
     <Dashboard nameSelect="Nhóm hàng" defaulCheckKey="2">
@@ -98,9 +115,25 @@ const CategoryProduct = () => {
         />
       </div>
       <div className="category-table">
-          <Table columns={columns} dataSource={listCategory?listCategory:[]} size="small"/>
-          {showModalUpdate ? <ModalUpdateCategoryProduct  categoryEdit={category} hideModal={hideModalUpdate} handleHideModal={handlerHideModalUpdate}/> :null}
-          {showModalDelete ? <ModalDeleteCategoryProduct idCategory={idCategory ? idCategory : null} hideModal={hideModalDelete} handleHideModal={handlerHideModalDelete}/> : null}
+        <Table
+          columns={columns}
+          dataSource={listCategory ? listCategory : []}
+          size="small"
+        />
+        {showModalUpdate ? (
+          <ModalUpdateCategoryProduct
+            categoryEdit={category}
+            hideModal={hideModalUpdate}
+            handleHideModal={handlerHideModalUpdate}
+          />
+        ) : null}
+        {showModalDelete ? (
+          <ModalDeleteCategoryProduct
+            idCategory={idCategory ? idCategory : null}
+            hideModal={hideModalDelete}
+            handleHideModal={handlerHideModalDelete}
+          />
+        ) : null}
       </div>
     </Dashboard>
   );

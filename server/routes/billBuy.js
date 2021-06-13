@@ -1,7 +1,7 @@
 const express = require("express");
 const asyncHandler = require('express-async-handler')
 const router = express.Router();
-const {getBillWithId,getListBillBuyWithLimit,getListBillWithStatus,getListBillBuy,create,update,updateStatus,remove} =require("../services/billBuy");
+const {getBillWithId,getListBillBuyWithLimit,getListBillWithStatus,getBillWithIdPartner,getBillWithIdPartnerAndType,getListBillBuy,create,update,updateStatus,remove} =require("../services/billBuy");
 const {checkSignup} =require("../middlewares/checkUser");
 const {checkAuth,checkAdmin} =require("../middlewares/auth");
 
@@ -16,6 +16,12 @@ router.post("/get/:id",checkAuth,checkAdmin,asyncHandler(getBillWithId))
 router.post("/history/status",checkAuth,checkAdmin,asyncHandler(getListBillWithStatus))
 
 router.post("/history/limit",checkAuth,checkAdmin,asyncHandler(getListBillBuyWithLimit))
+
+router.post("/history/bill/:id",checkAuth,checkAdmin,asyncHandler(getBillWithIdPartner))
+
+router.post("/history/bill/:id/debt",checkAuth,checkAdmin,asyncHandler(getBillWithIdPartnerAndType))
+
+
 
 //POST CREATE BILL BUY
 router.post("/create",checkAuth,checkAdmin, asyncHandler(create))

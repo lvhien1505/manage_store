@@ -31,11 +31,13 @@ const Sale = ({history}) => {
       let res= await checkAuth(token);
       if (res.status === 200) {
         return setName(res.data.name);
+      }else{
+        window.location.href="/"
       }
       
     } catch (error) {
       notifyScreen("error","401","Lỗi xác thực !")
-      history.push("/login")
+      window.location.href="/"
     }
   }
 
@@ -170,6 +172,7 @@ const Sale = ({history}) => {
                   listSell={tab.products}
                   removeProduct={(id)=>handleRemoveProduct(id)}
                   nameSale={name ? name : "Admin"}
+                  countNumProduct={tab.products.reduce((previousValue,currentValue)=>previousValue + currentValue.countNum,0)}
                 />
               </Tabs.TabPane>
             ))}

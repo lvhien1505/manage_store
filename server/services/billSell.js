@@ -1,12 +1,15 @@
 const BillSellModel = require("../models/billSell");
 const BuyerModel = require("../models/buyer");
 const ProductModel = require("../models/product");
+const ControlDebtModel = require("../models/controlDebt");
+const PaidDebtModel = require("../models/paidDebt");
 const {
   ERROR_SERVER,
   CREATE_BILL_SELL_SUCCESS,
   UPDATE_BILL_SELL_SUCCESS,
   DELETE_BILL_SELL_SUCCESS,
 } = require("../utils/notify");
+const {sortTimeArray} = require("../utils/time")
 
 const getListBillSell = async (req, res) => {
   try {
@@ -46,6 +49,38 @@ const getBillWithId = async (req, res) => {
     res.status(500).json(ERROR_SERVER);
   }
 };
+
+const getBillWithIdBuyer= async (req, res) => {
+  try {
+    let buyerId = req.params.id;
+    let bill = await BillSellModel.find({buyerId : buyerId});
+    res.status(200).json(bill).sort({ createdAt: "desc" });;
+  } catch (error) {
+    res.status(500).json(ERROR_SERVER);
+  }
+};
+
+const getBillWithIdBuyerAndType = async (req, res) => {
+  try {
+    let buyerId = req.params.id;
+    let listBill = await BillSellModel.find({ $and:[{buyerId : buyerId},{typeBill:"debt"},{status:true}]}).sort({ createdAt: "desc" });
+    let listControl = await ControlDebtModel.find({
+      idPartner:buyerId,
+      typePartner:"buyer"
+    }).sort({ createdAt: "desc" });
+    let listPaidDebt = await PaidDebtModel.find({
+      idPartner:buyerId,
+      typePartner:"buyer"
+    }).sort({ createdAt: "desc" });
+
+    let copyListAllBill = [...listBill.concat(listControl).concat(listPaidDebt)]
+     let listAllBill = sortTimeArray(copyListAllBill)
+    res.status(200).json(listAllBill);
+  } catch (error) {
+    res.status(500).json(ERROR_SERVER);
+  }
+};
+
 
 const updateStatus = async (req, res) => {
   try {
@@ -101,6 +136,15 @@ const create = async (req, res) => {
     let totalExcessPaid = req.body.totalExcessPaid;
     let noteSell = req.body.noteSell;
     let status = req.body.status;
+
+    var typeBill=""
+
+    if (totalExcessPaid < 0) {
+      typeBill = "debt"
+    }else{
+      typeBill = "done"
+    }
+
     let bill = {
       buyerId,
       buyerCode,
@@ -119,6 +163,7 @@ const create = async (req, res) => {
       totalExcessPaid,
       noteSell,
       status,
+      typeBill
     };
     if (buyerId) {
       buyer = await BuyerModel.findById(buyerId);
@@ -135,11 +180,23 @@ const create = async (req, res) => {
               { _id: buyerId },
               { debt: newDebt, totalSell: newTotalSell }
             );
+      
+            data.debtRedundancy = newDebt;
+            console.log(data.debtRedundancy);
+            console.log(data);
+            await data.save()
+             
+          }else{
+            await BuyerModel.findByIdAndUpdate(
+              { _id: buyerId },
+              { totalSell: newTotalSell }
+            );
+  
+            data.debtRedundancy = buyer.debt;
+  
+            await data.save()
           }
-          await BuyerModel.findByIdAndUpdate(
-            { _id: buyerId },
-            { totalSell: newTotalSell }
-          );
+          
         }
         if (listSell.length > 0) {
           listSell.forEach(async (product)=>{
@@ -217,4 +274,5 @@ module.exports = {
   getBillWithId,
   getListBillWithStatus,
   updateStatus,
+  getBillWithIdBuyer,getBillWithIdBuyerAndType
 };

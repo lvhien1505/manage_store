@@ -1,8 +1,8 @@
 .content-tab-wrapper {
   width: 100%;
-  height: 91vh;
-  position: relative;
-  top: 13px;
+  // height: 91vh;
+  position: absolute;
+  top: 42px;
   display: flex;
   justify-content: flex-start;
   .list-product {
@@ -105,6 +105,16 @@
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
+        .btn{
+          background-color: #56ad51;
+          width: 100%;
+          height: 66px;
+          text-align : center;
+          border:none;
+        }
+        .btn-success:hover,.btn-save:hover{
+             background-color: #287524;
+        }
       }
     }
   }

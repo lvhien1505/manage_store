@@ -9,7 +9,7 @@ const ModalDeleteProduct = ({ idProduct,hideModal, handleHideModal }) => {
       let res = await removeProduct(id);
       if (res.status === 200) {
         notifyScreen("success", res.data.statusCode, res.data.message);
-       return handleHideModal();
+        window.location.href="/dashboard/merchandise/category"
       }
     } catch (error) {
       if (error.response) {

@@ -9,7 +9,7 @@ const ModalDeletePartner = ({ idPartner,hideModal, handleHideModal }) => {
       let res = await removePartner(id);
       if (res.status === 200) {
         notifyScreen("success", res.data.statusCode, res.data.message);
-       return handleHideModal();
+        return window.location.href="/dashboard/partner";
       }
     } catch (error) {
       if (error.response) {

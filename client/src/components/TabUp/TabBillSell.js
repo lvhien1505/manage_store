@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { ArrowLeftOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined,SwapOutlined,CheckSquareOutlined,DeliveredProcedureOutlined } from "@ant-design/icons";
 import { Button, Table, Space } from "antd";
 import { Link } from "react-router-dom";
 import Dashboard from "../../components/DashBoard/Dashboard";
 import { getBillWithId, updateStatusBill } from "../../api/billSell";
+import CurrencyFormat from "react-currency-format";
 import { notifyScreen } from "../../utils/notify";
 import "./styles/TabBill.scss";
 
@@ -52,6 +53,14 @@ const TabBillSell = ({ match, history }) => {
       title: "Giá bán",
       dataIndex: "moneyOut",
       key: "moneyOut",
+      render: (text) => (
+        <CurrencyFormat
+          value={text}
+          displayType={"text"}
+          thousandSeparator={true}
+          renderText={(value) => <span>{value}</span>}
+        />
+      ),
     },
     {
       title: "Giảm giá",
@@ -62,6 +71,14 @@ const TabBillSell = ({ match, history }) => {
       title: "Thành tiền",
       dataIndex: "totalMoney",
       key: "totalMoney",
+      render: (text) => (
+        <CurrencyFormat
+          value={text}
+          displayType={"text"}
+          thousandSeparator={true}
+          renderText={(value) => <span>{value}</span>}
+        />
+      ),
     },
   ];
   useEffect(() => {
@@ -118,8 +135,9 @@ const TabBillSell = ({ match, history }) => {
                 <Button
                   type="primary"
                   size="large"
-                  style={{ width: "150px" }}
+                  style={{ width: "150px",textAlign:"center", }}
                   onClick={() => history.push("/notify")}
+                  icon={<SwapOutlined />}
                 >
                   Điều chỉnh
                 </Button>
@@ -131,16 +149,20 @@ const TabBillSell = ({ match, history }) => {
                       style={{
                         width: "150px",
                         backgroundColor: "rgba(149, 129, 129, 0.85)",
+                        textAlign:"center",
+                        
                       }}
                       onClick={() => history.push("/notify")}
+                      icon={<DeliveredProcedureOutlined />}
                     >
                       In
                     </Button>
                     <Button
                       type="primary"
                       size="large"
-                      style={{ width: "150px", backgroundColor: "#4bac4d" }}
+                      style={{ width: "150px", backgroundColor: "rgba(149, 129, 129, 0.85)", textAlign:"center",}}
                       onClick={() => history.push("/notify")}
+                      icon={<DeliveredProcedureOutlined />}
                     >
                       Xuất File
                     </Button>
@@ -149,8 +171,9 @@ const TabBillSell = ({ match, history }) => {
                   <Button
                     type="primary"
                     size="large"
-                    style={{ width: "150px", backgroundColor: "#4bac4d" }}
+                    style={{ width: "150px", backgroundColor: "#4bac4d",textAlign:"center", }}
                     onClick={() => handleSuccessBill(match.params.id)}
+                    icon={<CheckSquareOutlined />}
                   >
                     Hoàn thành
                   </Button>
@@ -173,23 +196,48 @@ const TabBillSell = ({ match, history }) => {
               </div>
               <div>
                 <span>Tổng tiền hàng : </span>
-                <span>{bill.totalMoneySell}</span>
+                <CurrencyFormat
+                  value={bill.totalMoneySell}
+                  displayType={"text"}
+                  thousandSeparator={true}
+                  renderText={(value) => <span>{value}</span>}
+                />
               </div>
               <div>
                 <span>Giảm giá hóa đơn : </span>
-                <span>{bill.totalSaleOffMoneySell}</span>
+                <CurrencyFormat
+                  value={bill.totalSaleOffMoneySell}
+                  displayType={"text"}
+                  thousandSeparator={true}
+                  renderText={(value) => <span>{value}</span>}
+                />
               </div>
               <div>
                 <span>Khách cần trả : </span>
-                <span>{bill.totalBuyerPaidNeed}</span>
+                <CurrencyFormat
+                  value={bill.totalBuyerPaidNeed}
+                  displayType={"text"}
+                  thousandSeparator={true}
+                  renderText={(value) => <span>{value}</span>}
+                />
               </div>
               <div>
                 <span>Tổng đã trả: </span>
-                <span>{bill.totalBuyerPaid}</span>
+                <CurrencyFormat
+                  value={bill.totalBuyerPaid}
+                  displayType={"text"}
+                  thousandSeparator={true}
+                  renderText={(value) => <span>{value}</span>}
+                />
               </div>
               <div>
                 <span>Công nợ: </span>
-                <span>{bill.totalExcessPaid}</span>
+                <CurrencyFormat
+                  value={bill.totalExcessPaid}
+                  displayType={"text"}
+                  thousandSeparator={true}
+                  renderText={(value) => <span>{value}</span>}
+                />
               </div>
             </div>
           </div>
@@ -274,13 +322,17 @@ const TabBillSell = ({ match, history }) => {
         <div className="user-create">
           <span>Người tạo</span>
           <span> : {bill.userSell}</span>
-          <div style={{marginTop:"10px"}}>
+          <div style={{ marginTop: "10px" }}>
             {bill.noteSell ? bill.noteSell : "...Ghi chú"}
           </div>
         </div>
         <div className="btn-action">
           {bill.status ? (
-            <Button type="primary" style={{ width: "100%", height: "70px" }} onClick={()=>history.push("/notify")}>
+            <Button
+              type="primary"
+              style={{ width: "100%", height: "70px" }}
+              onClick={() => history.push("/notify")}
+            >
               Điều chỉnh
             </Button>
           ) : (
@@ -295,7 +347,7 @@ const TabBillSell = ({ match, history }) => {
                 type="primary"
                 size="large"
                 style={{ width: "50%", height: "70px" }}
-                onClick={()=>history.push("/notify")}
+                onClick={() => history.push("/notify")}
               >
                 Điều chỉnh
               </Button>

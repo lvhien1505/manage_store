@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import {Link} from 'react-router-dom'
-import { Button, Space, Table } from "antd";
+import { Button, Space, Table,Row,Col } from "antd";
+import {DeliveredProcedureOutlined,PlusOutlined } from "@ant-design/icons";
+import CurrencyFormat from 'react-currency-format';
 import Dashboard from "../../../../components/DashBoard/Dashboard";
 import ModalDeleteBill from "../../../../components/Modals/ModalConfirmDelete/ModalDeleteBill";
+import SectionBill from "../../../../components/SectionTab/SectionBill";
 import { getBillWithStatus } from "../../../../api/billSell";
 import { notifyScreen } from "../../../../utils/notify";
 import "./styles/BillSuccess.scss"
@@ -46,13 +49,7 @@ const BillSuccess = ({ history }) => {
       title: "Mã HD",
       dataIndex: "code",
       key: "code",
-      render: (text) => "HD0000" + text,
-    },
-    {
-      title: "Trạng thái",
-      dataIndex: "status",
-      key: "status",
-      render: (value) => (value ? "Hoàn thành" : "Chưa hoàn thành"),
+      render: (text,obj) => <Link to={`/dashboard/transaction/bill-success/${obj._id}`}>{"HD0000" + text}</Link>
     },
     {
       title: "Ngày",
@@ -73,26 +70,25 @@ const BillSuccess = ({ history }) => {
       title: "Tổng tiền hàng",
       key: "totalMoneySell",
       dataIndex: "totalMoneySell",
+      render: (text)=><CurrencyFormat value={text} displayType={'text'} thousandSeparator={true}  renderText={value => <span>{value}</span>} />
     },
     {
       title: "Giảm giá",
       key: "totalSaleOffMoneySell",
       dataIndex: "totalSaleOffMoneySell",
+      render: (text)=><CurrencyFormat value={text} displayType={'text'} thousandSeparator={true}  renderText={value => <span>{value}</span>} />
     },
     {
       title: "Tổng tiền cần trả",
       key: "totalBuyerPaidNeed",
       dataIndex: "totalBuyerPaidNeed",
+      render: (text)=><CurrencyFormat value={text} displayType={'text'} thousandSeparator={true}  renderText={value => <span>{value}</span>} />
     },
     {
       title: "Khách trả",
       key: "totalBuyerPaid",
       dataIndex: "totalBuyerPaid",
-    },
-    {
-      title: "Tiền thừa trả khách",
-      key: "totalExcessPaid",
-      dataIndex: "totalExcessPaid",
+      render: (text)=><CurrencyFormat value={text} displayType={'text'} thousandSeparator={true}  renderText={value => <span>{value}</span>} />
     },
     {
       title: "Cập nhật",
@@ -100,14 +96,6 @@ const BillSuccess = ({ history }) => {
       dataIndex: "_id",
       render: (id) => (
         <Space>
-          <Button
-            type="primary"
-            onClick={() => {
-              return history.push(`/dashboard/transaction/bill-success/${id}`);
-            }}
-          >
-            Thông tin/Điều chỉnh
-          </Button>
           <Button
             type="primary"
             onClick={() => handlerShowModalDelete(id)}
@@ -126,10 +114,17 @@ const BillSuccess = ({ history }) => {
   return (
     <Dashboard nameSelect="Hóa đơn bán hoàn thành" defaulCheckKey="3">
       <div className="bill-success__pc">
-        <div>
-          <h1>Hóa đơn hoàn thành</h1>
-        </div>
-        <Table dataSource={listBill} columns={columns} />
+        <h2>Hóa đơn</h2>
+        <Row>
+          <Col span={5}><SectionBill listBill={listBill.length > 0 ? listBill : [] } status={true}/></Col>
+          <Col span={19}>
+          <div className="top-table-list-bill">
+                    <Button type="primary" icon={<PlusOutlined />} onClick={()=>history.push("/sale")}>Thêm mới</Button>
+                <Button type="primary" icon={<DeliveredProcedureOutlined />}>Xuất file</Button>
+            </div>
+           <div className="table-list-bill"> <Table dataSource={listBill} columns={columns} /></div>
+          </Col>
+        </Row>
         {showModalDelete ? (
           <ModalDeleteBill
             idBill={bill._id ? bill._id : null}
@@ -170,7 +165,8 @@ const BillSuccess = ({ history }) => {
                     >
                       <div className="math">
                         <span className="money">
-                          {billSuccess.totalBuyerPaidNeed}
+                        <CurrencyFormat value= {billSuccess.totalBuyerPaidNeed} displayType={'text'} thousandSeparator={true}  renderText={value => <span>{value}</span>} />
+                         
                         </span>
                         <span className="status">
                           {billSuccess.status

@@ -15,6 +15,7 @@ const getListProducts = async (req, res) => {
     let listProducts = await ProductModel.find().populate("category unit");
     res.status(200).json(listProducts);
   } catch (error) {
+    
     res.status(500).json(ERROR_SERVER);
   }
 };
@@ -99,6 +100,7 @@ const update = async (req, res) => {
       return res.status(200).json(UPDATE_PRODUCT_SUCCESS);
     }
   } catch (error) {
+    console.log(error);
     res.status(500).json(ERROR_SERVER);
   }
 };

@@ -14,7 +14,7 @@ $res_320 : "only screen and (min-width: 320px) and (max-width: 424px)";
     .sale-tab {
       width: 100%;
       position: absolute;
-      top: 1.5px;
+      top: 0px;
     }
   }
 }
@@ -22,6 +22,15 @@ $res_320 : "only screen and (min-width: 320px) and (max-width: 424px)";
   position: absolute;
   left: 36%;
 }
+
+.ant-tabs-nav-wrap{
+  height: 42px;
+}
+
+.ant-tabs-nav-add{
+  margin-left: 14.5px;
+}
+
 .sale-mobile {
   visibility: hidden;
 }

@@ -10,7 +10,7 @@ let buyerSchema = mongoose.Schema({
         type:String,
         required:true
     },
-    age:Number,
+    age:String,
     sex:String,
     phone:String,
     address:String,
@@ -27,7 +27,10 @@ let buyerSchema = mongoose.Schema({
         {
             type:String
         }
-    ]
+    ],
+    listBill:[{
+        type:String
+    }]
 },{
     timestamps: true,
 });

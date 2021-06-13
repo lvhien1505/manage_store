@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Button, Space, Table } from "antd";
+import { Button, Space, Table, Row, Col } from "antd";
+import { Link } from "react-router-dom";
+import { PlusOutlined, DeliveredProcedureOutlined } from "@ant-design/icons";
 import Dashboard from "../../../components/DashBoard/Dashboard";
 import ModalDeleteBillBuy from "../../../components/Modals/ModalConfirmDelete/ModalDeleteBillBuy";
+import SectionBill from "../../../components/SectionTab/SectionBill";
 import { getBillWithStatus } from "../../../api/billBuy";
 import { notifyScreen } from "../../../utils/notify";
 
@@ -44,7 +47,11 @@ const BillSave = ({ history }) => {
       title: "Mã PN",
       dataIndex: "code",
       key: "code",
-      render: (text) => "PN0000" + text,
+      render: (text, obj) => (
+        <Link to={`/dashboard/transaction/buy/bill-save/${obj._id}`}>
+          {"PN0000" + text}
+        </Link>
+      ),
     },
     {
       title: "Trạng thái",
@@ -63,12 +70,12 @@ const BillSave = ({ history }) => {
       key: "createdHour",
     },
     {
-      title: "Nhà cung cấp",
+      title: "NCC",
       key: "namePartner",
       dataIndex: "namePartner",
     },
     {
-      title: "Tổng tiền nhập hàng",
+      title: "Tổng tiền NH",
       key: "totalMoneyBuy",
       dataIndex: "totalMoneyBuy",
     },
@@ -78,7 +85,7 @@ const BillSave = ({ history }) => {
       dataIndex: "totalSaleOffMoneyBuy",
     },
     {
-      title: "Tổng tiền cần trả",
+      title: "Cần trả NCC",
       key: "totalPaidNeedPartner",
       dataIndex: "totalPaidNeedPartner",
     },
@@ -88,30 +95,11 @@ const BillSave = ({ history }) => {
       dataIndex: "totalMoneyPaid",
     },
     {
-      title: "Công nợ",
-      key: "totalDebtMath",
-      dataIndex: "totalDebtMath",
-    },
-    {
       title: "Cập nhật",
       key: "id",
       dataIndex: "_id",
       render: (id) => (
         <Space>
-          <Button
-            type="primary"
-            onClick={() => {
-              let bill = listBill.filter((bill) => bill._id === id);
-              return history.push({
-                pathname: `/dashboard/transaction/buy/bill-save/${id}`,
-                state: {
-                  codeBill: bill[0].code,
-                },
-              });
-            }}
-          >
-            Thông tin/Điều chỉnh
-          </Button>
           <Button
             type="primary"
             onClick={() => handlerShowModalDelete(id)}
@@ -128,18 +116,110 @@ const BillSave = ({ history }) => {
     __getListBill();
   }, [hideModalDelete]);
   return (
-    <Dashboard nameSelect="Đơn hàng nhập tạm" defaulCheckKey="3">
-      <div>
-        <h1>Đơn hàng tạm</h1>
+    <Dashboard nameSelect="Đơn nhập tạm" defaulCheckKey="3">
+      <div className="bill-success__pc">
+        <h2>Đơn nhập tạm</h2>
+        <Row>
+          <Col span={5}>
+            <SectionBill
+              listBill={listBill.length > 0 ? listBill : []}
+              status={false}
+            />
+          </Col>
+          <Col span={19}>
+            <div className="top-table-list-bill">
+              <Button
+                type="primary"
+                icon={<PlusOutlined />}
+                onClick={() => history.push("/dashboard/transaction/buy")}
+              >
+                Thêm mới
+              </Button>
+            </div>
+            <div className="table-list-bill">
+              <Table dataSource={listBill} columns={columns} />
+            </div>
+          </Col>
+        </Row>
+
+        {showModalDelete ? (
+          <ModalDeleteBillBuy
+            idBill={bill._id ? bill._id : null}
+            hideModal={hideModalDelete}
+            handleHideModal={handlerHideModalDelete}
+          />
+        ) : null}
       </div>
-      <Table dataSource={listBill} columns={columns} />
-      {showModalDelete ? (
-        <ModalDeleteBillBuy
-          idBill={bill._id ? bill._id : null}
-          hideModal={hideModalDelete}
-          handleHideModal={handlerHideModalDelete}
-        />
-      ) : null}
+      <div className="bill-success__mobile">
+        <div className="total-bill">
+          <span>
+            Tổng số {listBill.length > 0 ? listBill.length : 0} hóa đơn{" "}
+          </span>
+        </div>
+        <div className="list-bill">
+          {listBill.length > 0
+            ? listBill.map((billSuccess, i) => (
+                <div className="element-bill" key={i}>
+                  <Link
+                    to={`/dashboard/transaction/buy/bill-success/${billSuccess._id}`}
+                  >
+                    <div className="left">
+                      <span className="code">HD0000{billSuccess.code}</span>
+                      <span className="name">
+                        {billSuccess.namePartner
+                          ? billSuccess.namePartner
+                          : "Không có khách hàng"}
+                      </span>
+                      <div className="time">
+                        <span>{billSuccess.createdDay}</span>
+                        <span>{billSuccess.createdHour}</span>
+                      </div>
+                    </div>
+                  </Link>
+                  <div className="right">
+                    <Link
+                      to={`/dashboard/transaction/buy/bill-success/${billSuccess._id}`}
+                    >
+                      <div className="math">
+                        <span className="money">
+                          {billSuccess.totalBuyerPaidNeed}
+                        </span>
+                        <span className="status">
+                          {billSuccess.status
+                            ? "Hoàn thành"
+                            : "Chưa hoàn thành"}
+                        </span>
+                      </div>
+                    </Link>
+                    <div style={{ marginTop: "6px" }}>
+                      <Button
+                        type="primary"
+                        danger
+                        style={{
+                          width: "35px",
+                          height: "35px",
+                          textAlign: "center",
+                        }}
+                        size="small"
+                        onClick={() => handlerShowModalDelete(billSuccess._id)}
+                      >
+                        Xóa
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            : null}
+
+          {showModalDelete ? (
+            <ModalDeleteBillBuy
+              idBill={bill._id ? bill._id : null}
+              hideModal={hideModalDelete}
+              handleHideModal={handlerHideModalDelete}
+            />
+          ) : null}
+        </div>
+      </div>
     </Dashboard>
   );
 };

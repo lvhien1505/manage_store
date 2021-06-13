@@ -97,6 +97,7 @@ const Buy = ({history}) => {
           nameSale={name?name:"Admin"}
           listPartner={listPartner}
           removeProduct={(id) => handleRemoveProduct(id)}
+          countNumProduct={listProductSelect.reduce((previousValue,currentValue)=>previousValue + currentValue.countNum,0)}
         />
         <ScreenListProduct
           listProduct={listProduct.length > 0 ? listProduct : []}

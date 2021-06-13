@@ -1,15 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { Tabs, Button, Avatar,Image } from "antd";
-import { ArrowLeftOutlined } from "@ant-design/icons";
+import { Tabs, Button, Avatar, Image, Select, Row, Col, Table } from "antd";
+import {
+  ArrowLeftOutlined,
+  DeliveredProcedureOutlined,
+  TransactionOutlined,
+  CreditCardOutlined,
+  CopyOutlined,
+  StopOutlined,
+  ToolOutlined,
+} from "@ant-design/icons";
 import Dashboard from "../DashBoard/Dashboard";
 import { getPartnerWithId } from "../../api/partner";
+import { getBillWithIdPartnerAndType } from "../../api/billBuy";
 import { notifyScreen } from "../../utils/notify";
 import NotifyScaleUp from "../../views/Notify/NotifyScaleUp";
+import CurrencyFormat from "react-currency-format";
 import avatar from "../../logo/avatar/default.jpg";
 import { convertDay } from "../../utils/convert";
 import "./styles/TabPartner.scss";
 import ModalUpdatePartner from "../Modals/ModalUpdate/ModalUpdatePartner";
 import ModalDeletePartner from "../Modals/ModalConfirmDelete/ModalDeletePartner";
+import SectionTabPartner from "../SectionTab/SectionTabPartner";
+import SectionTabBuyer from "../SectionTab/SectionTabPartner";
 
 const TabBuyer = ({ match, history }) => {
   const [hideModalUpdate, setHideModalUpdate] = useState(false);
@@ -17,12 +29,29 @@ const TabBuyer = ({ match, history }) => {
   const [hideModalDelete, setHideModalDelete] = useState(false);
   const [showModalDelete, setShowModalDelete] = useState(false);
   const [partner, setPartner] = useState({});
+  const [listBillDebt, setListBillDebt] = useState([]);
 
   const __getPartnerWithId = async (id) => {
     try {
       let res = await getPartnerWithId(id);
       if (res.status === 200) {
         return setPartner(res.data);
+      }
+    } catch (error) {
+      notifyScreen("error", "500", "Lỗi không xác định");
+    }
+  };
+
+  const __getListBillWithPartnerIdAndType = async (id) => {
+    try {
+      let res = await getBillWithIdPartnerAndType(id);
+      if (res.status === 200) {
+        return setListBillDebt(
+          res.data.map((bill, key) => {
+            bill.key = bill._id;
+            return bill;
+          })
+        );
       }
     } catch (error) {
       notifyScreen("error", "500", "Lỗi không xác định");
@@ -49,6 +78,62 @@ const TabBuyer = ({ match, history }) => {
     return setHideModalDelete(!hideModalDelete);
   };
 
+  const onChangeTab = (key) => {
+    if (key == "nocantra") {
+      __getListBillWithPartnerIdAndType(match.params.id);
+    }
+  };
+
+  const columns = [
+    {
+      title: "Mã phiếu nhập",
+      dataIndex: "code",
+      key: "code",
+      render: (text, obj) => {
+        if (obj.typeBill == "debt") {
+          return "PN0000" + text;
+        } else if (obj.typeBill == "paid") {
+          return "TT0000" + text;
+        } else {
+          return "CB0000" + text;
+        }
+      },
+    },
+    {
+      title: "Thời gian",
+      dataIndex: "createdDay",
+      key: "createdDay",
+    },
+    {
+      title: "Giờ",
+      dataIndex: "createdHour",
+      key: "createdHour",
+    },
+    {
+      title: "Loại",
+      key: "typeBill",
+      render: (obj) => {
+        if (obj.typeBill == "debt") {
+          return "Nhập hàng";
+        } else if (obj.typeBill == "paid") {
+          return "Thanh toán";
+        } else {
+          return "Điều chỉnh";
+        }
+      },
+    },
+    {
+      title: "Giá trị",
+      key: "totalBuyerPaidNeed",
+      dataIndex: "totalBuyerPaidNeed",
+    },
+    {
+      title: "Nợ cần trả NCC",
+      key: "debtRedundancy",
+      dataIndex: "debtRedundancy",
+    },
+  ];
+
   useEffect(() => {
     __getPartnerWithId(match.params.id);
   }, [hideModalUpdate, hideModalDelete]);
@@ -57,7 +142,13 @@ const TabBuyer = ({ match, history }) => {
     <Dashboard nameSelect={partner.name ? partner.name : ""} defaulCheckKey="6">
       <div className="partner-tabup">
         <div className="partner-tabup__pc">
-          <Tabs defaultActiveKey="thongtin" type="card" centered>
+          <Tabs
+            defaultActiveKey="thongtin"
+            type="card"
+            centered
+            onChange={(key) => onChangeTab(key)}
+            className="tabup-full"
+          >
             <Tabs.TabPane tab="Thông tin" key="thongtin">
               <div className="info-wrapper">
                 <div className="info-image">
@@ -84,10 +175,22 @@ const TabBuyer = ({ match, history }) => {
                     Điện thoại : {partner.phone}
                   </div>
                   <div className="info-detail-info">
-                    Tổng mua : {partner.totalBuy}
+                    Tổng mua :{" "}
+                    <CurrencyFormat
+                      value={partner.totalBuy}
+                      displayType={"text"}
+                      thousandSeparator={true}
+                      renderText={(value) => <span>{value}</span>}
+                    />
                   </div>
                   <div className="info-detail-info">
-                    Công nợ : {partner.debt}
+                    Công nợ :{" "}
+                    <CurrencyFormat
+                      value={partner.debt}
+                      displayType={"text"}
+                      thousandSeparator={true}
+                      renderText={(value) => <span>{value}</span>}
+                    />
                   </div>
                   <div className="info-detail-info">
                     Ngày tạo: {convertDay(partner.createdAt)}
@@ -102,6 +205,16 @@ const TabBuyer = ({ match, history }) => {
                     type="primary"
                     size="large"
                     onClick={handlerShowModalUpdate}
+                    icon={<CopyOutlined />}
+                  >
+                    Danh sách hóa đơn
+                  </Button>
+                  <Button
+                    className="info-action__btn"
+                    type="primary"
+                    size="large"
+                    onClick={handlerShowModalUpdate}
+                    icon={<ToolOutlined />}
                   >
                     Cập nhật
                   </Button>
@@ -109,7 +222,7 @@ const TabBuyer = ({ match, history }) => {
                     className="info-action__btn"
                     type="primary"
                     size="large"
-                    danger
+                    icon={<StopOutlined />}
                     onClick={() => history.push("/notify")}
                   >
                     Ngừng hoạt động
@@ -118,7 +231,7 @@ const TabBuyer = ({ match, history }) => {
                     className="info-action__btn"
                     type="primary"
                     size="large"
-                    danger
+                    icon={<StopOutlined />}
                     onClick={handlerShowModalDelete}
                   >
                     Xóa
@@ -127,7 +240,37 @@ const TabBuyer = ({ match, history }) => {
               </div>
             </Tabs.TabPane>
             <Tabs.TabPane tab="Nợ cần trả" key="nocantra">
-              <NotifyScaleUp />
+              <Row className="row-tab-paid-debt">
+                <Col span={5} className="wrapperleft-table">
+                  <h2>Thanh Toán</h2>
+                  <SectionTabBuyer typeSection="partner" partner={partner} />
+                </Col>
+                <Col span={19}>
+                  <div className="top-table-list-bill">
+                    <Button type="primary" icon={<TransactionOutlined />}>
+                      Điều chỉnh
+                    </Button>
+                    <Button type="primary" icon={<CreditCardOutlined />}>
+                      Thanh toán
+                    </Button>
+                    <Button
+                      type="primary"
+                      icon={<DeliveredProcedureOutlined />}
+                    >
+                      Xuất file công nợ
+                    </Button>
+                    <Button
+                      type="primary"
+                      icon={<DeliveredProcedureOutlined />}
+                    >
+                      Xuất file
+                    </Button>
+                  </div>
+                  <div className="table-list-bill">
+                    <Table columns={columns} dataSource={listBillDebt} />
+                  </div>
+                </Col>
+              </Row>
             </Tabs.TabPane>
           </Tabs>
           <div className="icon-goback" onClick={() => history.goBack()}>
@@ -153,16 +296,16 @@ const TabBuyer = ({ match, history }) => {
                 </div>
               </div>
               <div className="info-detail">
-                <div className="info-detail-info partner-name">{partner.name}</div>
+                <div className="info-detail-info partner-name">
+                  {partner.name}
+                </div>
                 <div className="info-detail-info">
                   <span> Mã NCC</span>
                   <span className="partner-value">{"NCC" + partner.code}</span>
                 </div>
                 <div className="info-detail-info">
                   <span>Công ty</span>
-                  <span className="partner-value">
-                    {partner.nameCompany}
-                  </span>
+                  <span className="partner-value">{partner.nameCompany}</span>
                 </div>
                 <div className="info-detail-info">
                   <span>Điện thoại</span>

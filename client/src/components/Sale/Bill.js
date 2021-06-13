@@ -4,6 +4,7 @@ import { CloseOutlined, UserOutlined } from "@ant-design/icons";
 import DashboardSaleMobile from "../DashBoard/DashboardSaleMobile";
 import { createBillSell } from "../../api/billSell";
 import { notifyScreen } from "../../utils/notify";
+import CurrencyFormat from "react-currency-format";
 import "./styles/Bill.scss";
 
 const Bill = ({ listSelectProduct, hideBill, infoBuyer, nameSale }) => {
@@ -147,7 +148,12 @@ const Bill = ({ listSelectProduct, hideBill, infoBuyer, nameSale }) => {
                         {product.name}
                       </span>
                       <div>
-                        <span>{product.moneyOut}</span>
+                        <CurrencyFormat
+                          value={product.moneyOut}
+                          displayType={"text"}
+                          thousandSeparator={true}
+                          renderText={(value) => <span>{value}</span>}
+                        />
                         <span style={{ color: "rgba(145, 128, 128, 0.85)" }}>
                           {" "}
                           x {product.countNum}
@@ -169,7 +175,12 @@ const Bill = ({ listSelectProduct, hideBill, infoBuyer, nameSale }) => {
                         /> */}
                       </div>
                       <span style={{ color: "#77d672", fontWeight: "600" }}>
-                        {product.totalMoney}
+                        <CurrencyFormat
+                          value={product.totalMoney}
+                          displayType={"text"}
+                          thousandSeparator={true}
+                          renderText={(value) => <span>{value}</span>}
+                        />
                       </span>
                     </div>
                   </div>
@@ -204,7 +215,12 @@ const Bill = ({ listSelectProduct, hideBill, infoBuyer, nameSale }) => {
             <div style={{ fontSize: "15px", fontWeight: "600" }}>
               Tổng tiền :{" "}
               <span className="total-money" style={{ color: "#77d672" }}>
-                {totalMoney}
+                <CurrencyFormat
+                  value={totalMoney}
+                  displayType={"text"}
+                  thousandSeparator={true}
+                  renderText={(value) => <span>{value}</span>}
+                />
               </span>
             </div>
           </div>
@@ -227,7 +243,12 @@ const Bill = ({ listSelectProduct, hideBill, infoBuyer, nameSale }) => {
             <div style={{ fontSize: "15px", fontWeight: "600" }}>
               Tiền thừa trả :{" "}
               <span className="total-money" style={{ color: "#77d672" }}>
-                {totalExcessMoney}
+                <CurrencyFormat
+                  value={totalExcessMoney}
+                  displayType={"text"}
+                  thousandSeparator={true}
+                  renderText={(value) => <span>{value}</span>}
+                />
               </span>
             </div>
           </div>

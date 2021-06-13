@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Select, Menu, Button, Image } from "antd";
 import { SearchOutlined, MenuOutlined } from "@ant-design/icons";
+import CurrencyFormat from 'react-currency-format'
 import "./styles/Navbar.scss";
 
 const Navbar = ({ listProduct, valueSelectProduct }) => {
@@ -47,7 +48,7 @@ const Navbar = ({ listProduct, valueSelectProduct }) => {
                     <div>
                       <Image
                         src={
-                          process.env.NODE_ENV === "development"
+                          process.env.REACT_APP_ENV === "development"
                             ? `${process.env.REACT_APP_BACKEND_URL}/${product.image}`
                             : `/${product.image}`
                         }
@@ -68,7 +69,12 @@ const Navbar = ({ listProduct, valueSelectProduct }) => {
                           {"SP" + product.code}
                         </span>
                         <span style={{ marginLeft: "15px", fontSize: "13px" }}>
-                          Giá : {product.moneyOut}
+                          Giá : <CurrencyFormat
+                      value={product.moneyOut}
+                      displayType={"text"}
+                      thousandSeparator={true}
+                      renderText={(value) => <span>{value}</span>}
+                    />
                         </span>
                       </div>
                       <div>

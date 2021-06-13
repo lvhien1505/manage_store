@@ -30,11 +30,13 @@ const ContentMobile = ({ listProduct, handleChangeListProduct,history }) => {
       let res= await checkAuth(token);
       if (res.status === 200) {
         return setName(res.data.name);
+      }else{
+        window.location.href="/"
       }
       
     } catch (error) {
       notifyScreen("error","401","Lỗi xác thực !")
-      history.push("/login")
+      window.location.href="/"
     }
   }
 
@@ -168,7 +170,7 @@ const ContentMobile = ({ listProduct, handleChangeListProduct,history }) => {
                 <div className="product-info__avatar">
                   <Avatar
                     src={
-                      process.env.NODE_ENV === "development"
+                      process.env.REACT_APP_ENV === "development"
                         ? `${process.env.REACT_APP_BACKEND_URL}/${product.image}`
                         : `/${product.image}`
                     }

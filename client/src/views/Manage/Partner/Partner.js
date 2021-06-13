@@ -1,9 +1,11 @@
 import React, { useState,useEffect } from "react";
-import { Button,Table,Avatar } from "antd";
+import { Button,Table,Avatar,Row,Col } from "antd";
 import {Link} from 'react-router-dom'
-import { PlusOutlined,UserOutlined,PhoneOutlined } from "@ant-design/icons";
+import { PlusOutlined,UserOutlined,PhoneOutlined,DeliveredProcedureOutlined } from "@ant-design/icons";
 import Dashboard from "../../../components/DashBoard/Dashboard";
 import ModalAddPartner from "../../../components/Modals/ModalAdd/ModalAddPartner";
+import SectionPartner from '../../../components/SectionTab/SectionPartner'
+import CurrencyFormat from "react-currency-format";
 import {getListPartner} from '../../../api/partner';
 import avatar from "../../../logo/avatar/default.jpg";
 import {notifyScreen} from '../../../utils/notify';
@@ -33,7 +35,9 @@ const Partner = ({history}) => {
       title: 'Mã NCC',
       dataIndex: 'code',
       key: 'code',
-      render:(text)=>("NCC" + text)
+      render: (text, obj) => (
+        <Link to={`/dashboard/partner/${obj._id}`}>{"NCC" + text}</Link>
+      ),
     },
     {
       title: 'Tên NCC',
@@ -54,23 +58,26 @@ const Partner = ({history}) => {
       title: 'Nợ cần trả NCC',
       key: 'debt',
       dataIndex: 'debt',
+      render: (text) => (
+        <CurrencyFormat
+          value={text}
+          displayType={"text"}
+          thousandSeparator={true}
+          renderText={(value) => <span>{value}</span>}
+        />
+      ),
     },
     {
       title: 'Tổng mua',
       key: 'totalBuy',
       dataIndex: 'totalBuy',
-    },
-    {
-      title: "Cập nhật",
-      key: "id",
-      dataIndex: "_id",
-      render: (id) => (
-        <Button
-          type="primary"
-          onClick={() => history.push(`/dashboard/partner/${id}`)}
-        >
-          Thông tin/Trả nợ
-        </Button>
+      render: (text) => (
+        <CurrencyFormat
+          value={text}
+          displayType={"text"}
+          thousandSeparator={true}
+          renderText={(value) => <span>{value}</span>}
+        />
       ),
     },
   ];
@@ -81,23 +88,41 @@ const Partner = ({history}) => {
 
   return (
     <Dashboard nameSelect="Nhà cung cấp" defaulCheckKey="6">
-      <div className="partner-wrapper">
-        <div className="btn">
-          <Button
-            onClick={() => setHideModalAdd(!hideModalAdd)}
-            className="btn-add__partner"
-            icon={<PlusOutlined className="icon-plus__edit" />}
-          >
-            Thêm nhà cung cấp
-          </Button>
-        </div>
+      <div className="modal-partner">
         <ModalAddPartner
           hideModal={hideModalAdd}
           handleHideModal={handlerHideModal}
         />
       </div>
       <div className="partner-table__pc">
-         <Table columns={columns} dataSource={listPartner?listPartner:[]} />
+      <h2>Nhà cung cấp</h2>
+        <Row>
+          <Col span={5}>
+            <SectionPartner
+            listPartner={listPartner.length >0 ? listPartner :[]}
+            typeSection="partner"
+            />
+          </Col>
+          <Col span={19}>
+            <div className="top-table-list-partner">
+              <Button
+                type="primary"
+                icon={<PlusOutlined />}
+                onClick={() => setHideModalAdd(!hideModalAdd)}
+              >
+                Thêm mới
+              </Button>
+              <Button type="primary" icon={<DeliveredProcedureOutlined />}>
+                Xuất file
+              </Button>
+            </div>
+            <div className="table-list-partner">
+              {" "}
+              <Table columns={columns} dataSource={listPartner?listPartner:[]} />
+            </div>
+          </Col>
+        </Row>
+         
       </div>
       <div className="partner-table__mobile">
       <div className="total-partner">

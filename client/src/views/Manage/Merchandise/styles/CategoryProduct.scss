@@ -12,21 +12,35 @@ $res_320: "only screen and (min-width: 320px) and (max-width: 424px)";
 }
 
 .category-wrapper {
+  height: 40px;
+  padding-left: 50px;
+  padding-right: 50px;
   .btn {
-    width: 10%;
-    margin: 0 auto;
-    .btn-add__category {
-      background-color: #4bac4d;
-      color: white;
+    float: right;
+    button {
+      height: 40px;
+      border: none;
       border-radius: 4px;
+      color: #fff;   
+    }
+
+    button:nth-child(n + 1) {
+      background-color: #419543;
+    }
+    button:nth-child(n + 1):hover {
+      background-color: #2b612c;
     }
   }
   @include responsive_320() {
-    .btn {
-        display: flex;
-        justify-content: center;
-        margin-top: 3px;
+    .category-wrapper {
+      padding-left: 10px;
+      padding-right: 10px;
     }
+    .category-table{
+      margin-top: 10px;
+      padding-left: 10px;
+      padding-right: 10px;
+  }
   }
   .icon-plus__edit {
     color: white;
@@ -34,5 +48,28 @@ $res_320: "only screen and (min-width: 320px) and (max-width: 424px)";
 }
 
 .category-table{
-    margin-top: 10px;
+  margin-top: 10px;
+    padding-left: 50px;
+    padding-right: 50px;
+    .ant-table-thead > tr >th{
+      background-color: #dcf4fc !important;
+    }
+    button{
+      border: none;
+    }
+  
+    .btn-update-category {
+      background-color: #419543;
+    }
+  
+    .btn-remove-category {
+      background-color: #898c8d;
+    }
+    .btn-update-category:hover {
+      background-color: #2b612c;
+    }
+    .btn-remove-category:hover {
+      background-color: #494d4e;
+    }
 }
+

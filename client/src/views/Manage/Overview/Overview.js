@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Button, Select, Space } from "antd";
+import CurrencyFormat from "react-currency-format";
 import { Link } from "react-router-dom";
-import {
-  DollarCircleFilled,
-  ShopFilled,
-  ShoppingFilled,
-} from "@ant-design/icons";
+import { DollarCircleFilled } from "@ant-design/icons";
 import { Column } from "@ant-design/charts";
 import Dashboard from "../../../components/DashBoard/Dashboard";
 import { getBillBuyWithLimit } from "../../../api/billBuy";
@@ -17,25 +14,26 @@ const Overview = () => {
   const [listBillSell, setListBillSell] = useState([]);
   const [dataChart, setDataChart] = useState([{ "Doanh thu": 2000000 }]);
   const [totalMoneyRevenueToday, setTotalMoneyRevenueToday] = useState(0);
+  const [totalMoneyRevenueSelect, setTotalMoneyRevenueSelect] = useState(0);
   const [numBill, setNumbill] = useState(0);
   const [typeHistory, setTypeHistory] = useState("");
   const [listBillBuy, setlistBillBuy] = useState([]);
-  const [dayBill, setDayBill] = useState("");
-  const [monthBill, setMonthBill] = useState("");
-  const [yearBill, setYearBill] = useState("");
+  let [dayBill, setDayBill] = useState("");
+  let [monthBill, setMonthBill] = useState("");
+  let [yearBill, setYearBill] = useState("");
   const [select, setSelect] = useState("");
 
   const __getListBillSell = async () => {
     try {
       let res = await getBillWithLimit();
       if (res.status === 200) {
-        let total = filterRevenue("1");
+        let total = filterRevenue("homnay");
         setDataChart([
-          { "Doanh thu ": 200000 },
-          { "Doanh thu": total.totalMoney, action: "Hôm nay" },
+          { "Doanh thu": total.totalMoney, action: "Hôm nay", type: "Hôm nay" },
         ]);
         setNumbill(total.numBill);
         setTotalMoneyRevenueToday(total.totalMoney);
+        setTotalMoneyRevenueSelect(total.totalMoney);
         return setListBillSell(res.data);
       }
     } catch (error) {
@@ -55,23 +53,389 @@ const Overview = () => {
   };
 
   const filterRevenue = (value) => {
+    __getTime();
     let totalMoney = 0;
-    if (value === "1") {
-      let newListBillAfterFilter = listBillSell.filter((bill) => {
-        let arrayTime = bill.createdDay.split("/");
-        return (
-          arrayTime[0] == dayBill &&
-          arrayTime[1] == monthBill &&
-          arrayTime[2] == yearBill
+    let newListBillAfterFilter = [];
+    dayBill = parseInt(dayBill);
+    monthBill = parseInt(monthBill);
+    yearBill = parseInt(yearBill);
+    switch (value) {
+      case "homnay":
+        newListBillAfterFilter = [
+          ...listBillSell.filter((bill) => {
+            let arrayTime = bill.createdDay.split("/");
+            return (
+              parseInt(arrayTime[0]) == dayBill &&
+              parseInt(arrayTime[1]) == monthBill &&
+              parseInt(arrayTime[2]) == yearBill
+            );
+          }),
+        ];
+        totalMoney = newListBillAfterFilter.reduce(
+          (previousValue, currentValue) =>
+            previousValue + currentValue.totalBuyerPaidNeed,
+          0
         );
-      });
-      newListBillAfterFilter.forEach((bill) => {
-        totalMoney += bill.totalBuyerPaidNeed;
-      });
-      return {
-        totalMoney,
-        numBill: newListBillAfterFilter.length,
-      };
+        return {
+          totalMoney,
+          newListBillAfterFilter,
+        };
+
+        break;
+      case "homqua":
+        newListBillAfterFilter = [
+          ...listBillSell.filter((bill) => {
+            let arrayTime = bill.createdDay.split("/");
+
+            if (dayBill == 1 && monthBill == 1) {
+              return (
+                parseInt(arrayTime[0]) == 31 &&
+                parseInt(arrayTime[1]) == 12 &&
+                parseInt(arrayTime[2]) == yearBill - 1
+              );
+            } else if (dayBill == 1) {
+              if (monthBill == 3) {
+                return (
+                  parseInt(arrayTime[0]) == 28 &&
+                  parseInt(arrayTime[1]) == 2 &&
+                  parseInt(arrayTime[2]) == yearBill
+                );
+              }
+              if (
+                monthBill == 5 ||
+                monthBill == 7 ||
+                monthBill == 8 ||
+                monthBill == 10 ||
+                monthBill == 12
+              ) {
+                return (
+                  parseInt(arrayTime[0]) == 30 &&
+                  parseInt(arrayTime[1]) == monthBill - 1 &&
+                  parseInt(arrayTime[2]) == yearBill
+                );
+              }
+              return (
+                parseInt(arrayTime[0]) == 31 &&
+                parseInt(arrayTime[1]) == monthBill - 1 &&
+                parseInt(arrayTime[2]) == yearBill
+              );
+            } else {
+              return (
+                parseInt(arrayTime[0]) == dayBill - 1 &&
+                parseInt(arrayTime[1]) == monthBill &&
+                parseInt(arrayTime[2]) == yearBill
+              );
+            }
+          }),
+        ];
+        totalMoney = newListBillAfterFilter.reduce(
+          (previousValue, currentValue) =>
+            previousValue + currentValue.totalBuyerPaidNeed,
+          0
+        );
+        return {
+          totalMoney,
+          newListBillAfterFilter,
+        };
+
+        break;
+
+      case "7ngayqua":
+        if (dayBill <= 6 && monthBill == 1) {
+          for (let i = 0; i < 7; i++) {
+            let copyListBillSellFilterWithDay = [];
+            let dayBillCreated = `${dayBill}/${monthBill}`;
+
+            if (dayBill == 0) {
+              dayBill = 30;
+              monthBill = 12;
+              dayBillCreated = `${dayBill}/${monthBill}`;
+              copyListBillSellFilterWithDay = [
+                ...listBillSell.filter((bill) => {
+                  let arrayTime = bill.createdDay.split("/");
+                  return (
+                    parseInt(arrayTime[0]) == dayBill &&
+                    parseInt(arrayTime[1]) == monthBill &&
+                    parseInt(arrayTime[2]) == yearBill - 1
+                  );
+                }),
+              ];
+              newListBillAfterFilter.push([
+                {
+                  listDataBillSell: copyListBillSellFilterWithDay,
+                  dayBillCreated,
+                },
+              ]);
+            } else {
+              copyListBillSellFilterWithDay = [
+                ...listBillSell.filter((bill) => {
+                  let arrayTime = bill.createdDay.split("/");
+                  return (
+                    parseInt(arrayTime[0]) == dayBill &&
+                    parseInt(arrayTime[1]) == monthBill &&
+                    parseInt(arrayTime[2]) == yearBill
+                  );
+                }),
+              ];
+              newListBillAfterFilter.push([
+                {
+                  listDataBillSell: copyListBillSellFilterWithDay,
+                  dayBillCreated,
+                },
+              ]);
+            }
+            dayBill = dayBill - 1;
+          }
+        } else if (dayBill <= 6) {
+          for (let i = 0; i < 7; i++) {
+            let copyListBillSellFilterWithDay = [];
+            let dayBillCreated = `${dayBill}/${monthBill}`;
+
+            if (
+              dayBill == 0 &&
+              (monthBill == 5 ||
+                monthBill == 7 ||
+                monthBill == 8 ||
+                monthBill == 10 ||
+                monthBill == 12)
+            ) {
+              dayBill = 30;
+              monthBill = monthBill - 1;
+              dayBillCreated = `${dayBill}/${monthBill}`;
+              copyListBillSellFilterWithDay = [
+                ...listBillSell.filter((bill) => {
+                  let arrayTime = bill.createdDay.split("/");
+                  return (
+                    parseInt(arrayTime[0]) == dayBill &&
+                    parseInt(arrayTime[1]) == monthBill &&
+                    parseInt(arrayTime[2]) == yearBill
+                  );
+                }),
+              ];
+              newListBillAfterFilter.push([
+                {
+                  listDataBillSell: copyListBillSellFilterWithDay,
+                  dayBillCreated,
+                },
+              ]);
+            } else if (dayBill == 0 && monthBill == 3) {
+              dayBill = 28;
+              monthBill = 2;
+              dayBillCreated = `${dayBill}/${monthBill}`;
+              copyListBillSellFilterWithDay = [
+                ...listBillSell.filter((bill) => {
+                  let arrayTime = bill.createdDay.split("/");
+                  return (
+                    parseInt(arrayTime[0]) == dayBill &&
+                    parseInt(arrayTime[1]) == monthBill &&
+                    parseInt(arrayTime[2]) == yearBill
+                  );
+                }),
+              ];
+              newListBillAfterFilter.push([
+                {
+                  listDataBillSell: copyListBillSellFilterWithDay,
+                  dayBillCreated,
+                },
+              ]);
+            } else {
+              dayBill = 31;
+              monthBill = monthBill - 1;
+              dayBillCreated = `${dayBill}/${monthBill}`;
+              copyListBillSellFilterWithDay = [
+                ...listBillSell.filter((bill) => {
+                  let arrayTime = bill.createdDay.split("/");
+                  return (
+                    parseInt(arrayTime[0]) == dayBill &&
+                    parseInt(arrayTime[1]) == monthBill &&
+                    parseInt(arrayTime[2]) == yearBill
+                  );
+                }),
+              ];
+              newListBillAfterFilter.push([
+                {
+                  listDataBillSell: copyListBillSellFilterWithDay,
+                  dayBillCreated,
+                },
+              ]);
+            }
+            dayBill = dayBill - i;
+          }
+        } else {
+          for (let i = 0; i < 7; i++) {
+            let copyListBillSellFilterWithDay = [];
+            let dayBillCreated = `${dayBill}/${monthBill}`;
+            copyListBillSellFilterWithDay = [
+              ...listBillSell.filter((bill) => {
+                let arrayTime = bill.createdDay.split("/");
+                return (
+                  parseInt(arrayTime[0]) == dayBill &&
+                  parseInt(arrayTime[1]) == monthBill &&
+                  parseInt(arrayTime[2]) == yearBill
+                );
+              }),
+            ];
+            newListBillAfterFilter.push([
+              {
+                listDataBillSell: copyListBillSellFilterWithDay,
+                dayBillCreated,
+              },
+            ]);
+            dayBill = dayBill - 1;
+          }
+        }
+        for (let i = 0; i < newListBillAfterFilter.length; i++) {
+          if (newListBillAfterFilter[i][0].listDataBillSell.length > 0) {
+            totalMoney += newListBillAfterFilter[i][0].listDataBillSell.reduce(
+              (previousValue, currentValue) =>
+                previousValue + currentValue.totalBuyerPaidNeed,
+              0
+            );
+          }
+        }
+
+        return {
+          totalMoney: totalMoney,
+          listDataBillSell: newListBillAfterFilter,
+        };
+        break;
+
+      case "thangnay":
+        let conditionStop = dayBill;
+        for (let i = 0; i < conditionStop; i++) {
+          let copyListBillSellFilterWithDay = [];
+          let dayBillCreated = `${dayBill}/${monthBill}`;
+          copyListBillSellFilterWithDay = [
+            ...listBillSell.filter((bill) => {
+              let arrayTime = bill.createdDay.split("/");
+              return (
+                parseInt(arrayTime[0]) == dayBill &&
+                parseInt(arrayTime[1]) == monthBill &&
+                parseInt(arrayTime[2]) == yearBill
+              );
+            }),
+          ];
+
+          newListBillAfterFilter.push([
+            {
+              listDataBillSell: copyListBillSellFilterWithDay,
+              dayBillCreated,
+            },
+          ]);
+          dayBill = dayBill - 1;
+        }
+
+        for (let i = 0; i < newListBillAfterFilter.length; i++) {
+          if (newListBillAfterFilter[i][0].listDataBillSell.length > 0) {
+            totalMoney += newListBillAfterFilter[i][0].listDataBillSell.reduce(
+              (previousValue, currentValue) =>
+                previousValue + currentValue.totalBuyerPaidNeed,
+              0
+            );
+          }
+        }
+
+        return {
+          totalMoney: totalMoney,
+          listDataBillSell: newListBillAfterFilter,
+        };
+        break;
+
+      case "thangtruoc":
+        let previousMonthBill = monthBill - 1;
+        if (previousMonthBill == 2) {
+          for (let i = 0; i < 28; i++) {
+            let copyListBillSellFilterWithDay = [];
+            let dayBillCreated = `${i + 1}/${previousMonthBill}`;
+            copyListBillSellFilterWithDay = [
+              ...listBillSell.filter((bill) => {
+                let arrayTime = bill.createdDay.split("/");
+                return (
+                  parseInt(arrayTime[0]) == i + 1 &&
+                  parseInt(arrayTime[1]) == previousMonthBill &&
+                  parseInt(arrayTime[2]) == yearBill
+                );
+              }),
+            ];
+
+            newListBillAfterFilter.push([
+              {
+                listDataBillSell: copyListBillSellFilterWithDay,
+                dayBillCreated,
+              },
+            ]);
+          }
+        } else if (
+          previousMonthBill == 1 ||
+          previousMonthBill == 3 ||
+          previousMonthBill == 5 ||
+          previousMonthBill == 7 ||
+          previousMonthBill == 8 ||
+          previousMonthBill == 10 ||
+          previousMonthBill == 12
+        ) {
+          for (let i = 0; i < 31; i++) {
+            let copyListBillSellFilterWithDay = [];
+            let dayBillCreated = `${i + 1}/${previousMonthBill}`;
+            copyListBillSellFilterWithDay = [
+              ...listBillSell.filter((bill) => {
+                let arrayTime = bill.createdDay.split("/");
+                return (
+                  parseInt(arrayTime[0]) == i + 1 &&
+                  parseInt(arrayTime[1]) == previousMonthBill &&
+                  parseInt(arrayTime[2]) == yearBill
+                );
+              }),
+            ];
+
+            newListBillAfterFilter.push([
+              {
+                listDataBillSell: copyListBillSellFilterWithDay,
+                dayBillCreated,
+              },
+            ]);
+          }
+        } else {
+          for (let i = 0; i < 30; i++) {
+            let copyListBillSellFilterWithDay = [];
+            let dayBillCreated = `${i + 1}/${previousMonthBill}`;
+            copyListBillSellFilterWithDay = [
+              ...listBillSell.filter((bill) => {
+                let arrayTime = bill.createdDay.split("/");
+                return (
+                  parseInt(arrayTime[0]) == i + 1 &&
+                  parseInt(arrayTime[1]) == previousMonthBill &&
+                  parseInt(arrayTime[2]) == yearBill
+                );
+              }),
+            ];
+
+            newListBillAfterFilter.push([
+              {
+                listDataBillSell: copyListBillSellFilterWithDay,
+                dayBillCreated,
+              },
+            ]);
+          }
+        }
+
+        for (let i = 0; i < newListBillAfterFilter.length; i++) {
+          if (newListBillAfterFilter[i][0].listDataBillSell.length > 0) {
+            totalMoney += newListBillAfterFilter[i][0].listDataBillSell.reduce(
+              (previousValue, currentValue) =>
+                previousValue + currentValue.totalBuyerPaidNeed,
+              0
+            );
+          }
+        }
+
+        return {
+          totalMoney: totalMoney,
+          listDataBillSell: newListBillAfterFilter,
+        };
+        break;
+      default:
+        break;
     }
   };
 
@@ -86,29 +450,83 @@ const Overview = () => {
   };
 
   const handleChangeSelect = (value) => {
+    let total = null;
+    let listDataChart = [];
     switch (value) {
-      case "1":
-        let total = filterRevenue(value);
-        setTotalMoneyRevenueToday(total.totalMoney);
+      case "homnay":
+        total = filterRevenue(value);
+        setTotalMoneyRevenueSelect(total.totalMoney);
         setDataChart([
-          { "Doanh thu ": 200000 },
-          { "Doanh thu": total.totalMoney, action: "Hôm nay" },
+          { "Doanh thu": total.totalMoney, action: "Hôm nay", type: "Hôm nay" },
         ]);
         setSelect("hôm nay");
         break;
-      case "2":
+      case "homqua":
+        total = filterRevenue(value);
+        setTotalMoneyRevenueSelect(total.totalMoney);
+        setDataChart([
+          { "Doanh thu": total.totalMoney, action: "Hôm qua", type: "Hôm qua" },
+        ]);
         setSelect("hôm qua");
         break;
 
-      case "3":
+      case "7ngayqua":
+        listDataChart = [];
+        total = filterRevenue(value);
+        setTotalMoneyRevenueSelect(total.totalMoney);
+        for (let i = 0; i < total.listDataBillSell.length; i++) {
+          let totalMoney = total.listDataBillSell[i][0].listDataBillSell.reduce(
+            (previousValue, currentValue) =>
+              previousValue + currentValue.totalBuyerPaidNeed,
+            0
+          );
+          listDataChart.push({
+            "Doanh thu": totalMoney,
+            action: `${total.listDataBillSell[i][0].dayBillCreated}`,
+            type: `${total.listDataBillSell[i][0].dayBillCreated}`,
+          });
+        }
+        setDataChart(listDataChart.sort(() => -1));
         setSelect("7 ngày qua");
         break;
 
-      case "4":
+      case "thangnay":
+        listDataChart = [];
+        total = filterRevenue(value);
+        setTotalMoneyRevenueSelect(total.totalMoney);
+        for (let i = 0; i < total.listDataBillSell.length; i++) {
+          let totalMoney = total.listDataBillSell[i][0].listDataBillSell.reduce(
+            (previousValue, currentValue) =>
+              previousValue + currentValue.totalBuyerPaidNeed,
+            0
+          );
+          listDataChart.push({
+            "Doanh thu": totalMoney,
+            action: `${total.listDataBillSell[i][0].dayBillCreated}`,
+            type: `${total.listDataBillSell[i][0].dayBillCreated}`,
+          });
+        }
+        setDataChart(listDataChart.sort(() => -1));
         setSelect("tháng này");
         break;
 
-      case "5":
+      case "thangtruoc":
+        listDataChart = [];
+        total = filterRevenue(value);
+        setTotalMoneyRevenueSelect(total.totalMoney);
+        for (let i = 0; i < total.listDataBillSell.length; i++) {
+          let totalMoney = total.listDataBillSell[i][0].listDataBillSell.reduce(
+            (previousValue, currentValue) =>
+              previousValue + currentValue.totalBuyerPaidNeed,
+            0
+          );
+          listDataChart.push({
+            "Doanh thu": totalMoney,
+            action: `${total.listDataBillSell[i][0].dayBillCreated}`,
+            type: `${total.listDataBillSell[i][0].dayBillCreated}`,
+          });
+        }
+        setDataChart(listDataChart.sort());
         setSelect("tháng trước");
         break;
       default:
@@ -148,7 +566,12 @@ const Overview = () => {
                     color: "#0094da",
                   }}
                 >
-                  {totalMoneyRevenueToday}
+                  <CurrencyFormat
+                    value={totalMoneyRevenueToday}
+                    displayType={"text"}
+                    thousandSeparator={true}
+                    renderText={(value) => <span>{value}</span>}
+                  />
                 </span>
                 <span style={{ color: "#666682" }}>Doanh thu</span>
               </div>
@@ -165,25 +588,33 @@ const Overview = () => {
                     marginLeft: "15px",
                   }}
                 >
-                  {totalMoneyRevenueToday}
+                  <CurrencyFormat
+                    value={totalMoneyRevenueSelect}
+                    displayType={"text"}
+                    thousandSeparator={true}
+                    renderText={(value) => <span>{value}</span>}
+                  />
                 </h3>
               </div>
               <div className="select">
                 <Select
                   style={{ width: "100px", backgroundColor: "#666682" }}
                   onChange={handleChangeSelect}
-                  defaultValue={"1"}
+                  defaultValue={"homnay"}
                 >
-                  <Select.Option key="1" value="1">
+                  <Select.Option key="1" value="homnay">
                     Hôm nay
                   </Select.Option>
-                  <Select.Option key="3" value="3">
+                  <Select.Option key="2" value="homqua">
+                    Hôm qua
+                  </Select.Option>
+                  <Select.Option key="3" value="7ngayqua">
                     7 ngày qua
                   </Select.Option>
-                  <Select.Option key="4" value="4">
+                  <Select.Option key="4" value="thangnay">
                     Tháng này
                   </Select.Option>
-                  <Select.Option key="5" value="5">
+                  <Select.Option key="5" value="thangtruoc">
                     Tháng trước
                   </Select.Option>
                 </Select>
@@ -221,60 +652,141 @@ const Overview = () => {
                 </Button>
               </Space>
             </div>
-            {typeHistory ? (
-              typeHistory === "sell" ? (
-                listBillSell.map((bill) => (
-                  <div style={{width:"75%",margin:"0 auto",marginTop:"10px",borderBottom:"1px solid #c6d3df",paddingBottom:"5px"}}>
+            {typeHistory
+              ? typeHistory === "sell"
+                ? listBillSell.map((bill) => (
+                    <div
+                      style={{
+                        width: "75%",
+                        margin: "0 auto",
+                        marginTop: "10px",
+                        borderBottom: "1px solid #c6d3df",
+                        paddingBottom: "5px",
+                      }}
+                      key={bill._id}
+                    >
+                      <span>{bill.userSell}</span>
+                      <Link
+                        to={`/dashboard/transaction/bill-success/${bill._id}`}
+                      >
+                        <span style={{ marginLeft: "10px" }}>
+                          vừa bán đơn hàng
+                        </span>
+                      </Link>
+                      <div>
+                        <span style={{ fontSize: "13px" }}>
+                          với giá trị{" "}
+                          <span style={{ color: "#4bac4d" }}>
+                            {" "}
+                            <CurrencyFormat
+                              value={bill.totalBuyerPaidNeed}
+                              displayType={"text"}
+                              thousandSeparator={true}
+                              renderText={(value) => <span>{value}</span>}
+                            />
+                          </span>
+                        </span>
+                      </div>
+                      <div>
+                        <span
+                          style={{
+                            fontSize: "13px",
+                            color: "rgba(108, 97, 97, 0.85)",
+                          }}
+                        >
+                          {bill.createdHour + " - " + bill.createdDay}
+                        </span>
+                      </div>
+                    </div>
+                  ))
+                : listBillBuy.map((bill) => (
+                    <div
+                      style={{
+                        width: "75%",
+                        margin: "0 auto",
+                        marginTop: "10px",
+                        borderBottom: "1px solid #c6d3df",
+                        paddingBottom: "5px",
+                      }}
+                      key={bill._id}
+                    >
+                      <span>{bill.userSell}</span>
+                      <Link
+                        to={`/dashboard/transaction/buy/bill-success/${bill._id}`}
+                      >
+                        <span style={{ marginLeft: "10px" }}>
+                          vừa nhập đơn hàng
+                        </span>
+                      </Link>
+                      <div>
+                        <span style={{ fontSize: "13px" }}>
+                          với giá trị{" "}
+                          <span style={{ color: "#4bac4d" }}>
+                            <CurrencyFormat
+                              value={bill.totalPaidNeedPartner}
+                              displayType={"text"}
+                              thousandSeparator={true}
+                              renderText={(value) => <span>{value}</span>}
+                            />
+                          </span>
+                        </span>
+                      </div>
+                      <div>
+                        <span
+                          style={{
+                            fontSize: "13px",
+                            color: "rgba(108, 97, 97, 0.85)",
+                          }}
+                        >
+                          {bill.createdHour + " - " + bill.createdDay}
+                        </span>
+                      </div>
+                    </div>
+                  ))
+              : listBillSell.map((bill) => (
+                  <div
+                    style={{
+                      width: "75%",
+                      margin: "0 auto",
+                      marginTop: "10px",
+                      borderBottom: "1px solid #c6d3df",
+                      paddingBottom: "5px",
+                    }}
+                    key={bill._id}
+                  >
                     <span>{bill.userSell}</span>
                     <Link
                       to={`/dashboard/transaction/bill-success/${bill._id}`}
                     >
-                      <span style={{marginLeft:"10px"}}>vừa bán đơn hàng</span>
+                      <span style={{ marginLeft: "10px" }}>
+                        vừa bán đơn hàng
+                      </span>
                     </Link>
                     <div>
-                      <span style={{fontSize:"13px"}}>với giá trị <span style={{color: "#4bac4d"}}>{bill.totalBuyerPaidNeed}</span></span>
+                      <span style={{ fontSize: "13px" }}>
+                        với giá trị{" "}
+                        <span style={{ color: "#4bac4d" }}>
+                          <CurrencyFormat
+                            value={bill.totalBuyerPaidNeed}
+                            displayType={"text"}
+                            thousandSeparator={true}
+                            renderText={(value) => <span>{value}</span>}
+                          />
+                        </span>
+                      </span>
                     </div>
                     <div>
-                      <span style={{fontSize:"13px",color:"rgba(108, 97, 97, 0.85)"}}>{bill.createdHour + " - " + bill.createdDay}</span>
+                      <span
+                        style={{
+                          fontSize: "13px",
+                          color: "rgba(108, 97, 97, 0.85)",
+                        }}
+                      >
+                        {bill.createdHour + " - " + bill.createdDay}
+                      </span>
                     </div>
                   </div>
-                ))
-              ) :  (
-                listBillBuy.map((bill) => (
-                  <div style={{width:"75%",margin:"0 auto",marginTop:"10px",borderBottom:"1px solid #c6d3df",paddingBottom:"5px"}}>
-                    <span>{bill.userSell}</span>
-                    <Link
-                      to={`/dashboard/transaction/buy/bill-success/${bill._id}`}
-                    >
-                      <span style={{marginLeft:"10px"}}>vừa nhập đơn hàng</span>
-                    </Link>
-                    <div>
-                      <span style={{fontSize:"13px"}}>với giá trị <span style={{color: "#4bac4d"}}>{bill.totalPaidNeedPartner}</span></span>
-                    </div>
-                    <div>
-                      <span style={{fontSize:"13px",color:"rgba(108, 97, 97, 0.85)"}}>{bill.createdHour + " - " + bill.createdDay}</span>
-                    </div>
-                  </div>
-                ))
-              )
-            ) : (
-              listBillSell.map((bill) => (
-                <div style={{width:"75%",margin:"0 auto",marginTop:"10px",borderBottom:"1px solid #c6d3df",paddingBottom:"5px"}}>
-                  <span>{bill.userSell}</span>
-                  <Link
-                    to={`/dashboard/transaction/bill-success/${bill._id}`}
-                  >
-                    <span style={{marginLeft:"10px"}}>vừa bán đơn hàng</span>
-                  </Link>
-                  <div>
-                    <span style={{fontSize:"13px"}}>với giá trị <span style={{color: "#4bac4d"}}>{bill.totalBuyerPaidNeed}</span></span>
-                  </div>
-                  <div>
-                    <span style={{fontSize:"13px",color:"rgba(108, 97, 97, 0.85)"}}>{bill.createdHour + " - " + bill.createdDay}</span>
-                  </div>
-                </div>
-              ))
-            )}
+                ))}
           </div>
         </div>
       </div>

@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Button, Table,Avatar } from "antd";
-import {Link} from 'react-router-dom'
-import { PlusOutlined } from "@ant-design/icons";
+import { Button, Table, Avatar, Row, Col } from "antd";
+import { Link } from "react-router-dom";
+import { PlusOutlined, DeliveredProcedureOutlined } from "@ant-design/icons";
+import CurrencyFormat from "react-currency-format";
 import Dashboard from "../../../components/DashBoard/Dashboard";
 import ModalAddMerchandise from "../../../components/Modals/ModalAdd/ModalAddMerchandise";
+import SectionCategoryMerchandise from "../../../components/SectionTab/SectionCategoryMerchandise";
 import { getProduct } from "../../../api/product";
+import { getListCategory } from "../../../api/category";
 import { notifyScreen } from "../../../utils/notify";
 import "./styles/Merchandise.scss";
 
 const Merchandise = ({ history }) => {
   const [hideModalAdd, setHideModalAdd] = useState(false);
   const [listMerchandise, setListMerchandise] = useState([]);
+  const [listCategory, setListCategory] = useState([]);
 
   const handlerHideModal = () => {
     return setHideModalAdd(!hideModalAdd);
@@ -27,12 +31,30 @@ const Merchandise = ({ history }) => {
     }
   };
 
+  const __getCategory = async () => {
+    try {
+      let res = await getListCategory();
+      if (res.status === 200) {
+        res.data.push({name:"Tất cả"})
+        return setListCategory(res.data);
+      }
+    } catch (error) {
+      notifyScreen("error", "500", "Lỗi không xác định");
+    }
+  };
+
+  const handleFilterListMerchandise = (list)=>{
+    console.log(list);
+  }
+
   const columns = [
     {
       title: "Mã hàng",
       dataIndex: "code",
       key: "code",
-      render: (text) => "SP" + text,
+      render: (text, obj) => (
+        <Link to={`/dashboard/merchandise/${obj._id}`}>{"SP" + text}</Link>
+      ),
     },
     {
       title: "Tên hàng",
@@ -43,58 +65,80 @@ const Merchandise = ({ history }) => {
       title: "Giá nhập",
       dataIndex: "moneyIn",
       key: "moneyIn",
+      render: (text) => (
+        <CurrencyFormat
+          value={text}
+          displayType={"text"}
+          thousandSeparator={true}
+          renderText={(value) => <span>{value}</span>}
+        />
+      ),
     },
     {
       title: "Giá bán",
       key: "moneyOut",
       dataIndex: "moneyOut",
+      render: (text) => (
+        <CurrencyFormat
+          value={text}
+          displayType={"text"}
+          thousandSeparator={true}
+          renderText={(value) => <span>{value}</span>}
+        />
+      ),
     },
     {
       title: "Tồn kho",
       key: "inventory",
       dataIndex: "inventory",
     },
-    {
-      title: "Cập nhật",
-      key: "id",
-      dataIndex: "_id",
-      render: (id) => (
-        <Button
-          type="primary"
-          onClick={() => history.push(`/dashboard/merchandise/${id}`)}
-        >
-          Thông tin/Điều chỉnh
-        </Button>
-      ),
-    },
   ];
 
   useEffect(() => {
     __getProduct();
+    __getCategory();
   }, [hideModalAdd]);
 
   return (
     <Dashboard nameSelect="Hàng hóa" defaulCheckKey="2">
-      <div className="merchandise-wrapper">
-        <div className="btn">
-          <Button
-            onClick={() => setHideModalAdd(!hideModalAdd)}
-            className="btn-add__merchandise"
-            icon={<PlusOutlined className="icon-plus__edit" />}
-          >
-            Thêm hàng hóa
-          </Button>
-        </div>
-        <ModalAddMerchandise
+      <div className="modal-merchandise">
+      <ModalAddMerchandise
           hideModal={hideModalAdd}
           handleHideModal={handlerHideModal}
         />
       </div>
       <div className="merchandise-table__pc">
-        <Table
-          columns={columns}
-          dataSource={listMerchandise.length > 0 ? listMerchandise : []}
-        />
+        <h2>Hàng hóa</h2>
+        <Row>
+          <Col span={5}>
+            <SectionCategoryMerchandise
+              listMerchandise={
+                listMerchandise.length > 0 ? listMerchandise : []
+              }
+              listCategory={listCategory.length > 0 ? listCategory : []}
+              handleFilter={handleFilterListMerchandise}
+            />
+          </Col>
+          <Col span={19}>
+            <div className="top-table-list-product">
+              <Button
+                type="primary"
+                icon={<PlusOutlined />}
+                onClick={() => setHideModalAdd(!hideModalAdd)}
+              >
+                Thêm mới
+              </Button>
+              <Button type="primary" icon={<DeliveredProcedureOutlined />}>
+                Xuất file
+              </Button>
+            </div>
+            <div className="table-list-product">
+              {" "}
+              <Table dataSource={listMerchandise} columns={columns} />
+            </div>
+          </Col>
+        </Row>
+        
       </div>
       <div className="merchandise-table__mobile">
         <div className="total-merchandise">
@@ -111,12 +155,12 @@ const Merchandise = ({ history }) => {
                     <div className="merchandise-info__avatar">
                       <Avatar
                         src={
-                          process.env.NODE_ENV === "development"
+                          process.env.REACT_APP_ENV === "development"
                             ? `${process.env.REACT_APP_BACKEND_URL}/${merchandise.image}`
                             : `/${merchandise.image}`
                         }
                         size={{ xs: 48 }}
-                       shape="square"
+                        shape="square"
                       />
                     </div>
                     <div className="merchandise-info__info">
@@ -125,10 +169,20 @@ const Merchandise = ({ history }) => {
                     </div>
                     <div className="merchandise-info__count">
                       <div className="money-out">
-                        {merchandise.moneyOut}
+                        <CurrencyFormat
+                          value={merchandise.moneyOut}
+                          displayType={"text"}
+                          thousandSeparator={true}
+                          renderText={(value) => <span>{value}</span>}
+                        />
                       </div>
                       <div className="inventory">
-                        {merchandise.inventory}
+                        <CurrencyFormat
+                          value={merchandise.inventory}
+                          displayType={"text"}
+                          thousandSeparator={true}
+                          renderText={(value) => <span>{value}</span>}
+                        />
                       </div>
                     </div>
                   </div>

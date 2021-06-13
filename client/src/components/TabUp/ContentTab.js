@@ -4,6 +4,7 @@ import { UserOutlined, DeleteOutlined } from "@ant-design/icons";
 import SearchBuyer from "../Search/Search";
 import { createBillSell } from "../../api/billSell";
 import { notifyScreen } from "../../utils/notify";
+import CurrencyFormat from "react-currency-format";
 import "./styles/ContentTab.scss";
 
 const ContentTab = ({
@@ -12,13 +13,15 @@ const ContentTab = ({
   listSell,
   removeProduct,
   nameSale,
+  countNumProduct
 }) => {
+ 
   const [totalSaleOffMoney, setTotalSaleOffMoney] = useState(0);
   const [totalPaidMoney, setTotalPaidMoney] = useState(0);
   const [totalExcessMoney, setExcessMoney] = useState(0);
   const [totalMoney, setTotalMoney] = useState(0);
   const [totalMoneyBuyerPaid, setTotalMoneyBuyerPaid] = useState(0);
-  const [listProduct, setListProduct] = useState([]);
+  const [listProduct, setListProduct] = useState(listSell);
   const [buyer, setBuyer] = useState({});
   const [dayCreateBill, setDayCreateBill] = useState("");
   const [hourCreateBill, setHourCreateBill] = useState("");
@@ -26,7 +29,7 @@ const ContentTab = ({
 
   const __initTotalMoney = () => {
     let totalMoneyInit = 0;
-    listProduct.forEach((product) => {
+    listSell.forEach((product) => {
       totalMoneyInit += product.totalMoney;
     });
     setTotalPaidMoney(totalMoneyInit - totalSaleOffMoney);
@@ -44,13 +47,6 @@ const ContentTab = ({
     });
     return setListProduct(newListProduct);
   };
-
-  // const onChangeValueSaleOffProduct = (value) => {
-  //   if (value) {
-  //     let newTotalSaleOffMoney = totalSaleOffMoney + value;
-  //     return setTotalSaleOffMoney(newTotalSaleOffMoney);
-  //   }
-  // };
 
   const onChangeValueSaleOff = (e) => {
     let value = e.target.value;
@@ -144,9 +140,9 @@ const ContentTab = ({
   };
   useEffect(() => {
     __getTime();
-    setListProduct(listSell);
     __initTotalMoney();
-  }, [listProduct, totalMoney, listSell.length, totalSaleOffMoney, buyer]);
+    setListProduct(listSell)
+  }, [totalMoney, totalSaleOffMoney, buyer,countNumProduct]);
 
   return (
     <div className="content-tab-wrapper">
@@ -226,7 +222,13 @@ const ContentTab = ({
                           }
                         />
                       </span>
-                      <span>{product.moneyOut}</span>
+                      <CurrencyFormat
+                        value={product.moneyOut}
+                        displayType={"text"}
+                        thousandSeparator={true}
+                        renderText={(value) => <span>{value}</span>}
+                      />
+
                       <span style={{ marginTop: "-5px" }}>
                         {/* <InputNumber
                           onChange={(value) =>
@@ -257,7 +259,12 @@ const ContentTab = ({
                           color: "rgba(0, 0, 0, 0.85)",
                         }}
                       >
-                        {product.totalMoney}
+                        <CurrencyFormat
+                          value={product.totalMoney}
+                          displayType={"text"}
+                          thousandSeparator={true}
+                          renderText={(value) => <span>{value}</span>}
+                        />
                       </span>
                     </div>
                   </div>
@@ -296,7 +303,15 @@ const ContentTab = ({
             <div className="info-bill">
               <div className="total-money">
                 <span>Tổng tiền hàng</span>
-                <span style={{ fontSize: "14px" }}>{totalMoney}</span>
+                <span style={{ fontSize: "14px" }}>
+                 
+                  <CurrencyFormat
+                    value={totalMoney}
+                    displayType={"text"}
+                    thousandSeparator={true}
+                    renderText={(value) => <span>{value}</span>}
+                  />
+                </span>
               </div>
               <div className="sale-money">
                 <span>Giảm giá</span>
@@ -315,7 +330,12 @@ const ContentTab = ({
               <div className="need-money">
                 <span>Khách cần trả</span>
                 <span style={{ fontSize: "16px", color: "#3d933c" }}>
-                  {totalPaidMoney}
+                  <CurrencyFormat
+                    value={totalPaidMoney}
+                    displayType={"text"}
+                    thousandSeparator={true}
+                    renderText={(value) => <span>{value}</span>}
+                  />
                 </span>
               </div>
               <div className="paid-money">
@@ -334,7 +354,14 @@ const ContentTab = ({
               </div>
               <div className="excess-money">
                 <span>Tiền thừa trả khách</span>
-                <span style={{ fontSize: "14px" }}>{totalExcessMoney}</span>
+                <span style={{ fontSize: "14px" }}>
+                  <CurrencyFormat
+                    value={totalExcessMoney}
+                    displayType={"text"}
+                    thousandSeparator={true}
+                    renderText={(value) => <span>{value}</span>}
+                  />
+                </span>
               </div>
               <div className="note">
                 <Input.TextArea
@@ -356,12 +383,7 @@ const ContentTab = ({
                 <Button
                   type="primary"
                   htmlType="button"
-                  style={{
-                    backgroundColor: "#56ad51",
-                    width: "100%",
-                    height: "66px",
-                    textAlign: "center",
-                  }}
+                  className="btn btn-save"
                   onClick={() => onFinish("save", listProduct)}
                 >
                   <span style={{ fontSize: "18px", fontWeight: "600" }}>
@@ -373,12 +395,7 @@ const ContentTab = ({
                 <Button
                   type="primary"
                   htmlType="button"
-                  style={{
-                    backgroundColor: "#56ad51",
-                    width: "100%",
-                    height: "66px",
-                    textAlign: "center",
-                  }}
+                  className="btn btn-save"
                   onClick={() => onFinish("success", listProduct)}
                 >
                   <span style={{ fontSize: "18px", fontWeight: "600" }}>

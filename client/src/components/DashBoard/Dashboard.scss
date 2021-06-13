@@ -1,4 +1,4 @@
-$res_320 : "only screen and (min-width: 320px) and (max-width: 424px)";
+$res_320: "only screen and (min-width: 320px) and (max-width: 424px)";
 // $res_375 : "only screen and (min-width: 375px) and (max-width: 424px)";
 // $res_425 : "only screen and (min-width: 425px) and (max-width: 767px)";
 // $res_768 : "only screen and (min-width: 768px) and (max-width: 991px)";
@@ -6,46 +6,127 @@ $res_320 : "only screen and (min-width: 320px) and (max-width: 424px)";
 // $res_1024 : "only screen and (min-width: 1024px) and (max-width: 1999px)";
 // $res_1200 : "only screen and (min-width: 1200px)";
 @mixin responsive_320() {
-    @media #{$res_320} {
-        @content
-    }
+  @media #{$res_320} {
+    @content;
+  }
 }
 
-.manage{
-    @include responsive_320(){
-        .manage-header__menu{
-            background-color:#0090da;
-            height: 50px;
-        }
+.manage {
+  @include responsive_320() {
+    .manage-header__menu {
+      background-color: #0090da;
+      height: 50px;
     }
-   .manage-header__menu{
-       .manage-header__menu-mobile{
-           visibility: hidden;
-       }
-       @include responsive_320(){
-           .manage-header__menu-pc{
-               display: none;
-           }
-           .manage-header__menu-mobile{
-               visibility:visible;
-               .btn-category{
-                   border: none;
-                   background-color: #0090da;
-                   width: 50px;
-                   height: 50px;
-               }
-               .menu-item{
-                   position: fixed;
-                   width: 80%;
-                   height: 100%;
-                   z-index: 10;
-               }
-               .name-select{
-                   color: white;
-                   font-size: 18px;
-                   font-weight: 600;
-               }
+  }
+  .manage-header {
+    height: auto;
+    z-index: 10;
+  }
+  .manage-header__menu {
+    .manage-header__menu-pc {
+      .ant-menu-submenu-title {
+        color: #fff;
+      }
+      li.fixed-overview{
+        margin-left: 20px !important;
+      }
+      .redirect-sale:hover{
+        a{
+          color: #fff;
         }
-       }
-   }
+      }
+    }
+    .manage-header__menu-mobile {
+      display: none;
+    }
+    @include responsive_320() {
+      ul.ant-menu{
+        background-color: #0078b6!important;
+        li{
+          span,span >a,i{
+            color: #fff !important;
+            font-size: 16px;
+          }
+          ul.ant-menu-sub{
+            background-color: #49a3df !important;
+            li{
+              padding-left: 50px !important;
+            }
+          }
+        }
+      }
+      .manage-header__menu-pc {
+        display: none;
+      }
+      .manage-header__menu-mobile {
+        display: block;
+        .btn-category {
+          border: none;
+          background-color: #0090da;
+          width: 50px;
+          height: 50px;
+        }
+        .menu-item {
+          position: fixed;
+          width: 80%;
+          height: 100%;
+          z-index: 10;
+        }
+        .name-select {
+          color: white;
+          font-size: 18px;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+  .manage-content {
+    background-color: #eeeeee;
+    padding-top: 30px;
+    min-height: calc(100vh - 50px) !important;
+  }
+}
+
+ul.ant-menu-sub {
+  min-width: 250px !important;
+  font-size: 15px;
+  background-color: #0078b6 !important;
+  li {
+    display: flex;
+    align-items: center;
+    span.ant-menu-item-icon {
+      font-size: 18px;
+      color: #fff;
+    }
+    span > a {
+      margin-left: 5px;
+      color: #fff;
+    }
+    padding-left: 20px !important;
+  }
+
+  li:hover {
+    background-color: #3ea0d1 !important;
+    span > a {
+      color: rgb(245, 240, 240);
+    }
+  }
+}
+ul li.ant-menu-item,li.ant-menu-submenu{
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+}
+
+
+
+ul li.ant-menu-item:nth-child(n+3){
+  margin-left: 0 !important;
+}
+
+
+
+
+li.ant-menu-item:hover,li.ant-menu-submenu:hover{
+  cursor: pointer;
+  background-color: #0078b6!important;
 }
