@@ -1,8 +1,8 @@
 const BillBuyModel = require("../models/billBuy");
 const PartnerModel = require("../models/partner");
 const ProductModel = require("../models/product");
-const ControlDebtModel = require("../models/controlDebt");
-const PaidDebtModel = require("../models/paidDebt");
+const ControlDebtModel = require("../models/adjustDebt");
+const PaidDebtModel = require("../models/payBill");
 const {
   ERROR_SERVER,
   CREATE_BILL_SELL_SUCCESS,

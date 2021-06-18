@@ -10,14 +10,18 @@ let billSellSchema = mongoose.Schema({
         default:1,
         unique:true
     },
-    typeBill:{
-        type:String
+    idPayBill:{
+        type:String,
+        ref:"payBill"
     },
-    buyerId:String,
-    buyerCode:String,
-    nameBuyer:String,
-    phone:String,
-    address:String,
+    isDebt:{
+        type:Boolean,
+        default:true
+    },
+    buyerId:{
+        type:String,
+        ref:"buyer"
+    },
     status:{
         type:Boolean,
         default:false
@@ -47,14 +51,14 @@ let billSellSchema = mongoose.Schema({
     totalBuyerPaid:Number,
     totalExcessPaid:Number,
     noteSell:String,
-    debtRedundancy:{
+    debtRedundancyBuyer:{
         type:Number,
         default:0
     },
-    historyPaid:[{
+    typeOfBill:{
         type:String,
-        ref:"paidDebt"
-    }]
+        default:"bill"
+    }
 },{
     timestamps: true,
 });

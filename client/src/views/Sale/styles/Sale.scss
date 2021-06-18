@@ -9,14 +9,19 @@ $res_320 : "only screen and (min-width: 320px) and (max-width: 424px)";
 .sale {
   height: 100vh;
   max-height: 100vh;
-  overflow: hidden;
   .sale-pc {
+    height: 100%;
     .sale-tab {
       width: 100%;
+      height: 100%;
       position: absolute;
       top: 0px;
     }
   }
+}
+
+.ant-tabs-nav {
+  margin: 0 !important;
 }
 .ant-tabs-nav-list {
   position: absolute;
@@ -32,7 +37,7 @@ $res_320 : "only screen and (min-width: 320px) and (max-width: 424px)";
 }
 
 .sale-mobile {
-  visibility: hidden;
+  display: none;
 }
 
 @include responsive_320() {
@@ -40,7 +45,7 @@ $res_320 : "only screen and (min-width: 320px) and (max-width: 424px)";
     overflow: auto;
   }
   .sale-mobile {
-    visibility: visible;
+    display: block;
   }
   .sale-pc {
     display: none;

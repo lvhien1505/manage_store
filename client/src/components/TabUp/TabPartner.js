@@ -8,6 +8,7 @@ import {
   CopyOutlined,
   StopOutlined,
   ToolOutlined,
+  EditOutlined,
 } from "@ant-design/icons";
 import Dashboard from "../DashBoard/Dashboard";
 import { getPartnerWithId } from "../../api/partner";
@@ -21,7 +22,6 @@ import "./styles/TabPartner.scss";
 import ModalUpdatePartner from "../Modals/ModalUpdate/ModalUpdatePartner";
 import ModalDeletePartner from "../Modals/ModalConfirmDelete/ModalDeletePartner";
 import SectionTabPartner from "../SectionTab/SectionTabPartner";
-import SectionTabBuyer from "../SectionTab/SectionTabPartner";
 
 const TabBuyer = ({ match, history }) => {
   const [hideModalUpdate, setHideModalUpdate] = useState(false);
@@ -149,56 +149,8 @@ const TabBuyer = ({ match, history }) => {
             onChange={(key) => onChangeTab(key)}
             className="tabup-full"
           >
-            <Tabs.TabPane tab="Thông tin" key="thongtin">
+            <Tabs.TabPane tab="Thông tin" key="thongtin" style={{height:"400px",backgroundColor:"#fff"}}>
               <div className="info-wrapper">
-                <div className="info-image">
-                  <Avatar
-                    src={avatar}
-                    size="large"
-                    shape="square"
-                    style={{
-                      width: "200px",
-                      height: "250px",
-                      objectFit: "cover",
-                    }}
-                  />
-                </div>
-                <div className="info-detail">
-                  <div className="info-detail-info">
-                    Mã NCC : {"NCC" + partner.code}
-                  </div>
-                  <div className="info-detail-info">Tên : {partner.name}</div>
-                  <div className="info-detail-info">
-                    Công ty: {partner.nameCompany}
-                  </div>
-                  <div className="info-detail-info">
-                    Điện thoại : {partner.phone}
-                  </div>
-                  <div className="info-detail-info">
-                    Tổng mua :{" "}
-                    <CurrencyFormat
-                      value={partner.totalBuy}
-                      displayType={"text"}
-                      thousandSeparator={true}
-                      renderText={(value) => <span>{value}</span>}
-                    />
-                  </div>
-                  <div className="info-detail-info">
-                    Công nợ :{" "}
-                    <CurrencyFormat
-                      value={partner.debt}
-                      displayType={"text"}
-                      thousandSeparator={true}
-                      renderText={(value) => <span>{value}</span>}
-                    />
-                  </div>
-                  <div className="info-detail-info">
-                    Ngày tạo: {convertDay(partner.createdAt)}
-                  </div>
-                </div>
-                <div className="note">
-                  {partner.note ? partner.note : "..Ghi chú"}
-                </div>
                 <div className="info-action">
                   <Button
                     className="info-action__btn"
@@ -237,13 +189,82 @@ const TabBuyer = ({ match, history }) => {
                     Xóa
                   </Button>
                 </div>
+                <div className="info-partner">
+                  <div className="info-image">
+                    <Avatar
+                      src={avatar}
+                      size="large"
+                      shape="square"
+                      style={{
+                        width: "250px",
+                        height: "250px",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </div>
+                  <div className="info-detail">
+                    <div className="left-info-detail">
+                      <div className="info-detail-info">
+                        <span> Mã NCC :</span>
+                        <span>{"NCC" + partner.code}</span>
+                      </div>
+                      <div className="info-detail-info">
+                        <span> Tên :</span>
+                        <span>{partner.name}</span>
+                      </div>
+                      <div className="info-detail-info">
+                        <span>Công ty:</span>
+                        <span>{partner.nameCompany}</span>
+                      </div>
+                      <div className="info-detail-info">
+                        <span>Điện thoại : </span>
+                        <span>{partner.phone}</span>
+                      </div>
+                      <div className="info-detail-info info-detail-address">
+                        <span> Địa chỉ : </span>
+                        <span>{partner.address}</span>
+                      </div>
+                    </div>
+                    <div className="right-info-detail">
+                      
+                      <div className="info-detail-info">
+                        <span>Tổng mua :</span>
+                        <CurrencyFormat
+                          value={partner.totalBuy}
+                          displayType={"text"}
+                          thousandSeparator={true}
+                          renderText={(value) => <span>{value}</span>}
+                        />
+                      </div>
+
+                      <div className="info-detail-info">
+                        <span>Công nợ :</span>
+                        <CurrencyFormat
+                          value={partner.debt}
+                          displayType={"text"}
+                          thousandSeparator={true}
+                          renderText={(value) => <span>{value}</span>}
+                        />
+                      </div>
+                      <div className="info-detail-info">
+                        <span> Ngày tạo:</span>
+                        <span>{convertDay(partner.createdAt)}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="note">
+                    <span>
+                      <EditOutlined /> {partner.note ? partner.note : "Ghi chú"}
+                    </span>
+                  </div>
+                </div>
               </div>
             </Tabs.TabPane>
             <Tabs.TabPane tab="Nợ cần trả" key="nocantra">
               <Row className="row-tab-paid-debt">
                 <Col span={5} className="wrapperleft-table">
                   <h2>Thanh Toán</h2>
-                  <SectionTabBuyer typeSection="partner" partner={partner} />
+                  <SectionTabPartner typeSection="partner" partner={partner} />
                 </Col>
                 <Col span={19}>
                   <div className="top-table-list-bill">
@@ -275,7 +296,6 @@ const TabBuyer = ({ match, history }) => {
           </Tabs>
           <div className="icon-goback" onClick={() => history.goBack()}>
             <ArrowLeftOutlined />
-            <span style={{ marginLeft: "5px" }}>Quay lại</span>
           </div>
         </div>
         <div className="partner-tabup__mobile">

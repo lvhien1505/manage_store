@@ -26,67 +26,117 @@ $res_320: "only screen and (min-width: 320px) and (max-width: 424px)";
       width: 100%;
     }
     .info-wrapper {
-      display: flex;
-      justify-content: space-around;
-    }
-    .info-image {
-      width: 200px;
-      height: 220px;
-      border: 1px solid #eee;
-      margin-top: 10px;
-    }
-    .info-detail-info {
-      width: 300px;
-      border-bottom: 1px solid #eeeeee;
+      padding-left: 35px;
+      padding-right: 35px;
       margin-top: 20px;
-      padding-bottom: 15px;
-    }
-    .info-detail-info:first-child {
-      margin-top: 0px;
-    }
-    .note {
-      margin-top: 10px;
-      width: 200px;
-      height: 70px;
-      border-left: 1px solid #eeeeee;
-      padding-left: 15px;
-    }
-    .info-action {
-      display: flex;
-      flex-direction: column;
-      .info-action__btn {
-        height: 40px;
-        border: none;
-        border-radius: 4px;
-        margin-top: 10px;
-      }
+      .info-action {
+        display: flex;
+        justify-content: flex-end;
+        .info-action__btn {
+          height: 40px;
+          border: none;
+          border-radius: 4px;
+          margin-right: 10px;
+        }
 
-      .info-action__btn:nth-child(n + 1) {
-        background-color: #419543;
-      }
+        .info-action__btn:nth-child(n + 1) {
+          background-color: #419543;
+        }
 
-      .info-action__btn:nth-child(n + 3) {
-        background-color: #898c8d;
-      }
+        .info-action__btn:nth-child(n + 3) {
+          background-color: #898c8d;
+        }
 
-      .info-action__btn:nth-child(n + 1):hover {
-        background-color: #2b612c;
+        .info-action__btn:nth-child(n + 4) {
+          margin-right: 0;
+        }
+
+        .info-action__btn:nth-child(n + 1):hover {
+          background-color: #2b612c;
+        }
+        .info-action__btn:nth-child(n + 3):hover {
+          background-color: #494d4e;
+        }
       }
-      .info-action__btn:nth-child(n + 3):hover {
-        background-color: #494d4e;
+      .info-partner {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+        .info-detail {
+          width: calc(40vw + 50px);
+          display: flex;
+          justify-content: flex-start;
+          .left-info-detail,
+          .right-info-detail {
+            width: 50%;
+            padding-right: 50px;
+            .info-image {
+              width: 250px;
+              height: 250px;
+            }
+            .info-detail-info {
+              border-bottom: 1px solid #aca5a5;
+              margin-top: 30px;
+              padding-bottom: 5px;
+              display: flex;
+              justify-content: space-between;
+              span {
+                font-weight: 600;
+                
+              }
+              span:first-child{
+                width: 120px !important;
+              }
+            }
+            .info-detail-info:first-child {
+              margin-top: 0;
+            }
+            .info-detail-address{
+              position: relative;
+              width: calc(40vw + 50px);
+            }
+          }
+          .right-info-detail {
+            position: relative;
+            left: 50px;
+          }
+        }
+        .note {
+          width: calc(100px + 20vw);
+          height: 60px;
+          border-left: 2px solid #419543;
+          padding-left: 10px;
+          span {
+            font-weight: 600;
+          }
+        }
       }
     }
     .icon-goback {
       position: absolute;
-      top: 57px;
-      left: 5px;
-      font-size: 15px;
-      color: #419543;
+      top: 54px;
+      left: 35px;
+      font-size: 14px;
+      color: rgb(0 ,144, 218);
+      font-weight: 800;
+      width: 30px;
+      height: 30px;
+      border-radius: 4px;
+      background-color: #fff;
+      span{
+        width: 30px;
+        height: 30px;
+        position: absolute;
+        text-align: center;
+        top: 8px;
+      }
     }
     .icon-goback:hover {
-      color: #2b612c;
+      background-color: rgb(0 ,144, 218);
+      color: #fff;
       cursor: pointer;
     }
+
 
     .row-tab-paid-debt {
       padding-left: 35px;

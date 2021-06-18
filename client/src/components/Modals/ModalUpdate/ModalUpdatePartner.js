@@ -119,11 +119,11 @@ const ModalUpdatePartner = ({ hideModal, handleHideModal, partnerEdit }) => {
         </div>
         <div className="note">
           <span style={{ width: "100px" }}>Ghi chú</span>
-          <Form.Item name="note">
+          <Form.Item name="note" initialValue={partnerEdit.note}>
             <Input.TextArea
               placeholder="Nhập ghi chú"
               autoSize={{ minRows: 3 }}
-              initialValue={partnerEdit.note}
+             
             />
           </Form.Item>
         </div>

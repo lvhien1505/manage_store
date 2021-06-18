@@ -4,6 +4,7 @@ import {
   ArrowLeftOutlined,
   StopOutlined,
   ToolOutlined,
+  EditOutlined
 } from "@ant-design/icons";
 import Dashboard from "../DashBoard/Dashboard";
 import ModalUpdateProduct from "../../components/Modals/ModalUpdate/ModalUpdateProduct";
@@ -72,68 +73,8 @@ const TabMerchandise = ({ match, history }) => {
             centered
             className="tabup-full"
           >
-            <Tabs.TabPane tab="Thông tin" key="thongtin">
+            <Tabs.TabPane tab="Thông tin" key="thongtin" style={{backgroundColor:"#fff",height:"400px"}}>
               <div className="info-wrapper">
-                <div className="info-image">
-                  <Image
-                    src={
-                      process.env.REACT_APP_ENV === "development"
-                        ? `${process.env.REACT_APP_BACKEND_URL}/${product.image}`
-                        : `/${product.image}`
-                    }
-                    alt={product.name}
-                    style={{ objectFit: "cover" }}
-                    width="250px"
-                    height="250px"
-                  />
-                </div>
-                <div className="info-detail">
-                  <div className="info-detail-info">
-                    Mã hàng : {"SP" + product.code}
-                  </div>
-                  <div className="info-detail-info">
-                    Tên hàng : {product.name}
-                  </div>
-                  <div className="info-detail-info">
-                    Nhóm hàng : {product.category ? product.category.name : ""}
-                  </div>
-                  <div className="info-detail-info">
-                    Đơn vị : {product.unit ? product.unit.name : ""}
-                  </div>
-                  <div className="info-detail-info">
-                    Giá nhập :{" "}
-                    <CurrencyFormat
-                      value={product.moneyIn}
-                      displayType={"text"}
-                      thousandSeparator={true}
-                      renderText={(value) => <span>{value}</span>}
-                    />
-                  </div>
-                  <div className="info-detail-info">
-                    Giá bán :{" "}
-                    <CurrencyFormat
-                      value={product.moneyOut}
-                      displayType={"text"}
-                      thousandSeparator={true}
-                      renderText={(value) => <span>{value}</span>}
-                    />
-                  </div>
-                  <div className="info-detail-info">
-                    Tồn kho :{" "}
-                    <CurrencyFormat
-                      value={product.inventory}
-                      displayType={"text"}
-                      thousandSeparator={true}
-                      renderText={(value) => <span>{value}</span>}
-                    />
-                  </div>
-                  <div className="info-detail-info">
-                    Ngày tạo: {convertDay(product.createdAt)}
-                  </div>
-                </div>
-                <div className="note">
-                  {product.note ? product.note : "..Ghi chú"}
-                </div>
                 <div className="info-action">
                   <Button
                     className="info-action__btn"
@@ -165,6 +106,78 @@ const TabMerchandise = ({ match, history }) => {
                     Xóa
                   </Button>
                 </div>
+                <div className="info-product">
+                  <div className="info-image">
+                    <Image
+                      src={
+                        process.env.REACT_APP_ENV === "development"
+                          ? `${process.env.REACT_APP_BACKEND_URL}/${product.image}`
+                          : `/${product.image}`
+                      }
+                      alt={product.name}
+                      style={{ objectFit: "cover" }}
+                      width="250px"
+                      height="250px"
+                    />
+                  </div>
+                  <div className="info-detail">
+                    <div className="left-info-detail">
+                      <div className="info-detail-info">
+                        <span>Mã hàng :</span>{" "}
+                        <span>{"SP" + product.code}</span>
+                      </div>
+                      <div className="info-detail-info">
+                        <span> Tên hàng :</span> <span>{product.name}</span>
+                      </div>
+                      <div className="info-detail-info">
+                        <span> Nhóm hàng :</span>
+                        <span>
+                          {product.category ? product.category.name : ""}
+                        </span>
+                      </div>
+                      <div className="info-detail-info">
+                        <span>Đơn vị :</span>
+                        <span>{product.unit ? product.unit.name : ""}</span>
+                      </div>
+                    </div>
+                    <div className="right-info-detail">
+                      <div className="info-detail-info">
+                        <span>Giá nhập :</span>
+                        <CurrencyFormat
+                          value={product.moneyIn}
+                          displayType={"text"}
+                          thousandSeparator={true}
+                          renderText={(value) => <span>{value}</span>}
+                        />
+                      </div>
+                      <div className="info-detail-info">
+                        <span> Giá bán :</span>
+                        <CurrencyFormat
+                          value={product.moneyOut}
+                          displayType={"text"}
+                          thousandSeparator={true}
+                          renderText={(value) => <span>{value}</span>}
+                        />
+                      </div>
+                      <div className="info-detail-info">
+                        <span> Tồn kho :</span>
+                        <CurrencyFormat
+                          value={product.inventory}
+                          displayType={"text"}
+                          thousandSeparator={true}
+                          renderText={(value) => <span>{value}</span>}
+                        />
+                      </div>
+                      <div className="info-detail-info">
+                        <span>Ngày tạo:</span>
+                        <span>{convertDay(product.createdAt)}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="note">
+                    <span><EditOutlined /> {product.note ? product.note : "Ghi chú"}</span>
+                  </div>
+                </div>
               </div>
             </Tabs.TabPane>
             <Tabs.TabPane tab="Thẻ kho" key="thekho">
@@ -173,7 +186,6 @@ const TabMerchandise = ({ match, history }) => {
           </Tabs>
           <div className="icon-goback" onClick={() => history.goBack()}>
             <ArrowLeftOutlined />
-            <span style={{ marginLeft: "5px" }}>Quay lại</span>
           </div>
         </div>
         <div className="product-tabup__mobile">

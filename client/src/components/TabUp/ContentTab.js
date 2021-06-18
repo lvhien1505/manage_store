@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Input, Form, Button, List, InputNumber } from "antd";
+import { Input, Form, Button, List, InputNumber, Radio } from "antd";
 import { UserOutlined, DeleteOutlined } from "@ant-design/icons";
 import SearchBuyer from "../Search/Search";
 import { createBillSell } from "../../api/billSell";
@@ -13,9 +13,8 @@ const ContentTab = ({
   listSell,
   removeProduct,
   nameSale,
-  countNumProduct
+  countNumProduct,
 }) => {
- 
   const [totalSaleOffMoney, setTotalSaleOffMoney] = useState(0);
   const [totalPaidMoney, setTotalPaidMoney] = useState(0);
   const [totalExcessMoney, setExcessMoney] = useState(0);
@@ -23,6 +22,7 @@ const ContentTab = ({
   const [totalMoneyBuyerPaid, setTotalMoneyBuyerPaid] = useState(0);
   const [listProduct, setListProduct] = useState(listSell);
   const [buyer, setBuyer] = useState({});
+  const [typeSelectPay, setTypeSelectPay] = useState("selectPaid");
   const [dayCreateBill, setDayCreateBill] = useState("");
   const [hourCreateBill, setHourCreateBill] = useState("");
   const [note, setNote] = useState("");
@@ -48,27 +48,30 @@ const ContentTab = ({
     return setListProduct(newListProduct);
   };
 
-  const onChangeValueSaleOff = (e) => {
-    let value = e.target.value;
-    if (!e.target.value || e.target.value === "0") {
-      value = 0;
-    }
+  const onChangeValueSaleOff = (values) => {
+    let value = values.value;
     let newPaidMoney = totalMoney - parseInt(value);
+    if (value == "") {
+      value = 0;
+      newPaidMoney = totalMoney - parseInt(value);
+    }
     setTotalSaleOffMoney(value);
     return setTotalPaidMoney(newPaidMoney);
   };
 
-  const onChangeValuePaidMoney = (e) => {
-    let value = e.target.value;
-    if (!e.target.value || e.target.value === "0") {
-      value = 0;
-    }
+  const onChangeValuePaidMoney = (values) => {
+    let value = values.value;
     let newExcessMoney = parseInt(value) - totalPaidMoney;
+    if (value == "") {
+      value = 0;
+      newExcessMoney = parseInt(value) - totalPaidMoney;
+    }
     setTotalMoneyBuyerPaid(value);
     return setExcessMoney(newExcessMoney);
   };
 
   const handleSelectBuyer = (info) => {
+    console.log(info);
     return setBuyer(info);
   };
 
@@ -81,68 +84,71 @@ const ContentTab = ({
     return setDayCreateBill(day);
   };
 
+  const handleChangeSelectRadio =(e)=>{
+    return setTypeSelectPay(e.target.value)
+  }
+
   const onFinish = async (type, listProduct) => {
     try {
-      let buyerId = buyer._id ? buyer._id : "";
-      let buyerCode = buyer.code ? buyer.code : "";
-      let nameBuyer = buyer.name ? buyer.name : "";
-      let phone = buyer.phone ? buyer.phone : "";
-      let createdHour = hourCreateBill || "";
-      let createdDay = dayCreateBill || "";
-      let userCreate = nameSale;
-      let userSell = nameSale;
-      let listSell = listProduct;
-      let countNumSell = 0;
-      listProduct.forEach((product) => {
-        countNumSell = product.countNum + countNumSell;
-      });
-      let totalMoneySell = totalMoney || 0;
-      let totalSaleOffMoneySell = totalSaleOffMoney || 0;
-      let totalBuyerPaidNeed = totalPaidMoney || 0;
-      let totalBuyerPaid = totalMoneyBuyerPaid || 0;
-      let totalExcessPaid = totalExcessMoney || 0;
-      let noteSell = note || "";
-      let bill = {
-        buyerId,
-        buyerCode,
-        nameBuyer,
-        phone,
-        createdHour,
-        createdDay,
-        userCreate,
-        userSell,
-        listSell,
-        countNumSell,
-        totalMoneySell,
-        totalSaleOffMoneySell,
-        totalBuyerPaidNeed,
-        totalBuyerPaid,
-        totalExcessPaid,
-        noteSell,
-      };
-      if (type === "save") {
-        bill.status = false;
-        let res = await createBillSell(bill);
-        if (res.status === 200) {
-          return notifyScreen("success", res.status, res.data.message);
+      let listSell = [...listProduct];
+      let buyerId = "";
+      if (listSell.length > 0) {
+        if (buyer) {
+          buyerId = buyer._id ? buyer._id : "";
         }
-      }
-      if (type === "success") {
-        bill.status = true;
-        let res = await createBillSell(bill);
-        if (res.status === 200) {
-          return notifyScreen("success", res.status, res.data.message);
+        let createdHour = hourCreateBill || "";
+        let createdDay = dayCreateBill || "";
+        let userCreate = nameSale;
+        let userSell = nameSale;
+
+        let countNumSell = listSell.reduce((previousValue,currentValue)=>previousValue + currentValue.countNum,0);
+        let totalMoneySell = totalMoney || 0;
+        let totalSaleOffMoneySell = totalSaleOffMoney || 0;
+        let totalBuyerPaidNeed = totalPaidMoney || 0;
+        let totalBuyerPaid = totalMoneyBuyerPaid || 0;
+        let totalExcessPaid = totalExcessMoney || 0;
+        let noteSell = note || "";
+        let bill = {
+          buyerId,
+          createdHour,
+          createdDay,
+          userCreate,
+          userSell,
+          listSell,
+          countNumSell,
+          totalMoneySell,
+          totalSaleOffMoneySell,
+          totalBuyerPaidNeed,
+          totalBuyerPaid,
+          totalExcessPaid,
+          noteSell,
+        };
+        if (type === "success") {
+          bill.status = true;
+          if (totalExcessPaid > 0) {
+            if (typeSelectPay == "selectDebt") {
+              bill.typeSelectPay="debt"
+            }else{
+              bill.typeSelectPay="paid"
+            }
+          }
+          let res = await createBillSell(bill);
+          if (res.status === 200) {
+            return notifyScreen("success", res.status, res.data.message);
+          }
         }
+      } else {
+        notifyScreen("error", "400", "Hóa đơn trống !");
       }
     } catch (error) {
-      notifyScreen("error", "500", "Lỗi không xác định");
+      notifyScreen("error", "500", "Lỗi không xác định !");
     }
   };
   useEffect(() => {
     __getTime();
     __initTotalMoney();
-    setListProduct(listSell)
-  }, [totalMoney, totalSaleOffMoney, buyer,countNumProduct]);
+    setListProduct(listSell);
+  }, [totalMoney, totalSaleOffMoney, buyer, countNumProduct]);
 
   return (
     <div className="content-tab-wrapper">
@@ -184,7 +190,7 @@ const ContentTab = ({
                           onClick={() => removeProduct(product._id)}
                           className="action-remove"
                         >
-                          <DeleteOutlined />
+                          <DeleteOutlined className="symbol-icon-delete" />
                         </span>
                       </div>
                       <div style={{ width: "50%" }}>
@@ -229,30 +235,7 @@ const ContentTab = ({
                         renderText={(value) => <span>{value}</span>}
                       />
 
-                      <span style={{ marginTop: "-5px" }}>
-                        {/* <InputNumber
-                          onChange={(value) =>
-                            onChangeValueSaleOffProduct(value)
-                          }
-                          defaultValue={0}
-                          style={
-                            i % 2 != 0
-                              ? {
-                                  border: "none",
-                                  borderBottom: "1px solid #d9d9d9",
-                                  fontSize: "13px",
-                                  backgroundColor: "#f9f9f9",
-                                  boxShadow: "none",
-                                }
-                              : {
-                                  border: "none",
-                                  borderBottom: "1px solid #d9d9d9",
-                                  fontSize: "13px",
-                                  boxShadow: "none",
-                                }
-                          }
-                        /> */}
-                      </span>
+                      <span style={{ marginTop: "-5px" }}></span>
                       <span
                         style={{
                           fontWeight: "700",
@@ -296,6 +279,13 @@ const ContentTab = ({
                   typeSearch="buyer"
                 />
               </Form.Item>
+              {buyer._id ? null : (
+                <div
+                  style={{ fontSize: "12px", color: "red", marginTop: "-10px" }}
+                >
+                  * Hệ thống không theo dõi công nợ đối với khách lẻ
+                </div>
+              )}
             </div>
             <div className="name-bill">
               <div>{keyBill}</div>
@@ -304,7 +294,6 @@ const ContentTab = ({
               <div className="total-money">
                 <span>Tổng tiền hàng</span>
                 <span style={{ fontSize: "14px" }}>
-                 
                   <CurrencyFormat
                     value={totalMoney}
                     displayType={"text"}
@@ -315,16 +304,11 @@ const ContentTab = ({
               </div>
               <div className="sale-money">
                 <span>Giảm giá</span>
-                <Input
-                  bordered={false}
-                  style={{
-                    borderBottom: "1px solid #e1e1e1",
-                    width: "30%",
-                    padding: "0",
-                    fontSize: "14px",
-                  }}
-                  defaultValue="0"
-                  onChange={onChangeValueSaleOff}
+                <CurrencyFormat
+                  thousandSeparator={true}
+                  onValueChange={onChangeValueSaleOff}
+                  className="input-current-format"
+                  disabled={listProduct.length > 0 ? false : true}
                 />
               </div>
               <div className="need-money">
@@ -340,20 +324,31 @@ const ContentTab = ({
               </div>
               <div className="paid-money">
                 <span>Khách thanh toán</span>
-                <Input
-                  bordered={false}
-                  style={{
-                    borderBottom: "1px solid #e1e1e1",
-                    width: "30%",
-                    padding: "0",
-                    fontSize: "14px",
-                  }}
-                  defaultValue="0"
-                  onChange={onChangeValuePaidMoney}
+                <CurrencyFormat
+                  thousandSeparator={true}
+                  onValueChange={onChangeValuePaidMoney}
+                  className="input-current-format"
+                  disabled={listProduct.length > 0 ? false : true}
                 />
               </div>
               <div className="excess-money">
-                <span>Tiền thừa trả khách</span>
+                {buyer._id ? (
+                  totalExcessMoney > 0 ? (
+                    <Radio.Group
+                      options={[
+                        { label: "Tiền thừa trả khách", value: "selectPaid" },
+                        { label: "Tính vào công nợ", value: "selectDebt" },
+                      ]}
+                      defaultValue="selectPaid"
+                      onChange={handleChangeSelectRadio}
+                    ></Radio.Group>
+                  ) : (
+                    <span>Tính vào công nợ</span>
+                  )
+                ) : (
+                  <span>Tiền thừa trả khách</span>
+                )}
+
                 <span style={{ fontSize: "14px" }}>
                   <CurrencyFormat
                     value={totalExcessMoney}
@@ -379,23 +374,11 @@ const ContentTab = ({
               </div>
             </div>
             <div className="btn-action">
-              <Form.Item name="save">
-                <Button
-                  type="primary"
-                  htmlType="button"
-                  className="btn btn-save"
-                  onClick={() => onFinish("save", listProduct)}
-                >
-                  <span style={{ fontSize: "18px", fontWeight: "600" }}>
-                    Lưu tạm
-                  </span>
-                </Button>
-              </Form.Item>
               <Form.Item name="success">
                 <Button
                   type="primary"
                   htmlType="button"
-                  className="btn btn-save"
+                  className="btn btn-success-bill"
                   onClick={() => onFinish("success", listProduct)}
                 >
                   <span style={{ fontSize: "18px", fontWeight: "600" }}>

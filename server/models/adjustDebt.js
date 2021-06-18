@@ -2,7 +2,7 @@ const mongoose=require("../config/dbConnect");
 const autoIncrement = require('mongoose-auto-increment');
 
 autoIncrement.initialize(mongoose)
-let controlDebtSchema = mongoose.Schema({
+let adjustDebtSchema = mongoose.Schema({
     code:{
         type:Number,
         required:true,
@@ -36,13 +36,17 @@ let controlDebtSchema = mongoose.Schema({
      debtRedundancy:{
         type:Number,
         default:0
+    },
+    typeOfBill:{
+        type:String,
+        default:"adjustdebt"
     }
 
 },{
     timestamps: true,
 });
 
-controlDebtSchema.plugin(autoIncrement.plugin,{ model: 'controlDebt', field: 'code',startAt:1 })
+adjustDebtSchema.plugin(autoIncrement.plugin,{ model: 'adjustDebt', field: 'code',startAt:1 })
 
-let controlDebtModel = mongoose.model("controlDebt", controlDebtSchema);
-module.exports = controlDebtModel;
+let adjustDebtModel = mongoose.model("adjustDebt", adjustDebtSchema);
+module.exports = adjustDebtModel;

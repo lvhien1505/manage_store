@@ -33,7 +33,6 @@ const BillSuccess = ({ history }) => {
   };
 
   const handlerHideModalDelete = () => {
-    setHideModalDelete(!hideModalDelete);
     return setHideModalDelete(false);
   };
 
@@ -41,7 +40,7 @@ const BillSuccess = ({ history }) => {
     let newListBill = listBill.filter((bill) => bill._id === id);
     setBill(newListBill[0]);
     setShowModalDelete(true);
-    return setHideModalDelete(!hideModalDelete);
+    return setHideModalDelete(true);
   };
 
   const columns = [
@@ -49,7 +48,7 @@ const BillSuccess = ({ history }) => {
       title: "Mã HD",
       dataIndex: "code",
       key: "code",
-      render: (text,obj) => <Link to={`/dashboard/transaction/bill-success/${obj._id}`}>{"HD0000" + text}</Link>
+      render: (text,obj) => <Link to={`/dashboard/transaction/bill-success/${obj._id}`}>{"HD00" + text}</Link>
     },
     {
       title: "Ngày",
@@ -64,7 +63,8 @@ const BillSuccess = ({ history }) => {
     {
       title: "Khách hàng",
       key: "nameBuyer",
-      dataIndex: "nameBuyer",
+      dataIndex: "buyerId",
+      render: (text) =><span>{text.name}</span>
     },
     {
       title: "Tổng tiền hàng",

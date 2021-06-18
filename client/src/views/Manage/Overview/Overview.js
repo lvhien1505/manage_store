@@ -11,6 +11,7 @@ import { notifyScreen } from "../../../utils/notify";
 import "./Overview.scss";
 
 const Overview = () => {
+
   const [listBillSell, setListBillSell] = useState([]);
   const [dataChart, setDataChart] = useState([{ "Doanh thu": 2000000 }]);
   const [totalMoneyRevenueToday, setTotalMoneyRevenueToday] = useState(0);

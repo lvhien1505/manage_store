@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Menu, Button } from "antd";
-import { Link } from "react-router-dom";
+import { Link,Redirect } from "react-router-dom";
 import {
   EyeFilled,
-  DropboxOutlined,
-  MehFilled,
-  SlackOutlined,
-  BuildFilled,
+  InboxOutlined,
+  UserOutlined,
+  TeamOutlined,
+  SwapOutlined,
   MenuOutlined,
   DollarCircleOutlined,
   TableOutlined,
@@ -15,8 +15,10 @@ import {
   GoldOutlined,
   ShoppingCartOutlined,
   FileDoneOutlined,
-  FileSyncOutlined,
+  RiseOutlined,
   BarChartOutlined,
+  PieChartOutlined,
+  ContainerOutlined
 } from "@ant-design/icons";
 import "./Dashboard.scss";
 import { checkAuth } from "../../api/login";
@@ -26,16 +28,17 @@ import Cookies from "js-cookie";
 
 let token = Cookies.get("__t");
 
-const Dashboard = ({ children, nameSelect, defaulCheckKey }) => {
+const Dashboard = ({ children, nameSelect, defaulCheckKey}) => {
   const [hideMenuMobile, setHideMenuMobile] = useState(false);
   const [defaulSelectKey, setDefaultSelectKey] = useState("");
-
+  
   const styles = {
     styleNoSelect: {
       color: "white",
       fontSize: "15px",
       paddingLeft: "15px",
       paddingRight: "15px",
+      zIndex:10
     },
     styleSelect: {
       color: "white",
@@ -43,6 +46,7 @@ const Dashboard = ({ children, nameSelect, defaulCheckKey }) => {
       paddingLeft: "15px",
       paddingRight: "15px",
       fontSize: "15px",
+      zIndex:10
     },
   };
 
@@ -96,12 +100,12 @@ const Dashboard = ({ children, nameSelect, defaulCheckKey }) => {
               type === "horizontal" ? { color: "white" } : { color: "black" }
             }
           >
-            Tổng quan
+          Tổng quan
           </Link>
         </Menu.Item>
         <Menu.SubMenu
           title="Hàng hóa"
-          icon={<DropboxOutlined />}
+          icon={<InboxOutlined style={{fontSize:"15px"}}/>}
           key="2"
           style={
             type === "horizontal"
@@ -127,7 +131,7 @@ const Dashboard = ({ children, nameSelect, defaulCheckKey }) => {
         </Menu.SubMenu>
         <Menu.SubMenu
           title="Giao dịch"
-          icon={<BuildFilled />}
+          icon={<SwapOutlined style={{fontSize:"15px"}} />}
           key="3"
           style={
             type === "horizontal"
@@ -148,25 +152,14 @@ const Dashboard = ({ children, nameSelect, defaulCheckKey }) => {
               Hoá đơn
             </Link>
           </Menu.Item>
-          <Menu.Item key="bill-save" icon={<FileSyncOutlined />}>
-            <Link to="/dashboard/transaction/bill-save" key="bill-save-1">
-              Hoá đơn tạm
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="success" icon={<FileDoneOutlined />}>
+          <Menu.Item key="success" icon={<ContainerOutlined />}>
             <Link to="/dashboard/transaction/buy/history/bill-success">
               Đơn nhập
             </Link>
           </Menu.Item>
-
-          <Menu.Item key="save" icon={<FileSyncOutlined />}>
-            <Link to="/dashboard/transaction/buy/history/bill-save">
-              Đơn nhập tạm
-            </Link>
-          </Menu.Item>
         </Menu.SubMenu>
         <Menu.Item
-          icon={<MehFilled />}
+          icon={<UserOutlined style={{fontSize:"15px"}}/>}
           key="5"
           style={
             type === "horizontal"
@@ -187,7 +180,7 @@ const Dashboard = ({ children, nameSelect, defaulCheckKey }) => {
           </Link>
         </Menu.Item>
         <Menu.Item
-          icon={<SlackOutlined />}
+          icon={<TeamOutlined style={{fontSize:"15px"}}/>}
           key="6"
           style={
             type === "horizontal"
@@ -208,7 +201,7 @@ const Dashboard = ({ children, nameSelect, defaulCheckKey }) => {
           </Link>
         </Menu.Item>
         <Menu.Item
-          icon={<DollarCircleOutlined />}
+          icon={<DollarCircleOutlined style={{fontSize:"15px"}}/>}
           key="7"
           style={
             type === "horizontal"
@@ -227,29 +220,9 @@ const Dashboard = ({ children, nameSelect, defaulCheckKey }) => {
             Sổ quỹ
           </Link>
         </Menu.Item>
-        {/* <Menu.Item
-          icon={<BarChartOutlined />}
-          key="8"
-          style={
-            type === "horizontal"
-              ? defaulSelectKey != "8"
-                ? styles.styleNoSelect
-                : styles.styleSelect
-              : { color: "black" }
-          }
-        >
-          <Link
-            to="/dashboard/test2"
-            style={
-              type === "horizontal" ? { color: "white" } : { color: "black" }
-            }
-          >
-            Báo cáo
-          </Link>
-        </Menu.Item> */}
         <Menu.SubMenu
           title="Báo cáo"
-          icon={<BarChartOutlined />}
+          icon={<BarChartOutlined style={{fontSize:"15px"}}/>}
           key="8"
           style={
             type === "horizontal"
@@ -260,7 +233,7 @@ const Dashboard = ({ children, nameSelect, defaulCheckKey }) => {
           }
           className="menu-transaction"
         >
-          <Menu.Item icon={<ShoppingCartOutlined />}>
+          <Menu.Item icon={<PieChartOutlined />}>
             <Link to="/dashboard/transaction/buy" key="buy">
               Cuối ngày
             </Link>
@@ -270,23 +243,23 @@ const Dashboard = ({ children, nameSelect, defaulCheckKey }) => {
               Bán hàng
             </Link>
           </Menu.Item>
-          <Menu.Item key="bill-save" icon={<FileSyncOutlined />}>
+          <Menu.Item key="bill-save" icon={<InboxOutlined />}>
             <Link to="/dashboard/transaction/bill-save" key="bill-save-1">
               Hàng hóa
             </Link>
           </Menu.Item>
-          <Menu.Item key="success" icon={<FileDoneOutlined />}>
+          <Menu.Item key="success" icon={<UserOutlined />}>
             <Link to="/dashboard/transaction/buy/history/bill-success">
               Khách hàng
             </Link>
           </Menu.Item>
 
-          <Menu.Item key="save" icon={<FileSyncOutlined />}>
+          <Menu.Item key="save" icon={<TeamOutlined />}>
             <Link to="/dashboard/transaction/buy/history/bill-save">
               Nhà cung cấp
             </Link>
           </Menu.Item>
-          <Menu.Item key="save" icon={<FileSyncOutlined />}>
+          <Menu.Item key="save" icon={<RiseOutlined />}>
             <Link to="/dashboard/transaction/buy/history/bill-save">
               Tài chính
             </Link>
@@ -302,8 +275,9 @@ const Dashboard = ({ children, nameSelect, defaulCheckKey }) => {
                   backgroundColor: "#fff",
                   padding: "0 8px 0px 8px",
                   fontWeight: 600,
+                  zIndex:10
                 }
-              : { fontSize: "16px", backgroundColor: "#fff", fontWeight: 600 }
+              : { fontSize: "16px", backgroundColor: "#fff", fontWeight: 600,zIndex:10 }
           }
           className="redirect-sale"
         >

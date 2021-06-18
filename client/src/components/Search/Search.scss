@@ -14,10 +14,14 @@
     }
   }
   .btn-add__buyer {
-    .btn {
+    .btn-add-buyer {
       border: none;
       background-color: #fff;
-      color: #666666;
+      color: #56ad51;
+    }
+    .btn-add-buyer:hover{
+       background-color: #3d933c;
+       color: #fff;
     }
   }
   .info-buyer{
@@ -28,3 +32,4 @@
     -webkit-box-orient: vertical;
   }
 }
+

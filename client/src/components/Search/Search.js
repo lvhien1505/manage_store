@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Select, Button } from "antd";
+import { Select, Button,Tooltip } from "antd";
 import { SearchOutlined, PlusOutlined } from "@ant-design/icons";
+import ModalAddBuyer from '../Modals/ModalAdd/ModalAddBuyer'
 import "./Search.scss";
 
 const SearchBuyer = ({
@@ -10,8 +11,14 @@ const SearchBuyer = ({
   typeSearch,
   listPartner,
 }) => {
+  const [hideModalAdd, setHideModalAdd] = useState(false);
+
   const handleSearch = (value) => {
     return [];
+  };
+
+  const handlerHideModal = () => {
+    return setHideModalAdd(!hideModalAdd);
   };
 
   const showListSelect = (list, valueSelect, infoCode) => {
@@ -21,11 +28,7 @@ const SearchBuyer = ({
           style={{ display: "flex", justifyContent: "space-between" }}
           onClick={() =>
             valueSelect({
-              _id: person._id,
-              name: person.name,
-              phone: person.phone,
-              address: person.address,
-              code:person.code
+              _id: person._id
             })
           }
         >
@@ -66,6 +69,10 @@ const SearchBuyer = ({
           onSearch={handleSearch}
           suffixIcon={<SearchOutlined />}
           bordered={false}
+          allowClear
+          onClear={() =>
+            typeSearch === "partner" ? valueSelectPartner({}) : valueSelectBuyer({})
+          }
         >
           {typeSearch === "partner"
             ? showListSelect(listPartner, valueSelectPartner, "NCC")
@@ -74,8 +81,15 @@ const SearchBuyer = ({
       </div>
 
       <div className="btn-add__buyer">
-        <Button className="btn" icon={<PlusOutlined />} />
+        <Tooltip title="Thêm khách hàng" arrowPointAtCenter placement="bottomLeft">
+          <Button className="btn-add-buyer" icon={<PlusOutlined />} onClick={handlerHideModal} />
+        </Tooltip>
+        <ModalAddBuyer
+          hideModal={hideModalAdd}
+          handleHideModal={handlerHideModal}
+        />
       </div>
+
     </div>
   );
 };

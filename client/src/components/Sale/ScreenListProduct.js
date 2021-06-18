@@ -1,11 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { List, Card, Image, Space } from "antd";
-import { CaretUpOutlined, CaretDownOutlined } from "@ant-design/icons";
+import { List, Image, Tooltip } from "antd";
+import {
+  CaretUpOutlined,
+  CaretDownOutlined,
+  FilterOutlined,
+  UnorderedListOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import CurrencyFormat from "react-currency-format";
+import ModalAddMerchandise from "../Modals/ModalAdd/ModalAddMerchandise";
 import "./styles/ScreenListProduct.scss";
 
 const ScreenListProduct = ({ listProduct, valueSelect }) => {
   const [count, setCount] = useState(40);
+  const [hideModalAdd, setHideModalAdd] = useState(false);
+
+  const handlerHideModal = () => {
+    return setHideModalAdd(!hideModalAdd);
+  };
 
   const handleClickIcon = (type) => {
     if (type === "up") {
@@ -43,17 +55,44 @@ const ScreenListProduct = ({ listProduct, valueSelect }) => {
         <CaretUpOutlined
           className="icon up"
           onClick={() => handleClickIcon("up")}
+          style={{ fontSize: "60px" }}
         />
         <CaretDownOutlined
           className="icon down"
           onClick={() => handleClickIcon("down")}
+          style={{ fontSize: "60px" }}
+        />
+      </div>
+      <div className="filter-product">
+        <Tooltip title="Thêm sản phẩm" arrowPointAtCenter placement="topRight">
+          <span
+            className="symbol-icon-filter symbol-icon-add-product"
+            onClick={handlerHideModal}
+          >
+            <PlusOutlined />
+          </span>
+        </Tooltip>
+        <Tooltip title="Thêm sản phẩm" arrowPointAtCenter placement="topRight">
+          <span className="symbol-icon-filter symbol-icon-filter-prize">
+            <FilterOutlined />
+          </span>
+        </Tooltip>
+        <Tooltip title="Lọc theo nhóm hàng" arrowPointAtCenter placement="topRight">
+          <span className="symbol-icon-filter symbol-icon-filter-category">
+            <UnorderedListOutlined />
+          </span>
+        </Tooltip>
+
+        <ModalAddMerchandise
+          hideModal={hideModalAdd}
+          handleHideModal={handlerHideModal}
         />
       </div>
       <div className="list-product">
         <List
           pagination={{
-            pageSize: 24,
-            position: "bottom",
+            pageSize: 2,
+            position: "top",
           }}
           grid={{ gutter: 16, column: 6 }}
           dataSource={listProduct.length > 0 ? listProduct : []}

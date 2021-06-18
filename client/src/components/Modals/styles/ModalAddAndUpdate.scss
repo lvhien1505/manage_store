@@ -58,6 +58,7 @@
         input:focus,
         input:active {
           box-shadow: none;
+          border-bottom: 2px solid #419543 !important;
         }
       }
       .ant-select {
@@ -70,6 +71,9 @@
           border: none;
           box-shadow: none;
         }
+      }
+      .ant-select-open{
+        border-bottom: 2px solid #419543 !important;
       }
     }
     .input-money-merchandise {
@@ -89,6 +93,9 @@
           box-shadow: none;
           position: relative;
           bottom: 5px;
+        }
+        input:focus,input:active{
+          border-bottom: 2px solid #419543 !important;
         }
       }
     }
@@ -129,8 +136,9 @@
       }
 
       input:focus,
-      input:active {
-        box-shadow: none;
+        input:active {
+          box-shadow: none;
+          border-bottom: 2px solid #419543 !important;
       }
     }
   }
@@ -159,7 +167,8 @@
         input:focus,
         input:active {
           box-shadow: none;
-        }
+          border-bottom: 2px solid #419543 !important;
+      }
         .ant-select {
           width: 250px;
           border-bottom: 2px solid #aca5a5 !important;
@@ -170,6 +179,9 @@
             border: none;
             box-shadow: none;
           }
+        }
+        .ant-select-open{
+          border-bottom: 2px solid #419543 !important;
         }
       }
     }

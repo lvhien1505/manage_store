@@ -104,13 +104,6 @@ const ContentBuy = ({ listPartner, listBuy,removeProduct,nameSale,countNumProduc
       let totalDebtMath=totalDebt ||0;
       let noteBuy =note || "";
       let bill={partnerId,partnerCode,namePartner,phone,createdHour,createdDay,userCreate,userSell,listBuy,countNumBuy,totalMoneyBuy,totalSaleOffMoneyBuy,totalPaidNeedPartner,totalMoneyPaid,totalDebtMath,noteBuy}
-      if (type === "save") {
-          bill.status=false;
-          let res = await createBillBuy(bill);
-          if (res.status === 200) {
-            return notifyScreen("success",res.status,res.data.message)
-          }
-      }
       if (type==="success") {
         bill.status=true;
         let res = await createBillBuy(bill);
@@ -206,28 +199,6 @@ const ContentBuy = ({ listPartner, listBuy,removeProduct,nameSale,countNumProduc
                       </span>
                       <span>{product.moneyOut}</span>
                       <span style={{ marginTop: "-5px" }}>
-                        {/* <InputNumber
-                          onChange={(value) =>
-                            onChangeValueSaleOffProduct(value, product._id)
-                          }
-                          defaultValue={0}
-                          style={
-                            i % 2 != 0
-                              ? {
-                                  border: "none",
-                                  borderBottom: "1px solid #d9d9d9",
-                                  fontSize: "13px",
-                                  backgroundColor: "#f9f9f9",
-                                  boxShadow: "none",
-                                }
-                              : {
-                                  border: "none",
-                                  borderBottom: "1px solid #d9d9d9",
-                                  fontSize: "13px",
-                                  boxShadow: "none",
-                                }
-                          }
-                        /> */}
                       </span>
                       <span
                         style={{
@@ -326,33 +297,10 @@ const ContentBuy = ({ listPartner, listBuy,removeProduct,nameSale,countNumProduc
               </div>
             </div>
             <div className="btn-action">
-              <Form.Item name="save">
-                <Button
-                  type="primary"
-                  htmlType="button"
-                  style={{
-                    backgroundColor: "#56ad51",
-                    width: "100%",
-                    height: "66px",
-                    textAlign: "center",
-                  }}
-                  onClick={()=>onFinish("save",listProduct)}
-                >
-                  <span style={{ fontSize: "18px", fontWeight: "600" }}>
-                    Lưu tạm
-                  </span>
-                </Button>
-              </Form.Item>
               <Form.Item name="success">
                 <Button
                   type="primary"
                   htmlType="button"
-                  style={{
-                    backgroundColor: "#56ad51",
-                    width: "100%",
-                    height: "66px",
-                    textAlign: "center",
-                  }}
                   onClick={()=>onFinish("success",listProduct)}
                 >
                   <span style={{ fontSize: "18px", fontWeight: "600" }}>

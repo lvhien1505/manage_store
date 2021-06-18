@@ -16,10 +16,8 @@ import TabBillBuy from './components/TabUp/TabBillBuy';
 import Inventory from './views/Manage/Merchandise/Inventory'
 import Sale from './views/Sale/Sale';
 import Signup from './views/Signup/Signup';
-import BillSave from './views/Manage/Transaction/Bill/BillSave';
 import BillSuccess from './views/Manage/Transaction/Bill/BillSuccess';
 import Buy from './views/Buy/Buy';
-import BillBuySave from './views/Buy/History/BillSave';
 import BillBuySuccess from './views/Buy/History/BillSuccess';
 import CashFlow from './views/Manage/CashFlow/CashFlow';
 import NotifyScaleUp from './views/Notify/NotifyScaleUp'
@@ -38,15 +36,12 @@ const App = () => {
         <Route path="/dashboard/merchandise/category-product" exact component={CategoryProduct} />
         <Route path="/dashboard/merchandise/unit" exact component={Unit} />
         <Route path="/dashboard/merchandise/inventory" exact component={Inventory} />
-        <Route path="/dashboard/transaction/bill-save" exact component={BillSave} />
-        <Route path="/dashboard/transaction/bill-save/:id" exact component={TabBillSell} />
         <Route path="/dashboard/transaction/bill-success" exact component={BillSuccess} />
         <Route path="/dashboard/transaction/bill-success/:id" exact component={TabBillSell} />
         <Route path="/dashboard/transaction/buy" exact component={Buy} />
-        <Route path="/dashboard/transaction/buy/history/bill-save" exact component={BillBuySave} />
         <Route path="/dashboard/transaction/buy/history/bill-success" exact component={BillBuySuccess} />
         <Route path="/dashboard/transaction/buy/bill-success/:id" exact component={TabBillBuy} />
-        <Route path="/dashboard/transaction/buy/bill-save/:id" exact component={TabBillBuy} />
+    
         <Route path="/dashboard/buyer" exact component={Buyer} />
         <Route path="/dashboard/buyer/:id" exact component={TabBuyer} />
         <Route path="/dashboard/partner/:id" exact component={TabPartner} />

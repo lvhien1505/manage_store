@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { ArrowLeftOutlined,SwapOutlined,CheckSquareOutlined,DeliveredProcedureOutlined } from "@ant-design/icons";
+import {
+  ArrowLeftOutlined,
+  SwapOutlined,
+  CheckSquareOutlined,
+  DeliveredProcedureOutlined,
+} from "@ant-design/icons";
 import { Button, Table, Space } from "antd";
 import { Link } from "react-router-dom";
 import Dashboard from "../../components/DashBoard/Dashboard";
@@ -21,17 +26,17 @@ const TabBillSell = ({ match, history }) => {
     }
   };
 
-  const handleSuccessBill = async (id) => {
-    try {
-      let res = await updateStatusBill(match.params.id, { status: true });
-      if (res.status === 200) {
-        notifyScreen("success", "200", "Cập nhật hóa đơn thành công");
-        return history.push("/dashboard/transaction/bill-save");
-      }
-    } catch (error) {
-      notifyScreen("error", "500", "Cập nhật hóa đơn thất bại !");
-    }
-  };
+  // const handleSuccessBill = async (id) => {
+  //   try {
+  //     let res = await updateStatusBill(match.params.id, { status: true });
+  //     if (res.status === 200) {
+  //       notifyScreen("success", "200", "Cập nhật hóa đơn thành công");
+  //       return history.push("/dashboard/transaction/bill-save");
+  //     }
+  //   } catch (error) {
+  //     notifyScreen("error", "500", "Cập nhật hóa đơn thất bại !");
+  //   }
+  // };
   const columns = [
     {
       title: "Mã hàng",
@@ -85,13 +90,13 @@ const TabBillSell = ({ match, history }) => {
     __getBillWithId();
   }, []);
   return (
-    <Dashboard nameSelect={"HD0000" + bill.code} defaulCheckKey="3">
+    <Dashboard nameSelect={"HD00" + bill.code} defaulCheckKey="3">
       <div className="tab-pc">
         <div className="content-wrapper">
           <div className="content-wrapper__top">
             <div className="info-bill">
               <div>
-                <span>Mã hóa đơn : {"HD0000" + bill.code}</span>
+                <span>Mã hóa đơn : {"HD00" + bill.code}</span>
               </div>
               <div>
                 <span>
@@ -106,11 +111,12 @@ const TabBillSell = ({ match, history }) => {
               <div>
                 <span>
                   Khách hàng :{" "}
-                  {!bill.buyerId || !bill.buyerCode ? (
+                  {console.log(bill)}
+                  {!bill.buyerId ? (
                     "Không có"
                   ) : (
-                    <Link to={`/dashboard/buyer/${bill.buyerId}`}>
-                      {"KH" + bill.buyerCode + "-" + bill.nameBuyer}
+                    <Link to={`/dashboard/buyer/${bill.buyerId._id}`}>
+                      {"KH" + bill.buyerId.code + " - " + bill.buyerId.name}
                     </Link>
                   )}
                 </span>
@@ -131,54 +137,43 @@ const TabBillSell = ({ match, history }) => {
               {bill.noteSell ? bill.noteSell : "...Ghi chú"}
             </div>
             <div className="btn-action">
-              <Space direction="vertical">
-                <Button
-                  type="primary"
-                  size="large"
-                  style={{ width: "150px",textAlign:"center", }}
-                  onClick={() => history.push("/notify")}
-                  icon={<SwapOutlined />}
-                >
-                  Điều chỉnh
-                </Button>
-                {bill.status ? (
-                  <Space direction="vertical">
-                    <Button
-                      type="primary"
-                      size="large"
-                      style={{
-                        width: "150px",
-                        backgroundColor: "rgba(149, 129, 129, 0.85)",
-                        textAlign:"center",
-                        
-                      }}
-                      onClick={() => history.push("/notify")}
-                      icon={<DeliveredProcedureOutlined />}
-                    >
-                      In
-                    </Button>
-                    <Button
-                      type="primary"
-                      size="large"
-                      style={{ width: "150px", backgroundColor: "rgba(149, 129, 129, 0.85)", textAlign:"center",}}
-                      onClick={() => history.push("/notify")}
-                      icon={<DeliveredProcedureOutlined />}
-                    >
-                      Xuất File
-                    </Button>
-                  </Space>
-                ) : (
-                  <Button
-                    type="primary"
-                    size="large"
-                    style={{ width: "150px", backgroundColor: "#4bac4d",textAlign:"center", }}
-                    onClick={() => handleSuccessBill(match.params.id)}
-                    icon={<CheckSquareOutlined />}
-                  >
-                    Hoàn thành
-                  </Button>
-                )}
-              </Space>
+              <Button
+                type="primary"
+                size="large"
+                onClick={() => history.push("/notify")}
+                icon={<SwapOutlined />}
+                className="info-action__btn"
+              >
+                Lịch sử thanh toán
+              </Button>
+              <Button
+                type="primary"
+                size="large"
+                onClick={() => history.push("/notify")}
+                icon={<SwapOutlined />}
+                className="info-action__btn"
+              >
+                Điều chỉnh
+              </Button>
+
+              <Button
+                type="primary"
+                size="large"
+                onClick={() => history.push("/notify")}
+                icon={<DeliveredProcedureOutlined />}
+                className="info-action__btn"
+              >
+                In
+              </Button>
+              <Button
+                type="primary"
+                size="large"
+                onClick={() => history.push("/notify")}
+                icon={<DeliveredProcedureOutlined />}
+                className="info-action__btn"
+              >
+                Xuất File
+              </Button>
             </div>
           </div>
           <div className="content-wrapper__bottom">
@@ -256,7 +251,7 @@ const TabBillSell = ({ match, history }) => {
           </div>
           <div className="info-buyer">
             <span>Khách hàng</span>
-            <span>{bill.nameBuyer ? bill.nameBuyer : "Không có"}</span>
+            <span>{bill.buyerId ? bill.buyerId.name : "Không có"}</span>
           </div>
           <div className="info-time">
             <span className="info-time__title">Thời gian</span>
@@ -335,36 +330,7 @@ const TabBillSell = ({ match, history }) => {
             >
               Điều chỉnh
             </Button>
-          ) : (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-start",
-                width: "100%",
-              }}
-            >
-              <Button
-                type="primary"
-                size="large"
-                style={{ width: "50%", height: "70px" }}
-                onClick={() => history.push("/notify")}
-              >
-                Điều chỉnh
-              </Button>
-              <Button
-                type="primary"
-                size="large"
-                style={{
-                  width: "50%",
-                  height: "70px",
-                  backgroundColor: "#02c54b",
-                }}
-                onClick={() => handleSuccessBill(match.params.id)}
-              >
-                Hoàn thành
-              </Button>
-            </div>
-          )}
+          ) : null}
         </div>
       </div>
     </Dashboard>

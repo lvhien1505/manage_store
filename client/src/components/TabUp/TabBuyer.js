@@ -8,7 +8,8 @@ import {
   TransactionOutlined,
   CopyOutlined,
   StopOutlined,
-  ToolOutlined
+  ToolOutlined,
+  EditOutlined,
 } from "@ant-design/icons";
 import Dashboard from "../DashBoard/Dashboard";
 import { getBuyerWithId } from "../../api/buyer";
@@ -18,7 +19,7 @@ import { notifyScreen } from "../../utils/notify";
 import { convertDay } from "../../utils/convert";
 import avatar from "../../logo/avatar/default.jpg";
 import ModalUpdateBuyer from "../Modals/ModalUpdate/ModalUpdateBuyer";
-import ModalPaidDebt from "../Modals/ModalAdjust/ModalPaidDebt";
+import ModalPayBill from "../Modals/ModalAdjust/ModalPayBill";
 import ModalAdjustDebt from "../Modals/ModalAdjust/ModalAdjustDebt";
 import SectionTabBuyer from "../SectionTab/SectionTabPartner";
 import "./styles/TabBuyer.scss";
@@ -29,12 +30,12 @@ const TabBuyer = ({ match, history }) => {
   const [showModalUpdate, setShowModalUpdate] = useState(false);
   const [hideModalDelete, setHideModalDelete] = useState(false);
   const [showModalDelete, setShowModalDelete] = useState(false);
-  const [hideModalPaidDebt, setHideModalPaidDebt] = useState(false);
-  const [showModalPaidDebt, setShowModalPaidDebt] = useState(false);
+  const [hideModalPayBill, setHideModalPayBill] = useState(false);
+  const [showModalPayBill, setShowModalPayBill] = useState(false);
   const [hideModalAdjustDebt, setHideModalAdjustDebt] = useState(false);
   const [showModalAdjustDebt, setShowModalAdjustDebt] = useState(false);
   const [buyer, setBuyer] = useState({});
-  const [listBillDebt, setListBillDebt] = useState([]);
+  const [listBill, setListBill] = useState([]);
 
   const __getBuyerWithId = async (id) => {
     try {
@@ -51,7 +52,7 @@ const TabBuyer = ({ match, history }) => {
     try {
       let res = await getBillWithIdBuyerAndType(id);
       if (res.status === 200) {
-        return setListBillDebt(
+        return setListBill(
           res.data.map((bill, key) => {
             bill.key = bill._id;
             return bill;
@@ -83,14 +84,14 @@ const TabBuyer = ({ match, history }) => {
     return setHideModalDelete(!hideModalDelete);
   };
 
-  const handlerHideModalPaidDebt = () => {
-    setHideModalPaidDebt(!hideModalPaidDebt);
-    return setShowModalPaidDebt(false);
+  const handlerHideModalPayBill = () => {
+    setHideModalPayBill(!hideModalPayBill);
+    return setShowModalPayBill(false);
   };
 
-  const handlerShowModalPaidDebt = () => {
-    setShowModalPaidDebt(true);
-    return setHideModalPaidDebt(!hideModalPaidDebt);
+  const handlerShowModalPayBill = () => {
+    setShowModalPayBill(true);
+    return setHideModalPayBill(!hideModalPayBill);
   };
 
   const handlerHideModalAdjustDebt = () => {
@@ -109,22 +110,35 @@ const TabBuyer = ({ match, history }) => {
     }
   };
 
+  const handleFilterBill = (list) => {
+    if (list.length <= 0) {
+      return [];
+    }
+    let listBill = list.filter(
+      (bill) => bill.typeOfBill == "bill" && bill.isDebt
+    );
+    if (listBill.length > 0) {
+      return listBill;
+    }
+    return [];
+  };
+
   const columns = [
     {
       title: "Mã phiếu",
       dataIndex: "code",
       key: "code",
       render: (text, obj) => {
-        if (obj.typeBill == "debt") {
+        if (obj.typeOfBill == "bill") {
           return (
             <Link to={`/dashboard/transaction/bill-success/${obj._id}`}>
-              {"HD0000" + text}
+              {"HD00" + text}
             </Link>
           );
-        } else if (obj.typeBill == "paid") {
-          return "TT0000" + text;
-        } else {
-          return "CB0000" + text;
+        } else if (obj.typeOfBill == "paybill") {
+          return "TTHD00" + text;
+        } else if (obj.typeOfBill == "adjustdebt") {
+          return "CB00" + text;
         }
       },
     },
@@ -142,32 +156,47 @@ const TabBuyer = ({ match, history }) => {
       title: "Loại",
       key: "typeBill",
       render: (obj) => {
-        if (obj.typeBill == "debt") {
+        if (obj.typeOfBill == "bill") {
           return "Bán hàng";
-        } else if (obj.typeBill == "paid") {
+        } else if (obj.typeOfBill == "paybill") {
           return "Thanh toán";
-        } else {
+        } else if (obj.typeOfBill == "adjustdebt") {
           return "Điều chỉnh";
         }
       },
     },
     {
       title: "Giá trị",
-      key: "totalBuyerPaidNeed",
-      dataIndex: "totalBuyerPaidNeed",
-      render: (text) => (
-        <CurrencyFormat
-          value={text}
-          displayType={"text"}
-          thousandSeparator={true}
-          renderText={(value) => <span>{value}</span>}
-        />
-      ),
+      key: "prizeBill",
+      render: (obj) => {
+        if (obj.typeOfBill == "bill") {
+          return (
+            <CurrencyFormat
+              value={obj.totalBuyerPaidNeed}
+              displayType={"text"}
+              thousandSeparator={true}
+              renderText={(value) => <span> {value}</span>}
+            />
+          );
+        } else if (obj.typeOfBill == "paybill") {
+          return (
+            <CurrencyFormat
+              value={-obj.valuePay}
+              displayType={"text"}
+              thousandSeparator={true}
+              renderText={(value) => <span>{value}</span>}
+            />
+          );
+        } else if (obj.typeOfBill == "adjustdebt") {
+          return "00";
+        }
+      },
+      align: "right",
     },
     {
       title: "Dư nợ khách hàng",
-      key: "debtRedundancy",
-      dataIndex: "debtRedundancy",
+      key: "debtRedundancyBuyer",
+      dataIndex: "debtRedundancyBuyer",
       render: (text) => (
         <CurrencyFormat
           value={text}
@@ -176,6 +205,7 @@ const TabBuyer = ({ match, history }) => {
           renderText={(value) => <span>{value}</span>}
         />
       ),
+      align: "right",
     },
   ];
 
@@ -194,69 +224,19 @@ const TabBuyer = ({ match, history }) => {
             onChange={(key) => onChangeTab(key)}
             className="tabup-full"
           >
-            <Tabs.TabPane tab="Thông tin" key="thongtin">
+            <Tabs.TabPane
+              tab="Thông tin"
+              key="thongtin"
+              style={{ height: "400px", backgroundColor: "#fff" }}
+            >
               <div className="info-wrapper">
-                <div className="info-image">
-                  <Avatar
-                    src={avatar}
-                    size="large"
-                    shape="square"
-                    style={{
-                      width: "200px",
-                      height: "250px",
-                      objectFit: "cover",
-                    }}
-                  />
-                </div>
-                <div className="info-detail">
-                  <div className="info-detail-info">
-                    Mã khách hàng : {"KH" + buyer.code}
-                  </div>
-                  <div className="info-detail-info">
-                    Tên khách : {buyer.name}
-                  </div>
-                  <div className="info-detail-info">Ngày sinh: {buyer.age}</div>
-                  <div className="info-detail-info">
-                    Giới tính : {buyer.sex === "male" ? "Nam" : "Nữ"}
-                  </div>
-                  <div className="info-detail-info">
-                    Điện thoại : {buyer.phone}
-                  </div>
-                  <div className="info-detail-info">
-                    Địa chỉ : {buyer.address}
-                  </div>
-                  <div className="info-detail-info">
-                    Tổng bán :{" "}
-                    <CurrencyFormat
-                      value={buyer.totalSell}
-                      displayType={"text"}
-                      thousandSeparator={true}
-                      renderText={(value) => <span>{value}</span>}
-                    />
-                  </div>
-                  <div className="info-detail-info">
-                    Công nợ :{" "}
-                    <CurrencyFormat
-                      value={buyer.debt}
-                      displayType={"text"}
-                      thousandSeparator={true}
-                      renderText={(value) => <span>{value}</span>}
-                    />
-                  </div>
-                  <div className="info-detail-info">
-                    Ngày tạo: {convertDay(buyer.createdAt)}
-                  </div>
-                </div>
-                <div className="note">
-                  {buyer.note ? buyer.note : "..Ghi chú"}
-                </div>
                 <div className="info-action">
                   <Button
                     className="info-action__btn"
                     type="primary"
                     size="large"
                     onClick={handlerShowModalUpdate}
-                    icon={<CopyOutlined/>}
+                    icon={<CopyOutlined />}
                   >
                     Danh sách hóa đơn
                   </Button>
@@ -265,7 +245,7 @@ const TabBuyer = ({ match, history }) => {
                     type="primary"
                     size="large"
                     onClick={handlerShowModalUpdate}
-                    icon={<ToolOutlined/>}
+                    icon={<ToolOutlined />}
                   >
                     Cập nhật
                   </Button>
@@ -273,7 +253,7 @@ const TabBuyer = ({ match, history }) => {
                     className="info-action__btn"
                     type="primary"
                     size="large"
-                    icon={<StopOutlined/>}
+                    icon={<StopOutlined />}
                     onClick={() => history.push("/notify")}
                   >
                     Ngừng hoạt động
@@ -282,11 +262,82 @@ const TabBuyer = ({ match, history }) => {
                     className="info-action__btn"
                     type="primary"
                     size="large"
-                    icon={<StopOutlined/>}
+                    icon={<StopOutlined />}
                     onClick={handlerShowModalDelete}
                   >
                     Xóa
                   </Button>
+                </div>
+                <div className="info-buyer">
+                  <div className="info-image">
+                    <Avatar
+                      src={avatar}
+                      size="large"
+                      shape="square"
+                      style={{
+                        width: "250px",
+                        height: "250px",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </div>
+                  <div className="info-detail">
+                    <div className="left-info-detail">
+                      <div className="info-detail-info">
+                        <span> Mã khách hàng :</span>
+                        <span>{"KH" + buyer.code}</span>
+                      </div>
+                      <div className="info-detail-info">
+                        <span> Tên khách :</span>
+                        <span>{buyer.name}</span>
+                      </div>
+                      <div className="info-detail-info">
+                        <span>Ngày sinh:</span>
+                        <span>{buyer.age}</span>
+                      </div>
+                      <div className="info-detail-info">
+                        <span>Giới tính : </span>
+                        <span>{buyer.sex === "male" ? "Nam" : "Nữ"}</span>
+                      </div>
+                      <div className="info-detail-info info-detail-address">
+                        <span> Địa chỉ : </span>
+                        <span>{buyer.address}</span>
+                      </div>
+                    </div>
+                    <div className="right-info-detail">
+                      <div className="info-detail-info">
+                        <span>Điện thoại :</span>
+                        <span> {buyer.phone}</span>
+                      </div>
+                      <div className="info-detail-info">
+                        <span>Tổng bán :</span>
+                        <CurrencyFormat
+                          value={buyer.totalSell}
+                          displayType={"text"}
+                          thousandSeparator={true}
+                          renderText={(value) => <span>{value}</span>}
+                        />
+                      </div>
+                      <div className="info-detail-info">
+                        <span>Công nợ :</span>
+                        <CurrencyFormat
+                          value={buyer.debt}
+                          displayType={"text"}
+                          thousandSeparator={true}
+                          renderText={(value) => <span>{value}</span>}
+                        />
+                      </div>
+                      <div className="info-detail-info">
+                        <span> Ngày tạo:</span>
+                        <span>{convertDay(buyer.createdAt)}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="note">
+                    <span>
+                      <EditOutlined /> {buyer.note ? buyer.note : "Ghi chú"}
+                    </span>
+                  </div>
                 </div>
               </div>
             </Tabs.TabPane>
@@ -308,7 +359,7 @@ const TabBuyer = ({ match, history }) => {
                     <Button
                       type="primary"
                       icon={<CreditCardOutlined />}
-                      onClick={handlerShowModalPaidDebt}
+                      onClick={handlerShowModalPayBill}
                     >
                       Thanh toán
                     </Button>
@@ -326,7 +377,7 @@ const TabBuyer = ({ match, history }) => {
                     </Button>
                   </div>
                   <div className="table-list-bill">
-                    <Table columns={columns} dataSource={listBillDebt} />
+                    <Table columns={columns} dataSource={listBill} />
                   </div>
                 </Col>
               </Row>
@@ -334,7 +385,6 @@ const TabBuyer = ({ match, history }) => {
           </Tabs>
           <div className="icon-goback" onClick={() => history.goBack()}>
             <ArrowLeftOutlined />
-            <span style={{ marginLeft: "5px" }}>Quay lại</span>
           </div>
         </div>
         <div className="buyer-tabup__mobile">
@@ -363,7 +413,7 @@ const TabBuyer = ({ match, history }) => {
                 <div className="info-detail-info">
                   <span>Ngày sinh</span>
                   <span className="buyer-value">{buyer.age}</span>
-                  </div>
+                </div>
                 <div className="info-detail-info">
                   <span>Giới tính</span>
                   <span className="buyer-value">
@@ -436,10 +486,12 @@ const TabBuyer = ({ match, history }) => {
             handleHideModal={handlerHideModalDelete}
           />
         ) : null}
-        {showModalPaidDebt ? (
-          <ModalPaidDebt
-            hideModal={hideModalPaidDebt}
-            handleHideModal={handlerHideModalPaidDebt}
+        {showModalPayBill ? (
+          <ModalPayBill
+            hideModal={hideModalPayBill}
+            handleHideModal={handlerHideModalPayBill}
+            listBill={handleFilterBill(listBill)}
+            buyer={buyer}
           />
         ) : null}
         {showModalAdjustDebt ? (
